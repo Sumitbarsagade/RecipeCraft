@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RecipeCraft — MERN Stack Project Flow</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FDF6EC;
+    --warm-white: #FFFBF5;
+    --rust: #C8501A;
+    --rust-light: #E8724A;
+    --forest: #2D4A3E;
+    --forest-light: #3D6B5C;
+    --gold: #D4A843;
+    --gold-light: #F0C868;
+    --charcoal: #1C1C1C;
+    --gray: #6B6B6B;
+    --gray-light: #E8E2DA;
+    --border: #D4C9B8;
+    --shadow: rgba(28, 28, 28, 0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--charcoal);
+    line-height: 1.6;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--forest);
+    color: var(--cream);
+    padding: 80px 60px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 70% 50%, rgba(212,168,67,0.15) 0%, transparent 70%);
+  }
+  .hero-badge {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--charcoal);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 20px;
+    margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(42px, 6vw, 72px);
+    font-weight: 900;
+    line-height: 1.05;
+    margin-bottom: 20px;
+  }
+  .hero h1 span { color: var(--gold); }
+  .hero p {
+    font-size: 17px;
+    color: rgba(253,246,236,0.75);
+    max-width: 560px;
+    margin-bottom: 40px;
+  }
+  .tech-stack {
+    display: flex; gap: 12px; flex-wrap: wrap;
+  }
+  .tech-pill {
+    background: rgba(253,246,236,0.12);
+    border: 1px solid rgba(253,246,236,0.2);
+    color: var(--cream);
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.5px;
+  }
+  .tech-pill.highlight {
+    background: var(--rust);
+    border-color: var(--rust);
+  }
+
+  /* ── MAIN LAYOUT ── */
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+  .section { padding: 64px 60px; }
+  .section:nth-child(even) { background: var(--warm-white); }
+
+  .section-label {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 36px;
+  }
+  .section-num {
+    width: 36px; height: 36px;
+    background: var(--rust);
+    color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+  }
+
+  /* ── CARDS ── */
+  .card-grid { display: grid; gap: 20px; }
+  .card-grid-2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .card-grid-3 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .card-grid-4 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+
+  .card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .card:hover { box-shadow: 0 8px 32px var(--shadow); transform: translateY(-2px); }
+
+  .card-icon {
+    font-size: 28px; margin-bottom: 14px;
+  }
+  .card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--forest);
+  }
+  .card p { font-size: 14px; color: var(--gray); line-height: 1.6; }
+  .card ul { list-style: none; margin-top: 10px; }
+  .card ul li {
+    font-size: 13px; color: var(--gray);
+    padding: 4px 0;
+    border-bottom: 1px solid var(--gray-light);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card ul li:last-child { border: none; }
+  .card ul li::before { content: '→'; color: var(--rust); font-size: 11px; }
+
+  /* ── WIREFRAMES ── */
+  .wireframe-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 28px; }
+
+  .wireframe {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .wireframe-header {
+    background: var(--forest);
+    color: var(--cream);
+    padding: 12px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .wireframe-dots { display: flex; gap: 6px; }
+  .wireframe-dots span {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+  }
+  .wireframe-dots span:first-child { background: #E55; }
+  .wireframe-dots span:nth-child(2) { background: #FA0; }
+  .wireframe-dots span:nth-child(3) { background: #5C5; }
+  .wireframe-body { padding: 20px; }
+
+  .wf-nav {
+    background: var(--forest);
+    height: 44px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    display: flex; align-items: center;
+    padding: 0 14px; gap: 8px;
+  }
+  .wf-nav-logo {
+    width: 80px; height: 14px;
+    background: var(--gold);
+    border-radius: 3px;
+  }
+  .wf-nav-links {
+    margin-left: auto;
+    display: flex; gap: 6px;
+  }
+  .wf-nav-links span {
+    width: 36px; height: 8px;
+    background: rgba(255,255,255,0.35);
+    border-radius: 2px;
+  }
+  .wf-nav-btn {
+    width: 56px; height: 24px;
+    background: var(--rust);
+    border-radius: 4px;
+    margin-left: 8px;
+  }
+  .wf-hero-banner {
+    background: linear-gradient(135deg, var(--rust-light), var(--rust));
+    height: 120px; border-radius: 8px;
+    margin-bottom: 16px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 8px;
+  }
+  .wf-hero-banner .wf-h1 {
+    width: 200px; height: 18px;
+    background: rgba(255,255,255,0.9);
+    border-radius: 3px;
+  }
+  .wf-hero-banner .wf-sub {
+    width: 140px; height: 10px;
+    background: rgba(255,255,255,0.5);
+    border-radius: 2px;
+  }
+  .wf-hero-banner .wf-cta {
+    width: 80px; height: 28px;
+    background: var(--gold);
+    border-radius: 4px;
+    margin-top: 4px;
+  }
+  .wf-search {
+    background: var(--gray-light);
+    height: 36px; border-radius: 6px;
+    margin-bottom: 16px;
+    display: flex; align-items: center;
+    padding: 0 12px; gap: 8px;
+  }
+  .wf-search-icon {
+    width: 14px; height: 14px;
+    background: var(--gray);
+    border-radius: 50%;
+    border: 2px solid var(--gray);
+  }
+  .wf-search-bar {
+    flex: 1; height: 8px;
+    background: var(--border);
+    border-radius: 2px;
+  }
+  .wf-recipe-cards {
+    display: grid; grid-template-columns: repeat(3,1fr); gap: 8px;
+    margin-bottom: 12px;
+  }
+  .wf-recipe-card {
+    background: var(--gray-light);
+    border-radius: 6px; overflow: hidden;
+  }
+  .wf-recipe-img {
+    height: 52px;
+    background: linear-gradient(135deg, var(--border), var(--gray-light));
+  }
+  .wf-recipe-info { padding: 6px; }
+  .wf-recipe-info .line1 {
+    height: 7px; background: var(--charcoal);
+    border-radius: 2px; margin-bottom: 4px;
+    opacity: 0.4;
+  }
+  .wf-recipe-info .line2 {
+    height: 6px; background: var(--border);
+    border-radius: 2px; width: 70%;
+  }
+
+  /* Auth wireframe */
+  .wf-form-card {
+    background: var(--gray-light);
+    border-radius: 8px;
+    padding: 20px; margin-bottom: 12px;
+  }
+  .wf-form-title {
+    height: 14px; background: var(--charcoal);
+    border-radius: 3px; width: 60%; margin: 0 auto 16px;
+    opacity: 0.6;
+  }
+  .wf-input {
+    height: 32px; background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 4px; margin-bottom: 10px;
+    display: flex; align-items: center;
+    padding: 0 10px;
+  }
+  .wf-input .label {
+    height: 7px; width: 60px;
+    background: var(--border);
+    border-radius: 2px;
+  }
+  .wf-btn {
+    height: 36px; background: var(--rust);
+    border-radius: 6px; width: 100%;
+    display: flex; align-items: center;
+    justify-content: center;
+  }
+  .wf-btn .label {
+    height: 9px; width: 70px;
+    background: rgba(255,255,255,0.7);
+    border-radius: 2px;
+  }
+  .wf-divider {
+    text-align: center; margin: 10px 0;
+    font-size: 11px; color: var(--gray);
+  }
+  .wf-social-btns { display: flex; gap: 8px; }
+  .wf-social-btns .wf-social {
+    flex: 1; height: 32px;
+    background: var(--border); border-radius: 4px;
+  }
+
+  /* Dashboard wireframe */
+  .wf-sidebar {
+    width: 60px; background: var(--forest);
+    border-radius: 6px; padding: 10px 6px;
+    display: flex; flex-direction: column; gap: 8px; align-items: center;
+  }
+  .wf-sidebar-icon {
+    width: 32px; height: 32px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 6px;
+  }
+  .wf-sidebar-icon.active { background: var(--rust); }
+  .wf-main-area { flex: 1; }
+  .wf-dashboard-body { display: flex; gap: 10px; }
+  .wf-stats-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 10px; }
+  .wf-stat {
+    background: var(--gray-light);
+    border-radius: 6px; padding: 10px;
+    text-align: center;
+  }
+  .wf-stat .num {
+    height: 16px; background: var(--forest);
+    border-radius: 3px; width: 40px;
+    margin: 0 auto 4px; opacity: 0.5;
+  }
+  .wf-stat .lbl {
+    height: 6px; background: var(--border);
+    border-radius: 2px; width: 50px; margin: 0 auto;
+  }
+  .wf-my-recipes { }
+  .wf-mr-header {
+    display: flex; justify-content: space-between;
+    align-items: center; margin-bottom: 8px;
+  }
+  .wf-mr-title {
+    height: 10px; width: 80px;
+    background: var(--charcoal); border-radius: 2px; opacity: 0.5;
+  }
+  .wf-add-btn {
+    height: 24px; width: 60px;
+    background: var(--rust); border-radius: 4px;
+  }
+  .wf-recipe-list-item {
+    background: var(--gray-light);
+    border-radius: 6px; padding: 10px;
+    display: flex; gap: 10px; align-items: center;
+    margin-bottom: 6px;
+  }
+  .wf-rli-img {
+    width: 40px; height: 40px;
+    background: var(--border);
+    border-radius: 4px; flex-shrink: 0;
+  }
+  .wf-rli-info { flex: 1; }
+  .wf-rli-info .t1 {
+    height: 8px; background: var(--charcoal);
+    opacity: 0.4; border-radius: 2px; margin-bottom: 5px; width: 80%;
+  }
+  .wf-rli-info .t2 {
+    height: 6px; background: var(--border);
+    border-radius: 2px; width: 50%;
+  }
+  .wf-rli-actions { display: flex; gap: 4px; }
+  .wf-rli-actions span {
+    width: 24px; height: 24px;
+    background: var(--border); border-radius: 4px;
+  }
+  .wf-rli-actions span.del { background: rgba(200,80,26,0.2); }
+
+  /* Recipe Detail wireframe */
+  .wf-recipe-detail-img {
+    height: 100px; background: linear-gradient(135deg, var(--rust-light), var(--gold));
+    border-radius: 8px; margin-bottom: 12px;
+  }
+  .wf-detail-meta { display: flex; gap: 8px; margin-bottom: 10px; }
+  .wf-meta-badge {
+    height: 20px; width: 60px;
+    background: var(--gray-light); border-radius: 10px;
+  }
+  .wf-detail-h1 {
+    height: 16px; background: var(--charcoal);
+    opacity: 0.5; border-radius: 3px; margin-bottom: 8px; width: 75%;
+  }
+  .wf-detail-desc { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+  .wf-detail-desc .l { height: 7px; background: var(--border); border-radius: 2px; }
+  .wf-detail-desc .l:last-child { width: 60%; }
+  .wf-ingredients-section {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  }
+  .wf-ingredients-card, .wf-steps-card {
+    background: var(--gray-light); border-radius: 6px; padding: 12px;
+  }
+  .wf-section-h {
+    height: 10px; background: var(--forest);
+    opacity: 0.4; border-radius: 2px; margin-bottom: 10px; width: 80px;
+  }
+  .wf-ing-item {
+    display: flex; gap: 6px; align-items: center; margin-bottom: 6px;
+  }
+  .wf-ing-item .dot {
+    width: 6px; height: 6px;
+    background: var(--rust); border-radius: 50%; flex-shrink: 0;
+  }
+  .wf-ing-item .line {
+    height: 7px; background: var(--border);
+    border-radius: 2px; flex: 1;
+  }
+  .wf-step { display: flex; gap: 6px; align-items: flex-start; margin-bottom: 8px; }
+  .wf-step .num {
+    width: 16px; height: 16px; flex-shrink: 0;
+    background: var(--forest); opacity: 0.4;
+    border-radius: 50%;
+  }
+  .wf-step-lines { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+  .wf-step-lines .l {
+    height: 6px; background: var(--border); border-radius: 2px;
+  }
+  .wf-step-lines .l:last-child { width: 70%; }
+  .wf-like-follow {
+    display: flex; gap: 8px; margin-top: 12px;
+  }
+  .wf-like-btn {
+    flex: 1; height: 32px; background: rgba(200,80,26,0.1);
+    border: 1px solid var(--rust); border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .wf-like-btn .l {
+    height: 8px; width: 50px; background: var(--rust);
+    border-radius: 2px; opacity: 0.6;
+  }
+  .wf-follow-btn {
+    flex: 1; height: 32px; background: var(--forest);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .wf-follow-btn .l {
+    height: 8px; width: 50px;
+    background: rgba(255,255,255,0.5); border-radius: 2px;
+  }
+
+  /* ── DATABASE SCHEMA ── */
+  .schema-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+  .schema-card {
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .schema-header {
+    background: var(--forest);
+    color: var(--cream);
+    padding: 12px 18px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .schema-header span { font-size: 16px; }
+  .schema-header h3 {
+    font-family: 'DM Mono', monospace;
+    font-size: 14px; font-weight: 500;
+  }
+  .schema-header .coll {
+    margin-left: auto;
+    font-size: 10px;
+    background: rgba(255,255,255,0.15);
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .schema-body { padding: 14px 18px; }
+  .field {
+    display: flex; align-items: flex-start;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--gray-light);
+    gap: 10px;
+    font-size: 13px;
+  }
+  .field:last-child { border: none; }
+  .field-name {
+    font-family: 'DM Mono', monospace;
+    color: var(--forest);
+    font-size: 12.5px;
+    min-width: 110px;
+    flex-shrink: 0;
+  }
+  .field-type {
+    color: var(--rust);
+    font-family: 'DM Mono', monospace;
+    font-size: 11.5px;
+    min-width: 80px;
+  }
+  .field-note {
+    color: var(--gray);
+    font-size: 12px;
+    flex: 1;
+  }
+  .field-badge {
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .badge-pk { background: #FFF3CD; color: #856404; }
+  .badge-fk { background: #D1ECF1; color: #0C5460; }
+  .badge-req { background: #F8D7DA; color: #721C24; }
+  .badge-idx { background: #D4EDDA; color: #155724; }
+
+  /* ── API ROUTES ── */
+  .api-section { margin-bottom: 28px; }
+  .api-section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; color: var(--forest);
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid var(--gold);
+    display: inline-block;
+  }
+  .route { display: flex; align-items: flex-start; gap: 14px; padding: 10px 0; border-bottom: 1px solid var(--gray-light); }
+  .route:last-child { border: none; }
+  .method {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 4px;
+    min-width: 54px; text-align: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .GET { background: #D4EDDA; color: #155724; }
+  .POST { background: #CCE5FF; color: #004085; }
+  .PUT { background: #FFF3CD; color: #856404; }
+  .DELETE { background: #F8D7DA; color: #721C24; }
+  .PATCH { background: #E2D9F3; color: #3D1973; }
+  .route-path {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--charcoal);
+    min-width: 240px;
+    flex-shrink: 0;
+  }
+  .route-desc { font-size: 13px; color: var(--gray); flex: 1; }
+  .route-auth {
+    font-size: 11px;
+    background: var(--rust);
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+  .route-auth.public {
+    background: var(--forest-light);
+  }
+
+  /* ── FOLDER STRUCTURE ── */
+  .folder-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .folder-tree {
+    background: #1C1C1C;
+    color: #D4C9B8;
+    border-radius: 10px;
+    padding: 24px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.9;
+  }
+  .folder-tree .tree-title {
+    color: var(--gold);
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .folder-tree .dir { color: #7DBBE6; }
+  .folder-tree .file { color: #A8D8A8; }
+  .folder-tree .comment { color: #6B6B6B; font-style: italic; }
+  .folder-tree .highlight { color: var(--gold); }
+
+  /* ── USER FLOWS ── */
+  .flow-diagram { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 16px 0; }
+  .flow-step {
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .flow-step.start { background: var(--forest); color: var(--cream); border-color: var(--forest); }
+  .flow-step.end { background: var(--rust); color: #fff; border-color: var(--rust); }
+  .flow-step.decision { background: #FFF8E1; border-color: var(--gold); color: var(--charcoal); border-radius: 0; transform: rotate(0deg); }
+  .flow-arrow {
+    color: var(--gray); font-size: 18px;
+    font-weight: 300;
+  }
+
+  /* ── COMPONENTS ── */
+  .comp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+  .comp-item {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+  }
+  .comp-item .comp-icon { font-size: 22px; margin-bottom: 8px; }
+  .comp-item h4 {
+    font-size: 14px; font-weight: 600;
+    color: var(--forest); margin-bottom: 6px;
+  }
+  .comp-item p { font-size: 12px; color: var(--gray); }
+
+  /* ── TIMELINE ── */
+  .timeline { position: relative; padding-left: 32px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 10px; top: 0; bottom: 0;
+    width: 2px; background: var(--border);
+  }
+  .timeline-item { position: relative; margin-bottom: 32px; }
+  .timeline-dot {
+    position: absolute;
+    left: -30px; top: 4px;
+    width: 18px; height: 18px;
+    background: var(--rust);
+    border-radius: 50%;
+    border: 3px solid var(--cream);
+    box-shadow: 0 0 0 2px var(--rust);
+  }
+  .timeline-header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+  .timeline-week {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    background: var(--forest);
+    color: var(--cream);
+    padding: 3px 10px;
+    border-radius: 4px;
+  }
+  .timeline-title {
+    font-weight: 600; font-size: 16px;
+  }
+  .timeline-tasks {
+    display: flex; flex-wrap: wrap; gap: 8px;
+  }
+  .task-tag {
+    background: var(--gray-light);
+    color: var(--charcoal);
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 4px;
+  }
+  .task-tag.be { background: rgba(45,74,62,0.12); color: var(--forest); }
+  .task-tag.fe { background: rgba(200,80,26,0.1); color: var(--rust); }
+  .task-tag.db { background: rgba(212,168,67,0.15); color: #7B5A00; }
+
+  /* ── ENV TABLE ── */
+  .env-table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+  .env-table th {
+    background: var(--forest);
+    color: var(--cream);
+    text-align: left;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .env-table td {
+    padding: 10px 16px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--gray-light);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+  }
+  .env-table tr:last-child td { border: none; }
+  .env-table tr:nth-child(even) td { background: var(--warm-white); }
+  .env-val { color: var(--rust); }
+  .env-desc { font-family: 'DM Sans', sans-serif; color: var(--gray); font-size: 12px; }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: var(--charcoal);
+    color: rgba(253,246,236,0.5);
+    text-align: center;
+    padding: 40px;
+    font-size: 13px;
+  }
+  .footer strong { color: var(--gold); }
+
+  @media (max-width: 768px) {
+    .hero { padding: 50px 24px 40px; }
+    .section { padding: 40px 24px; }
+    .folder-grid { grid-template-columns: 1fr; }
+    .wf-recipe-cards { grid-template-columns: repeat(2,1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">MERN Stack · Full Project Blueprint</div>
+  <h1>RecipeCraft<br><span>Project Flow</span></h1>
+  <p>Complete architecture, wireframes, database schema, API design, and component breakdown for a production-ready recipe blogging platform.</p>
+  <div class="tech-stack">
+    <div class="tech-pill highlight">MongoDB</div>
+    <div class="tech-pill highlight">Express.js</div>
+    <div class="tech-pill highlight">React.js</div>
+    <div class="tech-pill highlight">Node.js</div>
+    <div class="tech-pill">JWT Auth</div>
+    <div class="tech-pill">Cloudinary</div>
+    <div class="tech-pill">Redux Toolkit</div>
+    <div class="tech-pill">Mongoose</div>
+    <div class="tech-pill">Tailwind CSS</div>
+  </div>
+</div>
+
+<!-- 1. SYSTEM OVERVIEW -->
+<div class="section">
+  <div class="section-label">
+    <div class="section-num">1</div>
+    <div class="section-title">System Architecture Overview</div>
+  </div>
+  <div class="card-grid card-grid-3">
+    <div class="card">
+      <div class="card-icon">🖥️</div>
+      <h3>Frontend (React)</h3>
+      <p>Single Page Application with React 18, Vite, Redux Toolkit for state, React Router for navigation, and Tailwind CSS for styling.</p>
+      <ul>
+        <li>React 18 + Vite</li>
+        <li>Redux Toolkit + RTK Query</li>
+        <li>React Router v6</li>
+        <li>Tailwind CSS + shadcn/ui</li>
+        <li>React Hook Form + Zod</li>
+        <li>Axios for API calls</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-icon">⚙️</div>
+      <h3>Backend (Node + Express)</h3>
+      <p>RESTful API server with JWT authentication, role-based access, file uploads via Cloudinary, and comprehensive middleware.</p>
+      <ul>
+        <li>Node.js + Express 4</li>
+        <li>JWT + Bcrypt Auth</li>
+        <li>Multer + Cloudinary</li>
+        <li>Express Validator</li>
+        <li>Morgan + Winston logs</li>
+        <li>CORS + Helmet security</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-icon">🗄️</div>
+      <h3>Database (MongoDB)</h3>
+      <p>NoSQL document database with Mongoose ODM, indexed queries for performance, and well-structured schemas with relationships.</p>
+      <ul>
+        <li>MongoDB Atlas (cloud)</li>
+        <li>Mongoose v7 ODM</li>
+        <li>Text search indexes</li>
+        <li>Aggregation pipelines</li>
+        <li>GridFS for large files</li>
+        <li>Transactions support</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔐</div>
+      <h3>Authentication</h3>
+      <p>Secure JWT-based auth with access + refresh tokens, HTTP-only cookies, Google OAuth optional, and protected route guards.</p>
+      <ul>
+        <li>Access Token (15 min)</li>
+        <li>Refresh Token (7 days)</li>
+        <li>HTTP-only cookies</li>
+        <li>Google OAuth 2.0</li>
+        <li>Email verification</li>
+        <li>Password reset flow</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-icon">☁️</div>
+      <h3>Media & Storage</h3>
+      <p>Image upload pipeline with Multer middleware, Cloudinary CDN storage, automatic resizing and optimization.</p>
+      <ul>
+        <li>Multer file upload</li>
+        <li>Cloudinary CDN</li>
+        <li>Image auto-resize</li>
+        <li>WebP conversion</li>
+        <li>Lazy loading on FE</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-icon">🚀</div>
+      <h3>Deployment</h3>
+      <p>Production-ready deployment with CI/CD pipeline, Docker containers, and cloud hosting for both frontend and backend.</p>
+      <ul>
+        <li>Frontend → Vercel</li>
+        <li>Backend → Railway / Render</li>
+        <li>DB → MongoDB Atlas</li>
+        <li>Docker + docker-compose</li>
+        <li>GitHub Actions CI/CD</li>
+        <li>ENV-based config</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- 2. WIREFRAMES -->
+<div class="section">
+  <div class="section-label">
+    <div class="section-num">2</div>
+    <div class="section-title">Page Wireframes</div>
+  </div>
+  <div class="wireframe-grid">
+
+    <!-- Home Page -->
+    <div class="wireframe">
+      <div class="wireframe-header">
+        <div class="wireframe-dots"><span></span><span></span><span></span></div>
+        🏠 Home / Landing Page
+      </div>
+      <div class="wireframe-body">
+        <div class="wf-nav">
+          <div class="wf-nav-logo"></div>
+          <div class="wf-nav-links"><span></span><span></span><span></span></div>
+          <div class="wf-nav-btn"></div>
+        </div>
+        <div class="wf-hero-banner">
+          <div class="wf-h1"></div>
+          <div class="wf-sub"></div>
+          <div class="wf-cta"></div>
+        </div>
+        <div class="wf-search">
+          <div class="wf-search-icon"></div>
+          <div class="wf-search-bar"></div>
+        </div>
+        <div style="height:8px;background:var(--border);border-radius:2px;width:120px;margin-bottom:10px;opacity:0.5;"></div>
+        <div class="wf-recipe-cards">
+          <div class="wf-recipe-card"><div class="wf-recipe-img"></div><div class="wf-recipe-info"><div class="line1"></div><div class="line2"></div></div></div>
+          <div class="wf-recipe-card"><div class="wf-recipe-img"></div><div class="wf-recipe-info"><div class="line1"></div><div class="line2"></div></div></div>
+          <div class="wf-recipe-card"><div class="wf-recipe-img"></div><div class="wf-recipe-info"><div class="line1"></div><div class="line2"></div></div></div>
+        </div>
+        <div style="font-size:10px;color:var(--gray);text-align:center;margin-top:4px;">Trending · Latest · Featured sections below</div>
+      </div>
+    </div>
+
+    <!-- Sign Up / Sign In -->
+    <div class="wireframe">
+      <div class="wireframe-header">
+        <div class="wireframe-dots"><span></span><span></span><span></span></div>
+        🔑 Sign Up / Sign In
+      </div>
+      <div class="wireframe-body">
+        <div class="wf-nav"><div class="wf-nav-logo"></div></div>
+        <div class="wf-form-card">
+          <div class="wf-form-title"></div>
+          <div class="wf-input"><div class="label"></div></div>
+          <div class="wf-input"><div class="label"></div></div>
+          <div class="wf-input" style="display:none"></div>
+          <div class="wf-btn"><div class="label"></div></div>
+          <div class="wf-divider">— or continue with —</div>
+          <div class="wf-social-btns">
+            <div class="wf-social"></div>
+            <div class="wf-social"></div>
+          </div>
+        </div>
+        <div style="font-size:10px;color:var(--gray);text-align:center;">Toggle Sign In / Sign Up tab · Forgot Password link</div>
+      </div>
+    </div>
+
+    <!-- Recipe Detail -->
+    <div class="wireframe">
+      <div class="wireframe-header">
+        <div class="wireframe-dots"><span></span><span></span><span></span></div>
+        🍽️ Recipe Detail Page
+      </div>
+      <div class="wireframe-body">
+        <div class="wf-nav"><div class="wf-nav-logo"></div><div class="wf-nav-links" style="margin-left:auto"><span></span><span></span></div></div>
+        <div class="wf-recipe-detail-img"></div>
+        <div class="wf-detail-meta">
+          <div class="wf-meta-badge"></div>
+          <div class="wf-meta-badge"></div>
+          <div class="wf-meta-badge"></div>
+        </div>
+        <div class="wf-detail-h1"></div>
+        <div class="wf-detail-desc">
+          <div class="l"></div><div class="l"></div><div class="l"></div>
+        </div>
+        <div class="wf-ingredients-section">
+          <div class="wf-ingredients-card">
+            <div class="wf-section-h"></div>
+            <div class="wf-ing-item"><div class="dot"></div><div class="line"></div></div>
+            <div class="wf-ing-item"><div class="dot"></div><div class="line"></div></div>
+            <div class="wf-ing-item"><div class="dot"></div><div class="line"></div></div>
+          </div>
+          <div class="wf-steps-card">
+            <div class="wf-section-h"></div>
+            <div class="wf-step"><div class="num"></div><div class="wf-step-lines"><div class="l"></div><div class="l"></div></div></div>
+            <div class="wf-step"><div class="num"></div><div class="wf-step-lines"><div class="l"></div><div class="l"></div></div></div>
+          </div>
+        </div>
+        <div class="wf-like-follow">
+          <div class="wf-like-btn"><div class="l"></div></div>
+          <div class="wf-follow-btn"><div class="l"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- User Dashboard -->
+    <div class="wireframe">
+      <div class="wireframe-header">
+        <div class="wireframe-dots"><span></span><span></span><span></span></div>
+        📊 User Dashboard
+      </div>
+      <div class="wireframe-body">
+        <div class="wf-nav"><div class="wf-nav-logo"></div><div style="width:28px;height:28px;background:var(--rust);border-radius:50%;margin-left:auto"></div></div>
+        <div class="wf-dashboard-body" style="margin-top:10px">
+          <div class="wf-sidebar">
+            <div class="wf-sidebar-icon active"></div>
+            <div class="wf-sidebar-icon"></div>
+            <div class="wf-sidebar-icon"></div>
+            <div class="wf-sidebar-icon"></div>
+          </div>
+          <div class="wf-main-area">
+            <div class="wf-stats-row">
+              <div class="wf-stat"><div class="num"></div><div class="lbl"></div></div>
+              <div class="wf-stat"><div class="num"></div><div class="lbl"></div></div>
+              <div class="wf-stat"><div class="num"></div><div class="lbl"></div></div>
+            </div>
+            <div class="wf-my-recipes">
+              <div class="wf-mr-header"><div class="wf-mr-title"></div><div class="wf-add-btn"></div></div>
+              <div class="wf-recipe-list-item"><div class="wf-rli-img"></div><div class="wf-rli-info"><div class="t1"></div><div class="t2"></div></div><div class="wf-rli-actions"><span></span><span class="del"></span></div></div>
+              <div class="wf-recipe-list-item"><div class="wf-rli-img"></div><div class="wf-rli-info"><div class="t1"></div><div class="t2"></div></div><div class="wf-rli-actions"><span></span><span class="del"></span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chef Profile -->
+    <div class="wireframe">
+      <div class="wireframe-header">
+        <div class="wireframe-dots"><span></span><span></span><span></span></div>
+        👨‍🍳 Chef Public Profile
+      </div>
+      <div class="wireframe-body">
+        <div class="wf-nav"><div class="wf-nav-logo"></div></div>
+        <div style="background:linear-gradient(135deg,var(--forest),var(--forest-light));height:60px;border-radius:8px 8px 0 0;margin-bottom:0;position:relative">
+          <div style="position:absolute;bottom:-20px;left:16px;width:44px;height:44px;background:var(--gold);border-radius:50%;border:3px solid #fff"></div>
+        </div>
+        <div style="background:var(--gray-light);border-radius:0 0 8px 8px;padding:28px 16px 14px;margin-bottom:12px">
+          <div style="height:10px;background:var(--charcoal);opacity:0.5;border-radius:2px;width:100px;margin-bottom:6px"></div>
+          <div style="height:7px;background:var(--border);border-radius:2px;width:70%;margin-bottom:12px"></div>
+          <div style="display:flex;gap:16px;margin-bottom:12px">
+            <div style="text-align:center"><div style="height:14px;width:30px;background:var(--charcoal);opacity:0.4;border-radius:2px;margin-bottom:3px"></div><div style="height:7px;width:40px;background:var(--border);border-radius:2px"></div></div>
+            <div style="text-align:center"><div style="height:14px;width:30px;background:var(--charcoal);opacity:0.4;border-radius:2px;margin-bottom:3px"></div><div style="height:7px;width:40px;background:var(--border);border-radius:2px"></div></div>
+          </div>
+          <div style="height:30px;background:var(--forest);border-radius:6px;display:flex;align-items:center;justify-content:center"><div style="height:8px;width:60px;background:rgba(255,255,255,0.5);border-radius:2px"></div></div>
+        </div>
+        <div class="wf-recipe-cards">
+          <div class="wf-recipe-card"><div class="wf-recipe-img"></div><div class="wf-recipe-info"><div class="line1"></div><div class="line2"></div></div></div>
+          <div class="wf-recipe-card"><div class="wf-recipe-img"></div><div class="wf-recipe-info"><div class="line1"></div><div class="line2"></div></div></div>
+          <div class="wf-recipe-card"><div class="wf-recipe-img"></div><div class="wf-recipe-info"><div class="line1"></div><div class="line2"></div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create/Edit Recipe -->
+    <div class="wireframe">
+      <div class="wireframe-header">
+        <div class="wireframe-dots"><span></span><span></span><span></span></div>
+        ✏️ Create / Edit Recipe
+      </div>
+      <div class="wireframe-body">
+        <div class="wf-nav"><div class="wf-nav-logo"></div></div>
+        <div style="background:var(--gray-light);border-radius:8px;padding:14px;margin-top:8px">
+          <div style="height:10px;background:var(--charcoal);opacity:0.4;border-radius:2px;width:100px;margin-bottom:12px"></div>
+          <div class="wf-input" style="margin-bottom:8px"><div class="label" style="width:80px"></div></div>
+          <div style="height:60px;background:#fff;border:1px solid var(--border);border-radius:4px;margin-bottom:8px"></div>
+          <div style="background:#fff;border:2px dashed var(--border);border-radius:6px;height:44px;display:flex;align-items:center;justify-content:center;margin-bottom:8px">
+            <div style="height:8px;width:80px;background:var(--border);border-radius:2px"></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+            <div class="wf-input"><div class="label"></div></div>
+            <div class="wf-input"><div class="label"></div></div>
+          </div>
+          <div style="height:8px;background:var(--border);border-radius:2px;width:80px;margin-bottom:8px;opacity:0.5"></div>
+          <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px">
+            <div style="display:flex;gap:6px"><div style="flex:1;height:28px;background:#fff;border:1px solid var(--border);border-radius:4px"></div><div style="width:28px;height:28px;background:rgba(200,80,26,0.15);border-radius:4px"></div></div>
+            <div style="display:flex;gap:6px"><div style="flex:1;height:28px;background:#fff;border:1px solid var(--border);border-radius:4px"></div><div style="width:28px;height:28px;background:rgba(200,80,26,0.15);border-radius:4px"></div></div>
+          </div>
+          <div class="wf-btn"><div class="label"></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 3. DATABASE SCHEMA -->
+<div class="section">
+  <div class="section-label">
+    <div class="section-num">3</div>
+    <div class="section-title">MongoDB Database Schema</div>
+  </div>
+  <div class="schema-grid">
+
+    <!-- User -->
+    <div class="schema-card">
+      <div class="schema-header"><span>👤</span><h3>User</h3><div class="coll">Collection</div></div>
+      <div class="schema-body">
+        <div class="field"><span class="field-name">_id</span><span class="field-type">ObjectId</span><span class="field-note">Auto-generated</span><span class="field-badge badge-pk">PK</span></div>
+        <div class="field"><span class="field-name">username</span><span class="field-type">String</span><span class="field-note">Unique, 3–30 chars</span><span class="field-badge badge-idx">IDX</span></div>
+        <div class="field"><span class="field-name">email</span><span class="field-type">String</span><span class="field-note">Unique, validated</span><span class="field-badge badge-idx">IDX</span></div>
+        <div class="field"><span class="field-name">password</span><span class="field-type">String</span><span class="field-note">Bcrypt hashed</span><span class="field-badge badge-req">REQ</span></div>
+        <div class="field"><span class="field-name">avatar</span><span class="field-type">String</span><span class="field-note">Cloudinary URL</span></div>
+        <div class="field"><span class="field-name">bio</span><span class="field-type">String</span><span class="field-note">Max 250 chars</span></div>
+        <div class="field"><span class="field-name">followers</span><span class="field-type">[ObjectId]</span><span class="field-note">Ref → User</span><span class="field-badge badge-fk">FK</span></div>
+        <div class="field"><span class="field-name">following</span><span class="field-type">[ObjectId]</span><span class="field-note">Ref → User</span><span class="field-badge badge-fk">FK</span></div>
+        <div class="field"><span class="field-name">isVerified</span><span class="field-type">Boolean</span><span class="field-note">Email verified flag</span></div>
+        <div class="field"><span class="field-name">refreshToken</span><span class="field-type">String</span><span class="field-note">JWT refresh token</span></div>
+        <div class="field"><span class="field-name">role</span><span class="field-type">String</span><span class="field-note">user | admin</span></div>
+        <div class="field"><span class="field-name">createdAt</span><span class="field-type">Date</span><span class="field-note">Auto timestamp</span></div>
+      </div>
+    </div>
+
+    <!-- Recipe -->
+    <div class="schema-card">
+      <div class="schema-header"><span>🍲</span><h3>Recipe</h3><div class="coll">Collection</div></div>
+      <div class="schema-body">
+        <div class="field"><span class="field-name">_id</span><span class="field-type">ObjectId</span><span class="field-note">Auto-generated</span><span class="field-badge badge-pk">PK</span></div>
+        <div class="field"><span class="field-name">title</span><span class="field-type">String</span><span class="field-note">Required, text-indexed</span><span class="field-badge badge-req">REQ</span></div>
+        <div class="field"><span class="field-name">slug</span><span class="field-type">String</span><span class="field-note">URL-friendly unique</span><span class="field-badge badge-idx">IDX</span></div>
+        <div class="field"><span class="field-name">description</span><span class="field-type">String</span><span class="field-note">Short summary</span></div>
+        <div class="field"><span class="field-name">author</span><span class="field-type">ObjectId</span><span class="field-note">Ref → User</span><span class="field-badge badge-fk">FK</span></div>
+        <div class="field"><span class="field-name">coverImage</span><span class="field-type">String</span><span class="field-note">Cloudinary URL</span></div>
+        <div class="field"><span class="field-name">ingredients</span><span class="field-type">[Object]</span><span class="field-note">{name, qty, unit}</span></div>
+        <div class="field"><span class="field-name">steps</span><span class="field-type">[Object]</span><span class="field-note">{order, instruction, image?}</span></div>
+        <div class="field"><span class="field-name">category</span><span class="field-type">String</span><span class="field-note">breakfast/lunch/dinner/etc</span></div>
+        <div class="field"><span class="field-name">cuisine</span><span class="field-type">String</span><span class="field-note">Indian, Italian, etc.</span></div>
+        <div class="field"><span class="field-name">tags</span><span class="field-type">[String]</span><span class="field-note">Searchable tags</span></div>
+        <div class="field"><span class="field-name">prepTime</span><span class="field-type">Number</span><span class="field-note">Minutes</span></div>
+        <div class="field"><span class="field-name">cookTime</span><span class="field-type">Number</span><span class="field-note">Minutes</span></div>
+        <div class="field"><span class="field-name">servings</span><span class="field-type">Number</span><span class="field-note">No. of servings</span></div>
+        <div class="field"><span class="field-name">difficulty</span><span class="field-type">String</span><span class="field-note">easy/medium/hard</span></div>
+        <div class="field"><span class="field-name">likes</span><span class="field-type">[ObjectId]</span><span class="field-note">Ref → User</span><span class="field-badge badge-fk">FK</span></div>
+        <div class="field"><span class="field-name">isPublished</span><span class="field-type">Boolean</span><span class="field-note">Draft vs published</span></div>
+        <div class="field"><span class="field-name">views</span><span class="field-type">Number</span><span class="field-note">View counter</span></div>
+        <div class="field"><span class="field-name">createdAt</span><span class="field-type">Date</span><span class="field-note">Auto timestamp</span></div>
+      </div>
+    </div>
+
+    <!-- Comment -->
+    <div class="schema-card">
+      <div class="schema-header"><span>💬</span><h3>Comment</h3><div class="coll">Collection</div></div>
+      <div class="schema-body">
+        <div class="field"><span class="field-name">_id</span><span class="field-type">ObjectId</span><span class="field-note">Auto-generated</span><span class="field-badge badge-pk">PK</span></div>
+        <div class="field"><span class="field-name">recipe</span><span class="field-type">ObjectId</span><span class="field-note">Ref → Recipe</span><span class="field-badge badge-fk">FK</span></div>
+        <div class="field"><span class="field-name">author</span><span class="field-type">ObjectId</span><span class="field-note">Ref → User</span><span class="field-badge badge-fk">FK</span></div>
+        <div class="field"><span class="field-name">content</span><span class="field-type">String</span><span class="field-note">Max 1000 chars</span><span class="field-badge badge-req">REQ</span></div>
+        <div class="field"><span class="field-name">likes</span><span class="field-type">[ObjectId]</span><span class="field-note">Ref → User</span></div>
+        <div class="field"><span class="field-name">parentComment</span><span class="field-type">ObjectId</span><span class="field-note">Nested replies</span><span class="field-badge badge-fk">FK</span></div>
+        <div class="field"><span class="field-name">createdAt</span><span class="field-type">Date</span><span class="field-note">Auto timestamp</span></div>
+      </div>
+    </div>
+
+    <!-- SavedRecipe -->
+    <div class="schema-card">
+      <div class="schema-header"><span>🔖</span><h3>SavedRecipe</h3><div class="coll">Collection</div></div>
+      <div class="schema-body">
+        <div class="field"><span class="field-name">_id</span><span class="field-type">ObjectId</span><span class="field-note">Auto-generated</span><span class="field-badge badge-pk">PK</span></div>
+        <div class="field"><span class="field-name">user</span><span class="field-type">ObjectId</span><span class="field-note">Ref → User</span><span class="field-badge badge-fk">FK</span></div>
+        <div class="field"><span class="field-name">recipe</span><span class="field-type">ObjectId</span><span class="field-note">Ref → Recipe</span><span class="field-badge badge-fk">FK</span></div>
+        <div class="field"><span class="field-name">savedAt</span><span class="field-type">Date</span><span class="field-note">Timestamp</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 4. API ROUTES -->
+<div class="section">
+  <div class="section-label">
+    <div class="section-num">4</div>
+    <div class="section-title">REST API Endpoints</div>
+  </div>
+
+  <div class="api-section">
+    <div class="api-section-title">🔑 Auth Routes — /api/auth</div>
+    <div class="route"><span class="method POST">POST</span><span class="route-path">/api/auth/register</span><span class="route-desc">Register new user, send verification email</span><span class="route-auth public">Public</span></div>
+    <div class="route"><span class="method POST">POST</span><span class="route-path">/api/auth/login</span><span class="route-desc">Login with email/password, return JWT tokens</span><span class="route-auth public">Public</span></div>
+    <div class="route"><span class="method POST">POST</span><span class="route-path">/api/auth/logout</span><span class="route-desc">Logout user, clear refresh token cookie</span><span class="route-auth">Private</span></div>
+    <div class="route"><span class="method POST">POST</span><span class="route-path">/api/auth/refresh-token</span><span class="route-desc">Get new access token using refresh token</span><span class="route-auth public">Public</span></div>
+    <div class="route"><span class="method GET">GET</span><span class="route-path">/api/auth/verify-email/:token</span><span class="route-desc">Verify email address from link</span><span class="route-auth public">Public</span></div>
+    <div class="route"><span class="method POST">POST</span><span class="route-path">/api/auth/forgot-password</span><span class="route-desc">Send password reset email</span><span class="route-auth public">Public</span></div>
+    <div class="route"><span class="method POST">POST</span><span class="route-path">/api/auth/reset-password/:token</span><span class="route-desc">Reset password using token from email</span><span class="route-auth public">Public</span></div>
+    <div class="route"><span class="method GET">GET</span><span class="route-path">/api/auth/google</span><span class="route-desc">Initiate Google OAuth 2.0 flow</span><span class="route-auth public">Public</span></div>
+  </div>
+
+  <div class="api-section">
+    <div class="api-section-title">👤 User Routes — /api/users</div>
+    <div class="route"><span class="method GET">GET</span><span class="route-path">/api/users/me</span><span class="route-desc">Get current logged-in user profile</span><span class="route-auth">Private</span></div>
+    <div class="route"><span class="method PUT">PUT</span><span class="route-path">/api/users/me</span><span class="route-desc">Update profile (name, bio, avatar)</span><span class="route-auth">Private</span></div>
+    <div class="route"><span class="method DELETE">DELETE</span><span class="route-path">/api/users/me</span><span class="route-desc">Delete user account and all associated data</span><span class="route-auth">Private</span></div>
+    <div class="route"><span class="method GET">GET</span><span class="route-path">/api/users/:username</span><span class="route-desc">View public profile of any user by username</span><span class="route-auth public">Public</span></div>
+    <div class="route"><span class="method POST">POST</span><span class="route-path">/api/users/:id/follow</span><span class="route-desc">Follow or unfollow a user (toggle)</span><span class="route-auth">Private</span></div>
+    <div class="route"><span class="method GET">GET</span><span class="route-path">/api/users/:id/followers</span><span class="route-desc">Get list of user's followers</span><span class="route-auth public">Public</span></div>
+    <div class="route"><span class="method GET">GET</span><span class="route-path">/api/users/:id/following</span><span class="route-desc">Get list of users that this user follows</span><span class="route-auth public">Public</span></div>
+    <div class="route"><span class="method GET">GET</span><span class="route-path">/api/users/me/saved-recipes</span><span class="route-desc">Get all recipes saved/bookmarked by user</span><span class="route-auth">Private</span></div>
+  </div>
+
+  <div class="api-section">
+    <div class="api-section-title">🍲 Recipe Routes — /api/recipes</div>
+    <div class="route"><span class="method GET">GET</span><span class="route-path">/api/recipes</span><span class="route-desc">Get all published recipes (pagination, filter, sort)</span><span class="route-auth public">Public</span></div>
+    <div class="route"><span class="method GET">GET</span><span class="route-path">/api/recipes/search?q=</span><span class="route-desc">Full-text search by title, tag, ingredient</span><span class="route-auth public">Public</span></div>
+    <div class="route"><span class="method GET">GET</span><span class="route-path">/api/recipes/trending</span><span class="route-desc">Get trending recipes (by likes + views)</span><span class="route-auth public">Public</span></div>
+    <div class="route"><span class="method GET">GET</span><span class="route-path">/api/recipes/feed</span><span class="route-desc">Personalized feed from followed users</span><span class="route-auth">Private</span></div>
+    <div class="route"><span class="method GET">GET</span><span class="route-path">/api/recipes/:slug</span><span class="route-desc">Get single recipe by slug, increment views</span><span class="route-auth public">Public</span></div>
+    <div class="route"><span class="method POST">POST</span><span class="route-path">/api/recipes</span><span class="route-desc">Create new recipe (with image upload)</span><span class="route-auth">Private</span></div>
+    <div class="route"><span class="method PUT">PUT</span><span class="route-path">/api/recipes/:id</span><span class="route-desc">Update recipe (author only)</span><span class="route-auth">Private</span></div>
+    <div class="route"><span class="method DELETE">DELETE</span><span class="route-path">/api/recipes/:id</span><span class="route-desc">Delete recipe and its comments (author only)</span><span class="route-auth">Private</span></div>
+    <div class="route"><span class="method POST">POST</span><span class="route-path">/api/recipes/:id/like</span><span class="route-desc">Like or unlike recipe (toggle)</span><span class="route-auth">Private</span></div>
+    <div class="route"><span class="method POST">POST</span><span class="route-path">/api/recipes/:id/save</span><span class="route-desc">Save or unsave recipe to bookmarks (toggle)</span><span class="route-auth">Private</span></div>
+    <div class="route"><span class="method GET">GET</span><span class="route-path">/api/recipes/user/:userId</span><span class="route-desc">Get all recipes by a specific user</span><span class="route-auth public">Public</span></div>
+  </div>
+
+  <div class="api-section">
+    <div class="api-section-title">💬 Comment Routes — /api/recipes/:id/comments</div>
+    <div class="route"><span class="method GET">GET</span><span class="route-path">/api/recipes/:id/comments</span><span class="route-desc">Get all comments for a recipe (paginated)</span><span class="route-auth public">Public</span></div>
+    <div class="route"><span class="method POST">POST</span><span class="route-path">/api/recipes/:id/comments</span><span class="route-desc">Post a new comment on a recipe</span><span class="route-auth">Private</span></div>
+    <div class="route"><span class="method PUT">PUT</span><span class="route-path">/api/comments/:commentId</span><span class="route-desc">Edit comment (author only)</span><span class="route-auth">Private</span></div>
+    <div class="route"><span class="method DELETE">DELETE</span><span class="route-path">/api/comments/:commentId</span><span class="route-desc">Delete comment (author or recipe author)</span><span class="route-auth">Private</span></div>
+  </div>
+</div>
+
+<!-- 5. FOLDER STRUCTURE -->
+<div class="section">
+  <div class="section-label">
+    <div class="section-num">5</div>
+    <div class="section-title">Project Folder Structure</div>
+  </div>
+  <div class="folder-grid">
+    <div class="folder-tree">
+      <div class="tree-title">📁 Backend (Node + Express)</div>
+<span class="dir">server/</span>
+├── <span class="dir">src/</span>
+│   ├── <span class="dir">config/</span>
+│   │   ├── <span class="file">db.js</span>          <span class="comment">// MongoDB connect</span>
+│   │   ├── <span class="file">cloudinary.js</span>  <span class="comment">// CDN config</span>
+│   │   └── <span class="file">passport.js</span>    <span class="comment">// OAuth strategy</span>
+│   ├── <span class="dir">controllers/</span>
+│   │   ├── <span class="file">auth.controller.js</span>
+│   │   ├── <span class="file">user.controller.js</span>
+│   │   ├── <span class="file">recipe.controller.js</span>
+│   │   └── <span class="file">comment.controller.js</span>
+│   ├── <span class="dir">middleware/</span>
+│   │   ├── <span class="file">auth.middleware.js</span>
+│   │   ├── <span class="file">upload.middleware.js</span>
+│   │   ├── <span class="file">validate.middleware.js</span>
+│   │   └── <span class="file">error.middleware.js</span>
+│   ├── <span class="dir">models/</span>
+│   │   ├── <span class="file">User.model.js</span>
+│   │   ├── <span class="file">Recipe.model.js</span>
+│   │   ├── <span class="file">Comment.model.js</span>
+│   │   └── <span class="file">SavedRecipe.model.js</span>
+│   ├── <span class="dir">routes/</span>
+│   │   ├── <span class="file">auth.routes.js</span>
+│   │   ├── <span class="file">user.routes.js</span>
+│   │   ├── <span class="file">recipe.routes.js</span>
+│   │   └── <span class="file">comment.routes.js</span>
+│   ├── <span class="dir">utils/</span>
+│   │   ├── <span class="file">generateTokens.js</span>
+│   │   ├── <span class="file">sendEmail.js</span>
+│   │   ├── <span class="file">slugify.js</span>
+│   │   └── <span class="file">ApiError.js</span>
+│   └── <span class="file highlight">app.js</span>          <span class="comment">// Express app setup</span>
+├── <span class="file highlight">server.js</span>          <span class="comment">// Entry point</span>
+├── <span class="file">.env.example</span>
+└── <span class="file">package.json</span>
+    </div>
+    <div class="folder-tree">
+      <div class="tree-title">📁 Frontend (React + Vite)</div>
+<span class="dir">client/</span>
+├── <span class="dir">src/</span>
+│   ├── <span class="dir">app/</span>
+│   │   └── <span class="file">store.js</span>        <span class="comment">// Redux store</span>
+│   ├── <span class="dir">features/</span>
+│   │   ├── <span class="dir">auth/</span>
+│   │   │   ├── <span class="file">authSlice.js</span>
+│   │   │   └── <span class="file">authApi.js</span>
+│   │   ├── <span class="dir">recipes/</span>
+│   │   │   ├── <span class="file">recipesSlice.js</span>
+│   │   │   └── <span class="file">recipesApi.js</span>
+│   │   └── <span class="dir">users/</span>
+│   ├── <span class="dir">components/</span>
+│   │   ├── <span class="dir">common/</span>   <span class="comment">// Button, Input, Modal</span>
+│   │   ├── <span class="dir">recipe/</span>   <span class="comment">// RecipeCard, RecipeForm</span>
+│   │   ├── <span class="dir">user/</span>     <span class="comment">// ProfileCard, FollowBtn</span>
+│   │   └── <span class="dir">layout/</span>   <span class="comment">// Navbar, Footer, Sidebar</span>
+│   ├── <span class="dir">pages/</span>
+│   │   ├── <span class="file">Home.jsx</span>
+│   │   ├── <span class="file">Login.jsx</span>
+│   │   ├── <span class="file">Register.jsx</span>
+│   │   ├── <span class="file">RecipeDetail.jsx</span>
+│   │   ├── <span class="file">CreateRecipe.jsx</span>
+│   │   ├── <span class="file">EditRecipe.jsx</span>
+│   │   ├── <span class="file">Dashboard.jsx</span>
+│   │   ├── <span class="file">Profile.jsx</span>
+│   │   └── <span class="file">Search.jsx</span>
+│   ├── <span class="dir">hooks/</span>         <span class="comment">// useAuth, useDebounce</span>
+│   ├── <span class="dir">utils/</span>         <span class="comment">// formatDate, axios</span>
+│   ├── <span class="dir">routes/</span>
+│   │   └── <span class="file highlight">ProtectedRoute.jsx</span>
+│   └── <span class="file highlight">main.jsx</span>
+├── <span class="file">.env.example</span>
+└── <span class="file">package.json</span>
+    </div>
+  </div>
+</div>
+
+<!-- 6. REACT COMPONENTS -->
+<div class="section">
+  <div class="section-label">
+    <div class="section-num">6</div>
+    <div class="section-title">Key React Components</div>
+  </div>
+  <div class="comp-grid">
+    <div class="comp-item"><div class="comp-icon">🃏</div><h4>RecipeCard</h4><p>Cover image, title, author, cook time, likes count, save button. Used in grids and feeds.</p></div>
+    <div class="comp-item"><div class="comp-icon">📝</div><h4>RecipeForm</h4><p>Create/Edit form with dynamic ingredient rows, step reordering, image upload, and tag input.</p></div>
+    <div class="comp-item"><div class="comp-icon">👤</div><h4>UserAvatar</h4><p>Avatar with online indicator, size variants, fallback initials when no image is set.</p></div>
+    <div class="comp-item"><div class="comp-icon">➕</div><h4>FollowButton</h4><p>Toggle follow/unfollow with optimistic UI update and follower count display.</p></div>
+    <div class="comp-item"><div class="comp-icon">❤️</div><h4>LikeButton</h4><p>Animated like toggle with count. Updates Redux state optimistically on click.</p></div>
+    <div class="comp-item"><div class="comp-icon">🔖</div><h4>SaveButton</h4><p>Bookmark recipe. Persists to user's saved list. Toast feedback on save/unsave.</p></div>
+    <div class="comp-item"><div class="comp-icon">🔍</div><h4>SearchBar</h4><p>Debounced search with autocomplete dropdown, supports ingredient and tag filters.</p></div>
+    <div class="comp-item"><div class="comp-icon">💬</div><h4>CommentSection</h4><p>Threaded comments with replies, like support, pagination, and author controls.</p></div>
+    <div class="comp-item"><div class="comp-icon">🏷️</div><h4>TagFilter</h4><p>Clickable category/cuisine/difficulty chips for filtering recipe lists.</p></div>
+    <div class="comp-item"><div class="comp-icon">📊</div><h4>DashboardStats</h4><p>Shows total recipes, likes received, followers, and views in metric cards.</p></div>
+    <div class="comp-item"><div class="comp-icon">🛡️</div><h4>ProtectedRoute</h4><p>HOC that redirects unauthenticated users to login. Wraps private pages.</p></div>
+    <div class="comp-item"><div class="comp-icon">🔔</div><h4>Toast / Alerts</h4><p>Global notification system for success, error, and info messages via Redux.</p></div>
+  </div>
+</div>
+
+<!-- 7. USER FLOWS -->
+<div class="section">
+  <div class="section-label">
+    <div class="section-num">7</div>
+    <div class="section-title">User Flows</div>
+  </div>
+
+  <div style="margin-bottom:32px">
+    <h3 style="font-family:'Playfair Display',serif;font-size:18px;margin-bottom:12px;color:var(--forest)">Registration & Login Flow</h3>
+    <div class="flow-diagram">
+      <div class="flow-step start">Visit Site</div><div class="flow-arrow">→</div>
+      <div class="flow-step">Click Sign Up</div><div class="flow-arrow">→</div>
+      <div class="flow-step">Fill Form</div><div class="flow-arrow">→</div>
+      <div class="flow-step decision">Email Exists?</div><div class="flow-arrow">→ No →</div>
+      <div class="flow-step">Create Account</div><div class="flow-arrow">→</div>
+      <div class="flow-step">Verify Email</div><div class="flow-arrow">→</div>
+      <div class="flow-step end">Dashboard</div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:32px">
+    <h3 style="font-family:'Playfair Display',serif;font-size:18px;margin-bottom:12px;color:var(--forest)">Create Recipe Flow</h3>
+    <div class="flow-diagram">
+      <div class="flow-step start">Dashboard</div><div class="flow-arrow">→</div>
+      <div class="flow-step">New Recipe</div><div class="flow-arrow">→</div>
+      <div class="flow-step">Fill Details</div><div class="flow-arrow">→</div>
+      <div class="flow-step">Upload Image</div><div class="flow-arrow">→</div>
+      <div class="flow-step">Add Ingredients</div><div class="flow-arrow">→</div>
+      <div class="flow-step">Write Steps</div><div class="flow-arrow">→</div>
+      <div class="flow-step decision">Save Draft?</div><div class="flow-arrow">→ No →</div>
+      <div class="flow-step end">Published!</div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:32px">
+    <h3 style="font-family:'Playfair Display',serif;font-size:18px;margin-bottom:12px;color:var(--forest)">Discovery & Engagement Flow</h3>
+    <div class="flow-diagram">
+      <div class="flow-step start">Browse / Search</div><div class="flow-arrow">→</div>
+      <div class="flow-step">View Recipe</div><div class="flow-arrow">→</div>
+      <div class="flow-step decision">Logged In?</div><div class="flow-arrow">→ Yes →</div>
+      <div class="flow-step">Like / Save</div><div class="flow-arrow">→</div>
+      <div class="flow-step">View Profile</div><div class="flow-arrow">→</div>
+      <div class="flow-step end">Follow Chef</div>
+    </div>
+  </div>
+</div>
+
+<!-- 8. ENV VARS -->
+<div class="section">
+  <div class="section-label">
+    <div class="section-num">8</div>
+    <div class="section-title">Environment Variables</div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+    <div>
+      <div style="font-family:'Playfair Display',serif;font-size:16px;margin-bottom:12px;color:var(--forest)">Backend (.env)</div>
+      <table class="env-table">
+        <thead><tr><th>Variable</th><th>Example / Notes</th></tr></thead>
+        <tbody>
+          <tr><td class="env-val">PORT</td><td class="env-desc">5000</td></tr>
+          <tr><td class="env-val">MONGODB_URI</td><td class="env-desc">mongodb+srv://...</td></tr>
+          <tr><td class="env-val">JWT_ACCESS_SECRET</td><td class="env-desc">32+ char random string</td></tr>
+          <tr><td class="env-val">JWT_REFRESH_SECRET</td><td class="env-desc">Different 32+ char string</td></tr>
+          <tr><td class="env-val">JWT_ACCESS_EXPIRES</td><td class="env-desc">15m</td></tr>
+          <tr><td class="env-val">JWT_REFRESH_EXPIRES</td><td class="env-desc">7d</td></tr>
+          <tr><td class="env-val">CLOUDINARY_CLOUD_NAME</td><td class="env-desc">From Cloudinary dashboard</td></tr>
+          <tr><td class="env-val">CLOUDINARY_API_KEY</td><td class="env-desc">From Cloudinary dashboard</td></tr>
+          <tr><td class="env-val">CLOUDINARY_API_SECRET</td><td class="env-desc">From Cloudinary dashboard</td></tr>
+          <tr><td class="env-val">SMTP_HOST</td><td class="env-desc">smtp.gmail.com</td></tr>
+          <tr><td class="env-val">SMTP_USER</td><td class="env-desc">your@gmail.com</td></tr>
+          <tr><td class="env-val">SMTP_PASS</td><td class="env-desc">App password (not main)</td></tr>
+          <tr><td class="env-val">GOOGLE_CLIENT_ID</td><td class="env-desc">From Google Cloud Console</td></tr>
+          <tr><td class="env-val">GOOGLE_CLIENT_SECRET</td><td class="env-desc">From Google Cloud Console</td></tr>
+          <tr><td class="env-val">CLIENT_URL</td><td class="env-desc">http://localhost:5173</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <div style="font-family:'Playfair Display',serif;font-size:16px;margin-bottom:12px;color:var(--forest)">Frontend (.env)</div>
+      <table class="env-table">
+        <thead><tr><th>Variable</th><th>Example / Notes</th></tr></thead>
+        <tbody>
+          <tr><td class="env-val">VITE_API_BASE_URL</td><td class="env-desc">http://localhost:5000/api</td></tr>
+          <tr><td class="env-val">VITE_CLOUDINARY_URL</td><td class="env-desc">https://res.cloudinary.com/...</td></tr>
+          <tr><td class="env-val">VITE_GOOGLE_CLIENT_ID</td><td class="env-desc">For Google login button</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 9. DEVELOPMENT TIMELINE -->
+<div class="section">
+  <div class="section-label">
+    <div class="section-num">9</div>
+    <div class="section-title">Suggested Development Timeline</div>
+  </div>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-header"><span class="timeline-week">Week 1–2</span><span class="timeline-title">Project Setup & Authentication</span></div>
+      <div class="timeline-tasks">
+        <span class="task-tag db">MongoDB Atlas setup</span>
+        <span class="task-tag be">Express server scaffold</span>
+        <span class="task-tag be">User model + auth routes</span>
+        <span class="task-tag be">JWT access + refresh tokens</span>
+        <span class="task-tag fe">Vite + React + Redux setup</span>
+        <span class="task-tag fe">Login / Register pages</span>
+        <span class="task-tag fe">ProtectedRoute component</span>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-header"><span class="timeline-week">Week 3–4</span><span class="timeline-title">Recipe CRUD & Image Upload</span></div>
+      <div class="timeline-tasks">
+        <span class="task-tag be">Recipe model + routes</span>
+        <span class="task-tag be">Multer + Cloudinary upload</span>
+        <span class="task-tag be">Slug generation utility</span>
+        <span class="task-tag fe">RecipeForm (create/edit)</span>
+        <span class="task-tag fe">RecipeCard + RecipeDetail</span>
+        <span class="task-tag fe">Dashboard with recipe list</span>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-header"><span class="timeline-week">Week 5</span><span class="timeline-title">Social Features (Likes, Follow, Comments)</span></div>
+      <div class="timeline-tasks">
+        <span class="task-tag be">Like / Save toggle endpoints</span>
+        <span class="task-tag be">Follow / unfollow endpoint</span>
+        <span class="task-tag be">Comment model + routes</span>
+        <span class="task-tag fe">LikeButton + SaveButton</span>
+        <span class="task-tag fe">FollowButton + ProfilePage</span>
+        <span class="task-tag fe">CommentSection component</span>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-header"><span class="timeline-week">Week 6</span><span class="timeline-title">Search, Feed & Discovery</span></div>
+      <div class="timeline-tasks">
+        <span class="task-tag be">Text search indexes</span>
+        <span class="task-tag be">Trending + Feed endpoints</span>
+        <span class="task-tag be">Filter / sort / pagination</span>
+        <span class="task-tag fe">SearchBar with debounce</span>
+        <span class="task-tag fe">Tag filter chips</span>
+        <span class="task-tag fe">Personalized feed page</span>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-header"><span class="timeline-week">Week 7–8</span><span class="timeline-title">Polish, Testing & Deployment</span></div>
+      <div class="timeline-tasks">
+        <span class="task-tag">Email verification</span>
+        <span class="task-tag">Password reset flow</span>
+        <span class="task-tag">Error boundary + 404 page</span>
+        <span class="task-tag fe">Responsive design polish</span>
+        <span class="task-tag be">API rate limiting + helmet</span>
+        <span class="task-tag">Deploy to Vercel + Railway</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <strong>RecipeCraft</strong> — Full MERN Stack Project Blueprint &nbsp;·&nbsp;
+  MongoDB · Express · React · Node.js &nbsp;·&nbsp;
+  Ready to build 🚀
+</div>
+
+</body>
+</html>

@@ -40,6 +40,14 @@ const express = require('express');
 
 const router = express.Router();
 
+const { getProfile, 
+    updateProfile, 
+    deleteProfile, 
+    getFollowersById,
+    getFollowingById,
+    getUserName,
+    followUserById,
+    getSavedRecipes } = require('../controllers/userController');
 
 router.get('/me', getProfile);
 
@@ -49,11 +57,11 @@ router.Delete('/me', deleteProfile);
 
 router.get('/:username', getUserName);
 
-router.post('/:id/follow', followUser);
+router.post('/:id/follow', followUserById);
 
-router.get('/:id/follower', getFollowers );
+router.get('/:id/followers', getFollowersById );
 
-router.get('/:id/following', getFollowing);
+router.get('/:id/following', getFollowingById);
 
 router.get('/me/saved-recipes', getSavedRecipes);
 

@@ -1,50 +1,63 @@
 // recipes, recipesSearch, recipesFeed, getRecipe, postRecipe, updateRecipe, deleteRecipe, likeRecipe, saveRecipe, getRecipes
 
-const recipes = (req, res)=>{
+
+const  getAllRecipes = (req, res)=>{
     
 }
 
 
-const recipesSearch = (req, res)=>{
+const searchRecipes = (req, res)=>{
     
 }
 
-const searchTrendingRecipes = (req, res)=>{
+const getTrendingRecipes = (req, res)=>{
     
 }
 
-const recipesFeed = (req, res)=>{
-    
-}
-
-
-const getRecipe = (req, res)=>{
-    
-}
-
-const postRecipe = (req, res)=>{
-    
-}
-
-const updateRecipe = (req, res)=>{
-    
-}
-
-const deleteRecipe = (req, res)=>{
-    
-}
-
-const likeRecipe = (req, res)=>{
-    
-}
-
-const saveRecipe = (req, res)=>{
-    
-}
-
-const getRecipes = (req, res)=>{
+const getRecipeFeed = (req, res)=>{
     
 }
 
 
-module.exports = { recipes, searchTrendingRecipes, recipesSearch, recipesFeed, getRecipe, postRecipe, updateRecipe, deleteRecipe, likeRecipe, saveRecipe, getRecipes}
+const getRecipeBySlug = (req, res)=>{
+    
+}
+
+const createRecipe = (req, res)=>{
+    
+}
+
+const updateRecipeById = (req, res)=>{
+    
+}
+
+const deleteRecipeById = (req, res)=>{
+    
+}
+
+const likeRecipeById = (req, res)=>{
+    
+}
+
+const saveRecipeById = (req, res)=>{
+    
+}
+
+const getRecipesByUserId = (req, res)=>{
+    
+}
+
+
+module.exports = {
+  getAllRecipes,
+  searchRecipes,
+  getTrendingRecipes,
+  getRecipeFeed,
+  getRecipeBySlug,
+  createRecipe,
+  updateRecipeById,
+  deleteRecipeById,
+  likeRecipeById,
+  saveRecipeById,
+  getRecipesByUserId
+}

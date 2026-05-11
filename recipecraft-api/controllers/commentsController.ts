@@ -2,20 +2,20 @@
 //getComments, postComments, updateComment, deleteComment
 
 
-const getComments = (req, res)=>{
+const getCommentsById = (req, res)=>{
 
 }
 
-const postComments = (req, res)=>{
+const postCommentsById = (req, res)=>{
 
 }
 
-const updateComment = (req, res)=>{
+const updateCommentById = (req, res)=>{
 
 }
 
-const deleteComment = (req, res) => {
+const deleteCommentById = (req, res) => {
 
 }
 
-module.exports = {getComments, postComments, updateComment, deleteComment}
+module.exports = {getCommentsById, postCommentsById, updateCommentById, deleteCommentById}

@@ -47,33 +47,55 @@ Public
 
 */
 
-import { recipes, searchTrendingRecipes, recipesSearch, recipesFeed, getRecipe, postRecipe, updateRecipe, deleteRecipe, likeRecipe, saveRecipe, getRecipes} from '../controllers/recipeController'
+const {
+  getAllRecipes,
+  searchRecipes,
+  getTrendingRecipes,
+  getRecipeFeed,
+  getRecipeBySlug,
+  createRecipe,
+  updateRecipeById,
+  deleteRecipeById,
+  likeRecipeById,
+  saveRecipeById,
+  getRecipesByUserId
+} = require('../controllers/recipeController');
 
 const express = require('express');
 
 const router = express.Router();
 
-router.get('/', recipes);
+// Get all recipes
+router.get('/', getAllRecipes);
 
-router.get('/search?q=', recipesSearch);
+// Search recipes
+router.get('/search', searchRecipes);
 
-router.get('/trending', searchTrendingRecipes);
+// Trending recipes
+router.get('/trending', getTrendingRecipes);
 
-router.get('/feed', recipesFeed);
+// Recipe feed
+router.get('/feed', getRecipeFeed);
 
-router.get('/:slug', getRecipe);
+// Get single recipe by slug
+router.get('/:slug', getRecipeBySlug);
 
-router.post('/', postRecipe);
+// Create recipe
+router.post('/', createRecipe);
 
-router.put('/:id', updateRecipe);
+// Update recipe
+router.put('/:id', updateRecipeById);
 
-router.Delete('/:id', deleteRecipe);
+// Delete recipe
+router.delete('/:id', deleteRecipeById);
 
-router.post('/:id/like', likeRecipe);
+// Like recipe
+router.post('/:id/like', likeRecipeById);
 
-router.post('/:id/save',saveRecipe);
+// Save recipe
+router.post('/:id/save', saveRecipeById);
 
-router.get('/user/:userId', getRecipes );
-
+// Get recipes by user
+router.get('/user/:userId', getRecipesByUserId);
 
 module.exports = router;

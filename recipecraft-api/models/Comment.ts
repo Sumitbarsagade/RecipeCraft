@@ -1,37 +1,37 @@
-
-import mongoose = require('mongoose');
-
+import mongoose = require("mongoose");
 
 const commentSchema = new mongoose.Schema({
-
-recipe:{
+  recipe: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Recipe'
-},
+    ref: "Recipe",
+    required: true,
+  },
 
-author: {
-   type: mongoose.Schema.Types.ObjectId,
-    ref: 'Recipe' 
-},
+  author: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
 
-content:{
+  content: {
     type: String,
-    required: true
-},
+    required: true,
+    trim: true,
+  },
 
-likes:{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-},
+  likes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
 
-createdAt:{
+  createdAt: {
     type: Date,
-    default: Date.now
-}
+    default: Date.now,
+  },
+});
 
-})
-
-
-const Comment = mongoose.model('Comment', commentSchema )
+const Comment = mongoose.model("Comment", commentSchema);
 
 module.exports = Comment;

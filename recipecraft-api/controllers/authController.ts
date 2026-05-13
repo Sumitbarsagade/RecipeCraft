@@ -4,41 +4,54 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 // Generate JWT Token
-const generateToken = (id) => {
+const generateToken = (id: string) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 };
 const sendMail = require('../utils/sendMail');
 
-const registerUser = async (req: { body: { username: any; email: any; password: any; }; }, res: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: { message: string; token?: any; }): void; new(): any; }; }; })=>{
-   //get username, email, password from request body
-   const {username, email, password} = req.body;
+ const registerUser = (async (req: { body: { username: string;  email: String; password: any; }; }, res: { status: (arg0: number, ) => { (): any; new(): any; json: { (arg0: { success?:boolean; message: string; accessToken?: any;  }): void; new(): any; }; }; } ) => {
+  try{
+  const { username, email, password } = req.body;
 
-   const lowercaseUsername:string = username.toLowerCase();
+  const existingUser = await User.findOne({ email: email });
 
-   //use try catch block to register new User
-   try{
-     //Verify used email already exists in database
-     const existingEmail = await User.findOne({email});
-     if (existingEmail) return res.status(400).json({message: 'Email already exists'});
-     // encrypt the password
-     const hashedPassword = await bcrypt.hash(password, 10);
-     // create an new User Object and store in newUser variable
-     const newUser = new User({username: lowercaseUsername, email: email, password: hashedPassword});
-     // Save the users details in database
-     await newUser.save();
-     
-     //generate token
-     const token = generateToken(newUser._id);
-     res.status(201).json({token:token, message: 'User registed successfully'});
+  if (existingUser) {
+    return res.status(400).json({
+      success: false,
+      message: "Email already exists",
+    });
+  }
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
 
-   }
-   catch(error){
-      res.status(500).json({message: 'Server error'})
-   }
-};
+  const user = await User.create({
+    username,
+    email,
+    password: hashedPassword,
+  });
+
+  const accessToken = generateToken(user._id.toString());
+
+   const refreshToken = generateToken(user._id.toString());
+  user.refreshToken = refreshToken;
+
+  await user.save();
+
+ 
+
+  return res.status(201).json({
+    success: true,
+    message: "User Registered Successfully",
+    accessToken,
+  });
 
 
-const loginUser = async (req: { body: { username: any; email: any; password: any; }; }, res: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: { message: string; token?: any; }): void; new(): any; }; }; })=>{
+} catch(error){
+   res.status(500).json({message:'Sever error'});
+}
+});
+
+const loginUser = async (req: { body: {  email: String; password: any; }; }, res: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: { message: string; token?: any; }): void; new(): any; }; }; })=>{
    const {email, password} = req.body;
    try{
      const user = await User.findOne({email});
@@ -55,7 +68,9 @@ const loginUser = async (req: { body: { username: any; email: any; password: any
    }
 };
 
-const logoutUser = async (req: { body: { username: any; email: any; password: any; }; }, res: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: { message: string; token?: any; }): void; new(): any; }; }; })=>{
+const logoutUser = async (req: { body: { username: any; email: any; password: any; }; }, res: {
+  clearCookie(arg0: string, arg1: { httpOnly: boolean; secure: boolean; sameSite: string; }): unknown; status: (arg0: number) => { (): any; new(): any; json: { (arg0: {success: boolean; message: string;   token?: any; }): void; new(): any; }; }; 
+})=>{
     try {
     res.clearCookie("token", {
       httpOnly: true,
@@ -71,63 +86,16 @@ const logoutUser = async (req: { body: { username: any; email: any; password: an
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "Logout failed",
-      error: error instanceof Error ? error.message : "Unknown error",
+      message: "Logout failed"
     });
 }
 };
 
-const refreshToken = async (req: { body: { username: any; email: any; password: any; }; }, res: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: { message: string; token?: any; }): void; new(): any; }; }; })=>{
-     try {
-
-    const refreshToken = req.cookies.refreshToken;
-
-    if (!refreshToken) {
-      return res.status(401).json({
-        success: false,
-        message: "Refresh token missing"
-      });
-    }
-
-    const decoded = jwt.verify(
-      refreshToken,
-      process.env.JWT_REFRESH_SECRET
-    );
-
-    const user = await User.findById(decoded.id);
-
-    if (!user || user.refreshToken !== refreshToken) {
-      return res.status(401).json({
-        success: false,
-        message: "Invalid refresh token"
-      });
-    }
-
-    const accessToken = jwt.sign(
-      { id: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: "15m" }
-    );
-
-    return res.status(200).json({
-      success: true,
-      accessToken
-    });
-
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message
-    });
-  }
-};
-
-
-const forgetPassword = async (req: { body: { email: any; password: any; }; }, res: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: { message: string; token?: any; }): void; new(): any; }; }; })=>{
+const forgetPassword = async (req: { body: { email: string; }; }, res: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: {success: boolean; message: string; token?: any; }): void; new(): any; }; }; })=>{
   try{
-   const userEmail = req.email;
-   const user = User.findOne({userEmail});
-   if (user!) return res.status(401).json({message: 'invalid Email '});
+   const userEmail = req.body.email;
+   const user = User.findOne({email: userEmail});
+   if (user!) return res.status(401).json({ success: false, message: "invalid Email" });
 
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
@@ -148,20 +116,19 @@ const forgetPassword = async (req: { body: { email: any; password: any; }; }, re
     return res.status(500).json(
       {
         success: false,
-        message: error.message
+        message: "Server Error"
       }
     )
   }
 };
 
-
-const resetPassword = async (req: { body: { email: string; newpassword: string, resetOtp: string; }; }, res: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: { success: boolean, message: string; token?: any; }): void; new(): any; }; }; }) => {
+const resetPassword = async (req: { body: { email: string; newpassword: string;   resetOtp: string   }; }, res: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: { success: boolean, message: string; token?: any; }): void; new(): any; }; }; }) => {
   const { email, newpassword, resetOtp } = req.body;
 
   try {
 
     // Missing await
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email: email });
 
     // Check user exists
     if (!user) {
@@ -217,4 +184,4 @@ const resetPassword = async (req: { body: { email: string; newpassword: string, 
   }
 };
 
-module.exports = {registerUser,loginUser};
+module.exports = {registerUser,loginUser, resetPassword, forgetPassword, logoutUser};

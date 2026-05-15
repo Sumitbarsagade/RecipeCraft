@@ -61,6 +61,12 @@ const {
   getRecipesByUserId
 } = require('../controllers/recipeController');
 
+
+const { protect } = require('../middleware/authMiddleware');
+const upload  = require('../middleware/multer')
+
+
+
 const express = require('express');
 
 const router = express.Router();
@@ -81,21 +87,21 @@ router.get('/feed', getRecipeFeed);
 router.get('/:slug', getRecipeBySlug);
 
 // Create recipe
-router.post('/', createRecipe);
+router.post('/', upload.single('image') ,createRecipe);
 
 // Update recipe
-router.put('/:id', updateRecipeById);
+router.put('/:id', protect, updateRecipeById);
 
 // Delete recipe
-router.delete('/:id', deleteRecipeById);
+router.delete('/:id',protect, deleteRecipeById);
 
 // Like recipe
-router.post('/:id/like', likeRecipeById);
+router.post('/:id/like', protect, likeRecipeById);
 
 // Save recipe
-router.post('/:id/save', saveRecipeById);
+router.post('/:id/save', protect, saveRecipeById);
 
 // Get recipes by user
-router.get('/user/:userId', getRecipesByUserId);
+router.get('/user/:userId',  getRecipesByUserId);
 
 module.exports = router;

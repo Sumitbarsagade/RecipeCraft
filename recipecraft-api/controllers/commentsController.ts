@@ -1,21 +1,17 @@
+import type { Request, Response } from 'express';
 
-//getComments, postComments, updateComment, deleteComment
+export const getCommentsById = async (_req: Request, _res: Response): Promise<void> => {
+  // TODO: implement
+};
 
+export const postCommentsById = async (_req: Request, _res: Response): Promise<void> => {
+  // TODO: implement
+};
 
-const getCommentsById = (req, res)=>{
+export const updateCommentById = async (_req: Request, _res: Response): Promise<void> => {
+  // TODO: implement
+};
 
-}
-
-const postCommentsById = (req, res)=>{
-
-}
-
-const updateCommentById = (req, res)=>{
-
-}
-
-const deleteCommentById = (req, res) => {
-
-}
-
-module.exports = {getCommentsById, postCommentsById, updateCommentById, deleteCommentById}
+export const deleteCommentById = async (_req: Request, _res: Response): Promise<void> => {
+  // TODO: implement
+};

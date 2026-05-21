@@ -1,53 +1,5 @@
-/*
-GET
-/api/recipes
-Get all published recipes (pagination, filter, sort)
-Public
-GET
-/api/recipes/search?q=
-Full-text search by title, tag, ingredient
-Public
-GET
-/api/recipes/trending
-Get trending recipes (by likes + views)
-Public
-GET
-/api/recipes/feed
-Personalized feed from followed users
-Private
-GET
-/api/recipes/:slug
-Get single recipe by slug, increment views
-Public
-POST
-/api/recipes
-Create new recipe (with image upload)
-Private
-PUT
-/api/recipes/:id
-Update recipe (author only)
-Private
-DELETE
-/api/recipes/:id
-Delete recipe and its comments (author only)
-Private
-POST
-/api/recipes/:id/like
-Like or unlike recipe (toggle)
-Private
-POST
-/api/recipes/:id/save
-Save or unsave recipe to bookmarks (toggle)
-Private
-GET
-/api/recipes/user/:userId
-Get all recipes by a specific user
-Public
-
-
-*/
-
-const {
+import { Router } from 'express';
+import {
   getAllRecipes,
   searchRecipes,
   getTrendingRecipes,
@@ -58,44 +10,24 @@ const {
   deleteRecipeById,
   likeRecipeById,
   saveRecipeById,
-  getRecipesByUserId
-} = require('../controllers/recipeController');
+  getRecipesByUserId,
+} from '../controllers/recipeController.js';
 
-const express = require('express');
+const router = Router();
 
-const router = express.Router();
-
-// Get all recipes
+// Public routes
 router.get('/', getAllRecipes);
-
-// Search recipes
 router.get('/search', searchRecipes);
-
-// Trending recipes
 router.get('/trending', getTrendingRecipes);
-
-// Recipe feed
-router.get('/feed', getRecipeFeed);
-
-// Get single recipe by slug
+router.get('/user/:userId', getRecipesByUserId);  // must be before /:slug
 router.get('/:slug', getRecipeBySlug);
 
-// Create recipe
+// Private routes (auth middleware to be added)
+router.get('/feed', getRecipeFeed);
 router.post('/', createRecipe);
-
-// Update recipe
 router.put('/:id', updateRecipeById);
-
-// Delete recipe
 router.delete('/:id', deleteRecipeById);
-
-// Like recipe
 router.post('/:id/like', likeRecipeById);
-
-// Save recipe
 router.post('/:id/save', saveRecipeById);
 
-// Get recipes by user
-router.get('/user/:userId', getRecipesByUserId);
-
-module.exports = router;
+export default router;

@@ -1,334 +1,265 @@
+import type { Request, Response } from 'express';
+import User from '../models/User.js';
+import Recipe from '../models/Recipe.js';
 
+interface AuthenticatedRequest extends Request {
+  user?: { id: string };
+}
 
-const User = require("../models/User");
-const Recipe = require("../models/Recipe");
-const bcrypt = require("bcryptjs");
-
-interface Response{ status: (arg0: number) => { (): any; new(): any; json: { (arg0: { success: boolean; count?: any; user?:string; message?: any; recipesCount?:number; recipes?: any; following?:any; followers?:any }): any; new(): any; }; };}
-
-interface Request {body:{username:string; email:string; bio:string; profileImage:any;}}
-
+// ---------------------------------------------------------------------------
 // GET USER PROFILE
-const getProfile = async (req:{params: any}, res:Response) => {
+// ---------------------------------------------------------------------------
+
+export const getProfile = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
 
     const user = await User.findById(id)
-      .select("-password")
-      .populate("followers", "username email profileImage")
-      .populate("following", "username email profileImage");
+      .select('-password -refreshToken -resetOtp -resetOtpExpire')
+      .populate('followers', 'username email avatar')
+      .populate('following', 'username email avatar');
 
     if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
+      res.status(404).json({ success: false, message: 'User not found' });
+      return;
     }
 
-    const recipesCount = await Recipe.countDocuments({
-      author: id,
-    });
+    const recipesCount = await Recipe.countDocuments({ author: id });
 
-    return res.status(200).json({
-      success: true,
-      user,
-      recipesCount,
-    });
-  } catch (error: any) {
-    return res.status(500).json({
+    res.status(200).json({ success: true, user, recipesCount });
+  } catch (error) {
+    res.status(500).json({
       success: false,
-      message: error.message,
+      message: error instanceof Error ? error.message : 'Server error',
     });
   }
 };
 
+// ---------------------------------------------------------------------------
 // UPDATE PROFILE
-const updateProfile = async (req: Request , res: Response) => {
-  try {
-    const userId = (req as any).user.id;
+// ---------------------------------------------------------------------------
 
-    const {
-      username,
-      email,
-      bio,
-      profileImage,
-    } = req.body;
+export const updateProfile = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  try {
+    const userId = req.user?.id;
+    const { username, email, bio, avatar } = req.body;
 
     const user = await User.findById(userId);
 
     if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
+      res.status(404).json({ success: false, message: 'User not found' });
+      return;
     }
 
-    // Check username uniqueness
     if (username && username !== user.username) {
       const existingUsername = await User.findOne({ username });
-
       if (existingUsername) {
-        return res.status(400).json({
-          success: false,
-          message: "Username already exists",
-        });
+        res.status(400).json({ success: false, message: 'Username already taken' });
+        return;
       }
-
       user.username = username;
     }
 
-    // Check email uniqueness
     if (email && email !== user.email) {
       const existingEmail = await User.findOne({ email });
-
       if (existingEmail) {
-        return res.status(400).json({
-          success: false,
-          message: "Email already exists",
-        });
+        res.status(400).json({ success: false, message: 'Email already in use' });
+        return;
       }
-
       user.email = email;
     }
 
-    if (bio) user.bio = bio;
-    if (profileImage) user.profileImage = profileImage;
-
-    
+    if (bio !== undefined) user.bio = bio;
+    if (avatar !== undefined) user.avatar = avatar;
 
     await user.save();
 
-    return res.status(200).json({
-      success: true,
-      message: "Profile updated successfully",
-      user,
-    });
-  } catch (error: any) {
-    return res.status(500).json({
+    res.status(200).json({ success: true, message: 'Profile updated successfully', user });
+  } catch (error) {
+    res.status(500).json({
       success: false,
-      message: error.message,
+      message: error instanceof Error ? error.message : 'Server error',
     });
   }
 };
 
+// ---------------------------------------------------------------------------
 // DELETE PROFILE
-const deleteProfile = async (req: {user: {id:string}}, res:Response) => {
+// ---------------------------------------------------------------------------
+
+export const deleteProfile = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
-    const userId = req.user.id;
+    const userId = req.user?.id;
 
     const user = await User.findById(userId);
 
     if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
+      res.status(404).json({ success: false, message: 'User not found' });
+      return;
     }
 
-    // Delete user's recipes
     await Recipe.deleteMany({ author: userId });
-
-    // Delete user
     await User.findByIdAndDelete(userId);
 
-    return res.status(200).json({
-      success: true,
-      message: "Profile deleted successfully",
-    });
-  } catch (error: any) {
-    return res.status(500).json({
+    res.status(200).json({ success: true, message: 'Profile deleted successfully' });
+  } catch (error) {
+    res.status(500).json({
       success: false,
-      message: error.message,
+      message: error instanceof Error ? error.message : 'Server error',
     });
   }
 };
 
-// GET USERNAME
-const getUserName = async (req:{params: any}, res: Response) => {
+// ---------------------------------------------------------------------------
+// GET USER BY USERNAME
+// ---------------------------------------------------------------------------
+
+export const getUserByUsername = async (req: Request, res: Response): Promise<void> => {
   try {
     const { username } = req.params;
 
     const user = await User.findOne({ username }).select(
-      "username email bio profileImage followers following"
+      'username email bio avatar followers following'
     );
 
     if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
+      res.status(404).json({ success: false, message: 'User not found' });
+      return;
     }
 
-    return res.status(200).json({
-      success: true,
-      user,
-    });
-  } catch (error: any) {
-    return res.status(500).json({
+    res.status(200).json({ success: true, user });
+  } catch (error) {
+    res.status(500).json({
       success: false,
-      message: error.message,
+      message: error instanceof Error ? error.message : 'Server error',
     });
   }
 };
 
+// ---------------------------------------------------------------------------
 // FOLLOW / UNFOLLOW USER
-const followUserById = async (req:{params: any}, res: Response) => {
+// ---------------------------------------------------------------------------
+
+export const followUserById = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
-    const currentUserId = (req as any).user.id;
+    const currentUserId = req.user?.id;
     const { id } = req.params;
 
     if (currentUserId === id) {
-      return res.status(400).json({
-        success: false,
-        message: "You cannot follow yourself",
-      });
+      res.status(400).json({ success: false, message: 'You cannot follow yourself' });
+      return;
     }
 
-    const currentUser = await User.findById(currentUserId);
-    const targetUser = await User.findById(id);
+    const [currentUser, targetUser] = await Promise.all([
+      User.findById(currentUserId),
+      User.findById(id),
+    ]);
 
-    if (!targetUser) {
-      return res.status(404).json({
-        success: false,
-        message: "Target user not found",
-      });
+    if (!currentUser || !targetUser) {
+      res.status(404).json({ success: false, message: 'User not found' });
+      return;
     }
 
     const alreadyFollowing = currentUser.following.includes(id);
 
     if (alreadyFollowing) {
-      // UNFOLLOW
       currentUser.following = currentUser.following.filter(
-        (userId: any) => userId.toString() !== id
+        (uid: string) => uid.toString() !== id
       );
-
       targetUser.followers = targetUser.followers.filter(
-        (userId: any) => userId.toString() !== currentUserId
+        (uid: string) => uid.toString() !== currentUserId
       );
-
-      await currentUser.save();
-      await targetUser.save();
-
-      return res.status(200).json({
-        success: true,
-        message: "User unfollowed",
-      });
+      await Promise.all([currentUser.save(), targetUser.save()]);
+      res.status(200).json({ success: true, message: 'User unfollowed' });
+    } else {
+      currentUser.following.push(id);
+      targetUser.followers.push(currentUserId);
+      await Promise.all([currentUser.save(), targetUser.save()]);
+      res.status(200).json({ success: true, message: 'User followed successfully' });
     }
-
-    // FOLLOW
-    currentUser.following.push(id);
-    targetUser.followers.push(currentUserId);
-
-    await currentUser.save();
-    await targetUser.save();
-
-    return res.status(200).json({
-      success: true,
-      message: "User followed successfully",
-    });
-  } catch (error: any) {
-    return res.status(500).json({
+  } catch (error) {
+    res.status(500).json({
       success: false,
-      message: error.message,
+      message: error instanceof Error ? error.message : 'Server error',
     });
   }
 };
 
+// ---------------------------------------------------------------------------
 // GET FOLLOWERS
-const getFollowersById = async (req:{params: any}, res: Response) => {
+// ---------------------------------------------------------------------------
+
+export const getFollowersById = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
 
     const user = await User.findById(id)
-      .populate("followers", "username email profileImage")
-      .select("followers");
+      .populate('followers', 'username email avatar')
+      .select('followers');
 
     if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
+      res.status(404).json({ success: false, message: 'User not found' });
+      return;
     }
 
-    return res.status(200).json({
-      success: true,
-      followers: user.followers,
-    });
-  } catch (error: any) {
-    return res.status(500).json({
+    res.status(200).json({ success: true, followers: user.followers });
+  } catch (error) {
+    res.status(500).json({
       success: false,
-      message: error.message,
+      message: error instanceof Error ? error.message : 'Server error',
     });
   }
 };
 
+// ---------------------------------------------------------------------------
 // GET FOLLOWING
-const getFollowingById = async (req:{params:any}, res: Response) => {
+// ---------------------------------------------------------------------------
+
+export const getFollowingById = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
 
     const user = await User.findById(id)
-      .populate("following", "username email profileImage")
-      .select("following");
+      .populate('following', 'username email avatar')
+      .select('following');
 
     if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
+      res.status(404).json({ success: false, message: 'User not found' });
+      return;
     }
 
-    return res.status(200).json({
-      success: true,
-      following: user.following,
-    });
-  } catch (error: any) {
-    return res.status(500).json({
+    res.status(200).json({ success: true, following: user.following });
+  } catch (error) {
+    res.status(500).json({
       success: false,
-      message: error.message,
+      message: error instanceof Error ? error.message : 'Server error',
     });
   }
 };
 
+// ---------------------------------------------------------------------------
 // GET SAVED RECIPES
-const getSavedRecipes = async (req:{user: {id:string}}, res: Response) => {
+// ---------------------------------------------------------------------------
+
+export const getSavedRecipes = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
-    const userId = (req as any).user.id;
+    const userId = req.user?.id;
 
     const user = await User.findById(userId).populate({
-      path: "savedRecipes",
-      populate: {
-        path: "author",
-        select: "username profileImage",
-      },
+      path: 'savedRecipes',
+      populate: { path: 'author', select: 'username avatar' },
     });
 
     if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
+      res.status(404).json({ success: false, message: 'User not found' });
+      return;
     }
 
-    return res.status(200).json({
-      success: true,
-      recipes: user.savedRecipes,
-    });
-  } catch (error: any) {
-    return res.status(500).json({
+    res.status(200).json({ success: true, recipes: user.savedRecipes });
+  } catch (error) {
+    res.status(500).json({
       success: false,
-      message: error.message,
+      message: error instanceof Error ? error.message : 'Server error',
     });
   }
-};
-
-module.exports = {
-  getProfile,
-  updateProfile,
-  deleteProfile,
-  getFollowersById,
-  getFollowingById,
-  getUserName,
-  followUserById,
-  getSavedRecipes,
 };

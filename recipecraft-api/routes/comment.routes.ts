@@ -1,40 +1,19 @@
-/*
+import { Router } from 'express';
+import {
+  getCommentsById,
+  postCommentsById,
+  updateCommentById,
+  deleteCommentById,
+} from '../controllers/commentsController.js';
 
-GET
-/api/recipes/:id/comments
-Get all comments for a recipe (paginated)
-Public
-POST
-/api/recipes/:id/comments
-Post a new comment on a recipe
-Private
-PUT
-/api/comments/:commentId
-Edit comment (author only)
-Private
-DELETE
-/api/comments/:commentId
-Delete comment (author or recipe author)
-Private
+const router = Router();
 
-*/
-
-const express = require('express');
-
-const router = express.Router();
-
-const {getCommentsById, postCommentsById, updateCommentById, deleteCommentById} = require('../controllers/');
-
+// Public routes
 router.get('/:id/comments', getCommentsById);
 
+// Private routes (auth middleware to be added)
 router.post('/:id/comments', postCommentsById);
-
 router.put('/:commentId', updateCommentById);
+router.delete('/:commentId', deleteCommentById);
 
-router.Delete('/:commentId', deleteCommentById);
-
-
-module.exports = router;
-
-
-
+export default router;

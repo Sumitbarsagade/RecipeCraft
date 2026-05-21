@@ -1,37 +1,48 @@
-import mongoose = require("mongoose");
+import mongoose, { Document, Schema } from 'mongoose';
 
-const commentSchema = new mongoose.Schema({
-  recipe: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Recipe",
-    required: true,
-  },
+// ---------------------------------------------------------------------------
+// Interface
+// ---------------------------------------------------------------------------
 
-  author: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
+export interface IComment extends Document {
+  recipe: mongoose.Types.ObjectId;
+  author: mongoose.Types.ObjectId;
+  content: string;
+  likes: mongoose.Types.ObjectId[];
+  createdAt: Date;
+}
 
-  content: {
-    type: String,
-    required: true,
-    trim: true,
-  },
+// ---------------------------------------------------------------------------
+// Schema
+// ---------------------------------------------------------------------------
 
-  likes: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+const commentSchema = new Schema<IComment>(
+  {
+    recipe: {
+      type: Schema.Types.ObjectId,
+      ref: 'Recipe',
+      required: true,
     },
-  ],
-
-  createdAt: {
-    type: Date,
-    default: Date.now,
+    author: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+    content: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    likes: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
   },
-});
+  { timestamps: true }
+);
 
-const Comment = mongoose.model("Comment", commentSchema);
+const Comment = mongoose.model<IComment>('Comment', commentSchema);
 
-module.exports = Comment;
+export default Comment;

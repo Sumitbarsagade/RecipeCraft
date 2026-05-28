@@ -8,6 +8,7 @@ import Recipe from '../models/Recipe.js';
 
 interface AuthRequest extends Request {
   user?: { id: string };
+  recipe?: { recipeId: string};
 }
 
 // ---------------------------------------------------------------------------
@@ -17,6 +18,12 @@ interface AuthRequest extends Request {
 export const getCommentsById = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const { recipeId } = req.params;
+    
+    
+    if (!recipeId) {
+      res.status(401).json({ success: false, message: 'Relevent recipe not found' });
+      return;
+    }
 
     const comments = await Comment.find({ recipe: recipeId })
       .populate('author', 'username profileImage')

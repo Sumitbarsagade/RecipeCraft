@@ -1,10 +1,12 @@
 import type { Request, Response } from 'express';
+import mongoose from 'mongoose';
 import slugify from 'slugify';
 import Recipe from '../models/Recipe.js';
 
 // Extend Request to include the authenticated user
 interface AuthenticatedRequest extends Request {
   user?: { id: string };
+
 }
 
 // ---------------------------------------------------------------------------
@@ -118,7 +120,7 @@ export const getRecipeFeed = async (req: Request, res: Response): Promise<void> 
 // GET RECIPE BY SLUG
 // ---------------------------------------------------------------------------
 
-export const getRecipeBySlug = async (req: Request, res: Response): Promise<void> => {
+export const getRecipeBySlug = async (req: {params: {slug: any}}, res: Response): Promise<void> => {
   try {
     const { slug } = req.params;
 
@@ -168,13 +170,18 @@ export const createRecipe = async (req: AuthenticatedRequest, res: Response): Pr
       return;
     }
 
-    const slug = slugify(title as string, { lower: true, strict: true });
+    const userId = req.user?.id;
+    if (!userId) {
+      res.status(401).json({ success: false, message: 'Unauthorized' });
+      return;
+    }
 
+    const slug = slugify(title as string, { lower: true, strict: true });
     const recipe = await Recipe.create({
       title,
       slug,
       description,
-      author: req.user?.id,
+      author: userId,
       coverImage,
       ingredients,
       step,
@@ -295,7 +302,7 @@ export const likeRecipeById = async (req: AuthenticatedRequest, res: Response): 
         (likeId: { toString: () => string }) => likeId.toString() !== userId
       );
     } else {
-      recipe.likes.push(userId);
+      recipe.likes.push(new mongoose.Types.ObjectId(userId));
     }
 
     await recipe.save();
@@ -325,6 +332,11 @@ export const saveRecipeById = async (_req: AuthenticatedRequest, res: Response):
 export const getRecipesByUserId = async (req: Request, res: Response): Promise<void> => {
   try {
     const { userId } = req.params;
+    
+    if (!userId) {
+      res.status(401).json({ success: false, message: 'Unathorized access' });
+      return;
+    }
 
     const recipes = await Recipe.find({ author: userId }).sort({ createdAt: -1 });
 

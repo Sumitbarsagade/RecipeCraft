@@ -136,110 +136,7 @@ export const getUserByUsername = async (req: Request, res: Response): Promise<vo
   }
 };
 
-// ---------------------------------------------------------------------------
-// FOLLOW / UNFOLLOW USER
-// ---------------------------------------------------------------------------
 
-export const followUserById = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-  try {
-    const currentUserId = req.user?.id;
-    const { id } = req.params;
-
-    if (currentUserId === id) {
-      res.status(400).json({ success: false, message: 'You cannot follow yourself' });
-      return;
-    }
-
-    const [currentUser, targetUser] = await Promise.all([
-      User.findById(currentUserId),
-      User.findById(id),
-    ]);
-
-    if (!currentUser || !targetUser) {
-      res.status(404).json({ success: false, message: 'User not found' });
-      return;
-    }
-
-    const alreadyFollowing = currentUser.following.includes(id);
-
-    if (alreadyFollowing) {
-      currentUser.following = currentUser.following.filter(
-        (uid: string) => uid.toString() !== id
-      );
-      targetUser.followers = targetUser.followers.filter(
-        (uid: string) => uid.toString() !== currentUserId
-      );
-      await Promise.all([currentUser.save(), targetUser.save()]);
-      res.status(200).json({ success: true, message: 'User unfollowed' });
-    } else {
-      currentUser.following.push(id);
-      targetUser.followers.push(currentUserId);
-      await Promise.all([currentUser.save(), targetUser.save()]);
-      res.status(200).json({ success: true, message: 'User followed successfully' });
-    }
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error instanceof Error ? error.message : 'Server error',
-    });
-  }
-};
-
-// ---------------------------------------------------------------------------
-// GET FOLLOWERS
-// ---------------------------------------------------------------------------
-
-export const getFollowersById = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const { id } = req.params;
-
-    const user = await User.findById(id)
-      .populate('followers', 'username email avatar')
-      .select('followers');
-
-    if (!user) {
-      res.status(404).json({ success: false, message: 'User not found' });
-      return;
-    }
-
-    res.status(200).json({ success: true, followers: user.followers });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error instanceof Error ? error.message : 'Server error',
-    });
-  }
-};
-
-// ---------------------------------------------------------------------------
-// GET FOLLOWING
-// ---------------------------------------------------------------------------
-
-export const getFollowingById = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const { id } = req.params;
-
-    const user = await User.findById(id)
-      .populate('following', 'username email avatar')
-      .select('following');
-
-    if (!user) {
-      res.status(404).json({ success: false, message: 'User not found' });
-      return;
-    }
-
-    res.status(200).json({ success: true, following: user.following });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error instanceof Error ? error.message : 'Server error',
-    });
-  }
-};
-
-// ---------------------------------------------------------------------------
-// GET SAVED RECIPES
-// ---------------------------------------------------------------------------
 
 export const getSavedRecipes = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
@@ -255,7 +152,7 @@ export const getSavedRecipes = async (req: AuthenticatedRequest, res: Response):
       return;
     }
 
-    res.status(200).json({ success: true, recipes: user.savedRecipes });
+    res.status(200).json({ success: true, recipes: user?.savedRecipes });
   } catch (error) {
     res.status(500).json({
       success: false,

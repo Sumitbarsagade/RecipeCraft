@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import {
   getCommentsById,
-  postCommentsById,
+  postComment,
   updateCommentById,
   deleteCommentById,
-} from '../controllers/commentsController.js';
+} from '../controllers/commentsController';
 
 const router = Router();
 
@@ -12,7 +12,7 @@ const router = Router();
 router.get('/:id/comments', getCommentsById);
 
 // Private routes (auth middleware to be added)
-router.post('/:id/comments', postCommentsById);
+router.post('/:id/comments', postComment);
 router.put('/:commentId', updateCommentById);
 router.delete('/:commentId', deleteCommentById);
 

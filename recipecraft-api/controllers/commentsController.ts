@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
-import Comment from '../models/Comment.js';
-import Recipe from '../models/Recipe.js';
+import Comment from '../models/Comment';
+import Recipe from '../models/Recipe';
 
 // ---------------------------------------------------------------------------
 // Extended request type to include authenticated user from auth middleware

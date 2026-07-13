@@ -8,7 +8,7 @@ import {
   getUserByUsername,
   followUserById,
   getSavedRecipes,
-} from '../controllers/userController.js';
+} from '../controllers/userController';
 
 const router = Router();
 

@@ -11,7 +11,7 @@ import {
   likeRecipeById,
   saveRecipeById,
   getRecipesByUserId,
-} from '../controllers/recipeController.js';
+} from '../controllers/recipeController';
 
 const router = Router();
 

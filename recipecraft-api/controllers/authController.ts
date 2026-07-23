@@ -2,7 +2,10 @@ import type { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
+import { otpStore } from '../middleware/otpStore.js';
+import crypto from 'crypto'; // Import crypto module
 import sendMail from '../utils/sendMail.js';
+
 
 // ---------------------------------------------------------------------------
 // Token helpers
@@ -156,35 +159,55 @@ export const refreshToken = async (req: Request, res: Response): Promise<void> =
 // Forgot Password
 // ---------------------------------------------------------------------------
 
-export const forgotPassword = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const { email } = req.body;
+export const requestOtp = async (req: Request, res: Response) => {
+  const { email } = req.body;
 
-    if (!email) {
-      res.status(400).json({ success: false, message: 'Email is required' });
-      return;
-    }
+  try {
 
     const user = await User.findOne({ email });
-    if (!user) {
-      // Return a generic message to avoid user enumeration
-      res.status(200).json({ success: true, message: 'If that email exists, an OTP has been sent' });
-      return;
-    }
+    if (!user) return res.status(400).json({ message: 'User not found' });
 
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    const otpExpire = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
-    user.resetOtp = otp;
-    user.resetOtpExpire = otpExpire;
+    // Generate OTP (e.g., 6 digits)
+    const otp = crypto.randomInt(100000, 999999);
+
+
+    // Store OTP temporarily with an expiry time (e.g., 10 minutes)
+    otpStore.set(email, { otp, expiresAt: Date.now() + 10 * 60 * 1000 }); // 10 minutes expiration
+  
+    
+
+    // Generate password reset token
+    const resetToken = crypto.randomBytes(20).toString('hex');
+    user.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+    user.resetOtpExpire = new Date(Date.now() + 3600000); // 1 hour expiry
     await user.save();
 
-    await sendMail(user.email, 'Password Reset OTP', `Your OTP for password reset is: ${otp}. It expires in 10 minutes.`);
+    const resetUrl = `${req.protocol}://${req.get('host')}/api/auth/reset-password/${resetToken}`;
 
-    res.status(200).json({ success: true, message: 'If that email exists, an OTP has been sent' });
+    // Set up email transport (replace with real service credentials)
+    const transporter = nodemailer.createTransport({
+      service: 'Gmail',
+      auth: {
+        user: process.env.EMAIL_USERNAME,
+        pass: process.env.EMAIL_APP_PASSWORD
+      }
+    });
+
+    const mailOptions = {
+      to: user.email,
+      from: userEmail,
+      subject: 'Password Reset OTP',
+      text: `Your OTP for password reset is ${otp}. It is valid for 10 minutes.`,
+    };
+
+    await transporter.sendMail(mailOptions);
+
+
+    res.status(200).json({ message: 'OTP sent to email' });
   } catch (error) {
-    console.error('forgotPassword error:', error);
-    res.status(500).json({ success: false, message: 'Server error' });
+    console.error('Error sending OTP: ', error);
+    res.status(500).json({ message: 'Error sending OTP' });
   }
 };
 
@@ -230,5 +253,33 @@ export const resetPassword = async (req: Request, res: Response): Promise<void> 
   } catch (error) {
     console.error('resetPassword error:', error);
     res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
+// Validate OTP
+export const validateOtp = async (req: Request, res: Response) => {
+  const { email, otp } = req.body;
+   
+  const user = await User.findOne({email});
+
+  if (!user) return res.status(400).json({ message: 'Invalid email or password' });
+
+  try {
+    const storedOtp = otpStore.get(email);
+
+    // Check if OTP exists and is valid
+    if (!storedOtp || storedOtp.expiresAt < Date.now()) {
+      return res.status(400).json({ message: 'OTP expired or invalid' });
+    }
+
+    // Check if OTP matches
+    if (parseInt(otp) !== storedOtp.otp) {
+      return res.status(400).json({ message: 'Incorrect OTP' });
+    }
+
+    res.status(200).json({ message: 'OTP validated successfully' });
+  } catch (error) {
+    console.error('Error validating OTP:', error);
+    res.status(500).json({ message: 'Error validating OTP' });
   }
 };

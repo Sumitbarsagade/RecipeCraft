@@ -140,7 +140,7 @@ export const getUserByUsername = async (req: Request, res: Response): Promise<vo
 
 export const getSavedRecipes = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
-    const userId = req.user?.id;
+    const userId = await req.user?.id;
 
     const user = await User.findById(userId).populate({
       path: 'savedRecipes',
@@ -152,7 +152,9 @@ export const getSavedRecipes = async (req: AuthenticatedRequest, res: Response):
       return;
     }
 
-    res.status(200).json({ success: true, recipes: user?.savedRecipes });
+    const recipes: Object = await Recipe.find({userid: userId});
+
+    res.status(200).json({ success: true, recipes: recipes });
   } catch (error) {
     res.status(500).json({
       success: false,

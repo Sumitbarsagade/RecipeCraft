@@ -13,6 +13,7 @@ export interface IUser extends Document {
   role: 'user' | 'admin';
   resetOtp?: string;
   resetOtpExpire?: Date;
+  resetPasswordToken?: string;
 }
 
 const userSchema = new Schema<IUser>(
@@ -67,8 +68,13 @@ const userSchema = new Schema<IUser>(
     resetOtpExpire: {
       type: Date,
     },
+    resetPasswordToken:{
+      type: String,
+    }
   },
-  { timestamps: true }
+  { timestamps: true },
+
+
 );
 
 const User = mongoose.model<IUser>('User', userSchema);

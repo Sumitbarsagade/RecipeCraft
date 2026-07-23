@@ -4,7 +4,7 @@ import {
   loginUser,
   logoutUser,
   refreshToken,
-  forgotPassword,
+  requestOtp,
   resetPassword,
 } from '../controllers/authController';
 
@@ -14,7 +14,7 @@ const router = Router();
 router.post('/register', registerUser);
 router.post('/login', loginUser);
 router.post('/refresh-token', refreshToken);
-router.post('/forgot-password', forgotPassword);
+router.post('/request-otp', requestOtp);
 router.post('/reset-password', resetPassword);
 
 // Private routes (auth middleware to be added)

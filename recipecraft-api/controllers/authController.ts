@@ -1,8 +1,8 @@
 import type { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import User from '../models/User.js';
-import { otpStore } from '../middleware/otpStore.js';
+import User from '../models/User';
+import { otpStore } from '../middleware/otpStore';
 import crypto from 'crypto'; // Import crypto module
 import sendMail from '../utils/sendMail.js';
 
@@ -23,10 +23,20 @@ const generateRefreshToken = (id: string): string => {
 // Register
 // ---------------------------------------------------------------------------
 
-export const registerUser = async (req: Request, res: Response): Promise<void> => {
+export const registerUser = async (req: Request, res: Response) => {
   try {
-    const { username, email, password } = req.body;
+    if (!req.body) {
+      res.status(400).json({
+        success: false,
+        message: "Request body is missing",
+      });
+      return;
+    }
+    
 
+
+    const { username, email, password } = req.body;
+    console.log("userName" ,username);
     if (!username || !email || !password) {
       res.status(400).json({ success: false, message: 'All fields are required' });
       return;
@@ -46,13 +56,16 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
     const accessToken = generateAccessToken(user._id.toString());
     const refreshToken = generateRefreshToken(user._id.toString());
 
-    user.refreshToken = refreshToken;
+    const hashedToken = await bcrypt.hash(refreshToken, salt);
+    
+    user.refreshToken = hashedToken;
+
     await user.save();
 
     res.status(201).json({
       success: true,
       message: 'User registered successfully',
-      accessToken,
+      accessToken, hashedToken
     });
   } catch (error) {
     console.error('registerUser error:', error);

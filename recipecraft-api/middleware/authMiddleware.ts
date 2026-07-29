@@ -1,31 +1,57 @@
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+import { Request, Response, NextFunction } from "express";
+import jwt, { JwtPayload } from "jsonwebtoken";
+import User from "../models/User";
 
-const protect = async (req: { headers: { authorization: string; }; user: any; }, res: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: { message: string; }): void; new(): any; }; }; }, next: () => void) => {
-  let token;
+interface AuthenticatedRequest extends Request {
+ user?: any; // Or a more specific User type if available
+}
 
-  // Check if the Authorization header is present and starts with 'Bearer'
-  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-    try {
-      // Get the token from the Authorization header
-      token = req.headers.authorization.split(' ')[1];
+interface TokenPayload extends JwtPayload {
+  id: string;
+}
 
-      // Verify the token
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+const protect = async (
+  req: Request,
+  res: Response, // Changed Request to AuthenticatedRequest
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const authHeader = req.headers.authorization;
 
-      // Attach the user to the request (excluding the password)
-      req.user = await User.findById(decoded.id).select('-password');
-
-      next();  // Proceed to the next middleware or route handler
-    } catch (error) {
-      
-      res.status(401).json({ message: 'Not authorized, token failed' });
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      res.status(401).json({
+        success: false,
+        message: "Access token is missing",
+      });
+      return;
     }
-  }
 
-  if (!token) {
-    res.status(401).json({ message: 'Not authorized, no token' });
+    const token = authHeader.split(" ")[1];
+
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_ACCESS_SECRET as string
+    ) as TokenPayload;
+
+    const user = await User.findById(decoded.id).select("-password -refreshToken");
+
+    if (!user) {
+      res.status(401).json({
+        success: false,
+        message: "User not found",
+      });
+      return;
+    }
+
+    (req as AuthenticatedRequest).user = user; // Cast req to AuthenticatedRequest
+
+    next();
+  } catch (error) {
+    res.status(401).json({
+      success: false,
+      message: "Invalid or expired access token",
+    });
   }
 };
 
-module.exports = { protect };
+export default protect;

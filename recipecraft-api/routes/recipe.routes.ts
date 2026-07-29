@@ -12,6 +12,8 @@ import {
   saveRecipeById,
   getRecipesByUserId,
 } from '../controllers/recipeController';
+import protect from '../middleware/authMiddleware';
+
 
 const router = Router();
 
@@ -23,6 +25,7 @@ router.get('/user/:userId', getRecipesByUserId);  // must be before /:slug
 router.get('/:slug', getRecipeBySlug);
 
 // Private routes (auth middleware to be added)
+router.use(protect)
 router.get('/feed', getRecipeFeed);
 router.post('/', createRecipe);
 router.put('/:id', updateRecipeById);

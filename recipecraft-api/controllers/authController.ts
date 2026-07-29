@@ -6,17 +6,32 @@ import { otpStore } from '../middleware/otpStore';
 import crypto from 'crypto'; // Import crypto module
 import sendMail from '../utils/sendMail.js';
 
+interface RefreshTokenPayload {
+  id: string;
+}
 
 // ---------------------------------------------------------------------------
 // Token helpers
 // ---------------------------------------------------------------------------
 
 const generateAccessToken = (id: string): string => {
-  return jwt.sign({ id }, process.env.JWT_SECRET as string, { expiresIn: '1h' });
+  return jwt.sign(
+    { id },
+    process.env.JWT_SECRET as string,
+    {
+      expiresIn: "15m",
+    }
+  );
 };
 
 const generateRefreshToken = (id: string): string => {
-  return jwt.sign({ id }, process.env.JWT_REFRESH_SECRET as string, { expiresIn: '7d' });
+  return jwt.sign(
+    { id },
+    process.env.JWT_REFRESH_SECRET as string,
+    {
+      expiresIn: "7d",
+    }
+  );
 };
 
 // ---------------------------------------------------------------------------
@@ -36,7 +51,7 @@ export const registerUser = async (req: Request, res: Response) => {
 
 
     const { username, email, password } = req.body;
-    console.log("userName" ,username);
+    
     if (!username || !email || !password) {
       res.status(400).json({ success: false, message: 'All fields are required' });
       return;
@@ -62,11 +77,19 @@ export const registerUser = async (req: Request, res: Response) => {
 
     await user.save();
 
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
+
     res.status(201).json({
       success: true,
       message: 'User registered successfully',
-      accessToken, hashedToken
+      accessToken
     });
+
   } catch (error) {
     console.error('registerUser error:', error);
     res.status(500).json({ success: false, message: 'Server error' });
@@ -91,7 +114,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
       res.status(401).json({ success: false, message: 'Invalid email or password' });
       return;
     }
-
+    
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       res.status(401).json({ success: false, message: 'Invalid email or password' });
@@ -101,16 +124,21 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
     const accessToken = generateAccessToken(user._id.toString());
     const refreshToken = generateRefreshToken(user._id.toString());
 
-    user.refreshToken = refreshToken;
+    const salt = await bcrypt.genSalt(10);
+
+    const hashedRefreshToken = await bcrypt.hash(refreshToken, salt);
+
+    user.refreshToken = hashedRefreshToken;
     await user.save();
 
-    // Send refresh token as an httpOnly cookie
-    res.cookie('refreshToken', refreshToken, {
+    res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
+
+    
 
     res.status(200).json({ success: true, message: 'Login successful', accessToken });
   } catch (error) {
@@ -125,12 +153,28 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
 
 export const logoutUser = async (req: Request, res: Response): Promise<void> => {
   try {
+    const user = req.body.email;
+   
+    if(!user){
+      res.status(400).json({
+        sucess:false,
+        message: "Request denied"
+      });
+      return;
+    }
+
+   const existingUser = await User.findOne({user});
+   
+   if(existingUser){
+     existingUser.refreshToken="";
+   }
+
     res.clearCookie('refreshToken', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
     });
-
+    
     res.status(200).json({ success: true, message: 'Logged out successfully' });
   } catch (error) {
     console.error('logoutUser error:', error);
@@ -142,29 +186,63 @@ export const logoutUser = async (req: Request, res: Response): Promise<void> => 
 // Refresh Token
 // ---------------------------------------------------------------------------
 
-export const refreshToken = async (req: Request, res: Response): Promise<void> => {
+export const refreshToken = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const token = req.cookies?.refreshToken;
 
     if (!token) {
-      res.status(401).json({ success: false, message: 'No refresh token provided' });
+      res.status(401).json({
+        success: false,
+        message: "No refresh token provided",
+      });
       return;
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_REFRESH_SECRET as string) as { id: string };
+    // Verify JWT
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_REFRESH_SECRET as string
+    ) as RefreshTokenPayload;
 
+    // Find user
     const user = await User.findById(decoded.id);
-    if (!user || user.refreshToken !== token) {
-      res.status(403).json({ success: false, message: 'Invalid refresh token' });
+
+    if (!user || !user.refreshToken) {
+      res.status(403).json({
+        success: false,
+        message: "Invalid refresh token",
+      });
       return;
     }
 
+    // Compare plain token with hashed token in DB
+    const isMatch = await bcrypt.compare(token, user.refreshToken);
+
+    if (!isMatch) {
+      res.status(403).json({
+        success: false,
+        message: "Invalid refresh token",
+      });
+      return;
+    }
+
+    // Generate new access token
     const newAccessToken = generateAccessToken(user._id.toString());
 
-    res.status(200).json({ success: true, accessToken: newAccessToken });
+    res.status(200).json({
+      success: true,
+      accessToken: newAccessToken,
+    });
   } catch (error) {
-    console.error('refreshToken error:', error);
-    res.status(403).json({ success: false, message: 'Invalid or expired refresh token' });
+    console.error("refreshToken error:", error);
+
+    res.status(403).json({
+      success: false,
+      message: "Invalid or expired refresh token",
+    });
   }
 };
 

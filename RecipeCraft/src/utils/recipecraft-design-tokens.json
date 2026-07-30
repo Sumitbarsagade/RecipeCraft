@@ -1,0 +1,954 @@
+{
+  "meta": {
+    "project": "RecipeCraft",
+    "version": "1.0.0",
+    "description": "Complete design token system — colors, typography, spacing for all pages and components",
+    "stack": "Vite + React + TypeScript + Tailwind CSS v3"
+  },
+
+  "brand": {
+    "rust": {
+      "DEFAULT": "#C8501A",
+      "light":   "#E8724A",
+      "lighter": "#F5A882",
+      "dark":    "#A03D12",
+      "darker":  "#7A2D0C",
+      "usage":   "Primary CTA buttons, like button active, active nav tab border, required field marker, delete actions"
+    },
+    "forest": {
+      "DEFAULT": "#2D4A3E",
+      "light":   "#3D6B5C",
+      "lighter": "#5C9480",
+      "dark":    "#1E3229",
+      "darker":  "#111E18",
+      "usage":   "Navbar background, sidebar background, follow button, step numbers, section headings"
+    },
+    "gold": {
+      "DEFAULT": "#D4A843",
+      "light":   "#F0C868",
+      "lighter": "#F7E0A0",
+      "dark":    "#A87E28",
+      "darker":  "#7B5A00",
+      "usage":   "Logo accent dot, hero eyebrow badge, trending badge, medium difficulty badge, star ratings"
+    },
+    "cream": {
+      "DEFAULT": "#FDF6EC",
+      "dark":    "#F5EAD8",
+      "darker":  "#EDD9BE",
+      "usage":   "Page background, hero text on dark backgrounds, email template background"
+    },
+    "charcoal": {
+      "DEFAULT": "#1C1C1C",
+      "soft":    "#2C2C2C",
+      "muted":   "#3D3D3D",
+      "usage":   "Primary body text, headings on light backgrounds, code blocks"
+    }
+  },
+
+  "semantic": {
+    "success": {
+      "bg":     "#D4EDDA",
+      "border": "#C3E6CB",
+      "text":   "#155724",
+      "icon":   "#28A745",
+      "usage":  "Published badge, email verified state, form success messages"
+    },
+    "warning": {
+      "bg":     "#FFF3CD",
+      "border": "#FFEEBA",
+      "text":   "#856404",
+      "icon":   "#FFC107",
+      "usage":  "Draft badge, unverified email warning, medium difficulty"
+    },
+    "error": {
+      "bg":     "#F8D7DA",
+      "border": "#F5C6CB",
+      "text":   "#721C24",
+      "icon":   "#DC3545",
+      "usage":  "Form validation errors, delete confirmation, API error toasts"
+    },
+    "info": {
+      "bg":     "#D1ECF1",
+      "border": "#BEE5EB",
+      "text":   "#0C5460",
+      "icon":   "#17A2B8",
+      "usage":  "Info toasts, hint messages, pagination info"
+    }
+  },
+
+  "neutral": {
+    "50":  "#FAFAFA",
+    "100": "#F5F5F5",
+    "200": "#E8E2DA",
+    "300": "#D4C9B8",
+    "400": "#B0A898",
+    "500": "#8C8278",
+    "600": "#6B6B6B",
+    "700": "#4A4A4A",
+    "800": "#2C2C2C",
+    "900": "#1C1C1C"
+  },
+
+  "typography": {
+    "fonts": {
+      "display": {
+        "family": "'Playfair Display', Georgia, serif",
+        "import": "https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&display=swap",
+        "tailwind": "font-display",
+        "usage": "Page titles (h1), section headings, recipe titles, chef names, logo wordmark"
+      },
+      "body": {
+        "family": "'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif",
+        "import": "https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap",
+        "tailwind": "font-body",
+        "usage": "All body text, labels, buttons, inputs, nav links, descriptions"
+      },
+      "mono": {
+        "family": "'DM Mono', 'Fira Code', 'Courier New', monospace",
+        "import": "https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&display=swap",
+        "tailwind": "font-mono",
+        "usage": "Code snippets, ingredient quantities, time values, stat numbers"
+      }
+    },
+    "scale": {
+      "xs":   { "size": "11px", "lineHeight": "1.4", "tailwind": "text-xs" },
+      "sm":   { "size": "12px", "lineHeight": "1.5", "tailwind": "text-sm" },
+      "base": { "size": "14px", "lineHeight": "1.6", "tailwind": "text-sm" },
+      "md":   { "size": "15px", "lineHeight": "1.6", "tailwind": "text-base" },
+      "lg":   { "size": "17px", "lineHeight": "1.6", "tailwind": "text-lg" },
+      "xl":   { "size": "20px", "lineHeight": "1.4", "tailwind": "text-xl" },
+      "2xl":  { "size": "24px", "lineHeight": "1.3", "tailwind": "text-2xl" },
+      "3xl":  { "size": "28px", "lineHeight": "1.2", "tailwind": "text-3xl" },
+      "4xl":  { "size": "34px", "lineHeight": "1.1", "tailwind": "text-4xl" },
+      "5xl":  { "size": "42px", "lineHeight": "1.05","tailwind": "text-5xl" },
+      "hero": { "size": "clamp(34px, 6vw, 72px)", "lineHeight": "1.05", "tailwind": "text-5xl lg:text-7xl" }
+    },
+    "weights": {
+      "light":    { "value": 300, "tailwind": "font-light",    "usage": "Subtle captions, meta info" },
+      "regular":  { "value": 400, "tailwind": "font-normal",   "usage": "Body text, descriptions, nav links" },
+      "medium":   { "value": 500, "tailwind": "font-medium",   "usage": "Labels, button text, card titles" },
+      "semibold": { "value": 600, "tailwind": "font-semibold", "usage": "Section headings, form labels, stats" },
+      "bold":     { "value": 700, "tailwind": "font-bold",     "usage": "Page titles, recipe names, hero text" },
+      "black":    { "value": 900, "tailwind": "font-black",    "usage": "Hero headline, logo text, display headings" }
+    }
+  },
+
+  "pages": {
+    "HomePage": {
+      "description": "Landing page with hero, search bar, and recipe grids",
+      "background":  "#FDF6EC",
+      "sections": {
+        "navbar": {
+          "background":    "#2D4A3E",
+          "logo_color":    "#FFFFFF",
+          "logo_dot":      "#D4A843",
+          "nav_links":     "rgba(255,255,255,0.7)",
+          "nav_links_active": "#FFFFFF",
+          "cta_button_bg": "#C8501A",
+          "cta_button_text": "#FFFFFF",
+          "signin_btn_bg": "rgba(255,255,255,0.12)",
+          "signin_btn_text": "#FFFFFF"
+        },
+        "hero": {
+          "background":     "#2D4A3E",
+          "eyebrow_bg":     "rgba(212,168,67,0.2)",
+          "eyebrow_border": "rgba(212,168,67,0.35)",
+          "eyebrow_text":   "#F0C868",
+          "h1_color":       "#FFFFFF",
+          "h1_accent":      "#D4A843",
+          "body_text":      "rgba(255,255,255,0.65)",
+          "primary_btn_bg": "#C8501A",
+          "primary_btn_text": "#FFFFFF",
+          "ghost_btn_bg":   "rgba(255,255,255,0.12)",
+          "ghost_btn_text": "#FFFFFF",
+          "overlay_emoji":  "rgba(255,255,255,0.08)"
+        },
+        "search_bar": {
+          "wrapper_bg":     "#FFFFFF",
+          "wrapper_border": "#E2D9CE",
+          "input_bg":       "#FAFAFA",
+          "input_text":     "#1C1C1C",
+          "input_placeholder": "#B0A898",
+          "icon_color":     "#8C8278",
+          "search_btn_bg":  "#C8501A",
+          "search_btn_text": "#FFFFFF"
+        },
+        "category_pills": {
+          "default_bg":     "#FFFFFF",
+          "default_border": "#E2D9CE",
+          "default_text":   "#6B6B6B",
+          "active_bg":      "rgba(200,80,26,0.05)",
+          "active_border":  "#C8501A",
+          "active_text":    "#C8501A"
+        },
+        "section_heading": {
+          "title_color":    "#1C1C1C",
+          "subtitle_color": "#6B6B6B",
+          "font":           "'Playfair Display', serif"
+        },
+        "recipe_grid": {
+          "background":     "#FFFFFF"
+        },
+        "trending_section": {
+          "background":     "#FDF6EC"
+        },
+        "latest_section": {
+          "background":     "#FFFBF5"
+        },
+        "footer": {
+          "background":     "#1C1C1C",
+          "text":           "rgba(253,246,236,0.5)",
+          "accent":         "#D4A843",
+          "links":          "rgba(253,246,236,0.7)",
+          "links_hover":    "#FFFFFF",
+          "border":         "rgba(255,255,255,0.08)"
+        }
+      }
+    },
+
+    "LoginPage": {
+      "description": "Sign in form page",
+      "background":      "#FDF6EC",
+      "card_bg":         "#FFFFFF",
+      "card_border":     "#E2D9CE",
+      "card_shadow":     "rgba(28,28,28,0.08)",
+      "logo_color":      "#2D4A3E",
+      "subtitle_color":  "#6B6B6B",
+      "tab_active_color":"#C8501A",
+      "tab_active_border":"#C8501A",
+      "tab_inactive":    "#6B6B6B",
+      "label_color":     "#4A4A4A",
+      "input_bg":        "#FAFAFA",
+      "input_border":    "#E2D9CE",
+      "input_border_focus": "#C8501A",
+      "input_text":      "#1C1C1C",
+      "input_placeholder": "#B0A898",
+      "submit_btn_bg":   "#C8501A",
+      "submit_btn_text": "#FFFFFF",
+      "forgot_link":     "#C8501A",
+      "divider_color":   "#E2D9CE",
+      "divider_text":    "#B0A898",
+      "google_btn_bg":   "#FAFAFA",
+      "google_btn_border":"#E2D9CE",
+      "google_btn_text": "#1C1C1C",
+      "footer_text":     "#6B6B6B",
+      "footer_link":     "#C8501A"
+    },
+
+    "RegisterPage": {
+      "description": "Sign up form page — same tokens as LoginPage with additions",
+      "inherits": "LoginPage",
+      "extras": {
+        "legal_text":  "#B0A898",
+        "legal_link":  "#C8501A"
+      }
+    },
+
+    "RecipeDetailPage": {
+      "description": "Full recipe view with hero image, ingredients, steps",
+      "background":  "#FDF6EC",
+      "sections": {
+        "hero": {
+          "background":       "#2D4A3E",
+          "overlay_gradient": "linear-gradient(to top, rgba(28,28,28,0.85), transparent 65%)",
+          "title_color":      "#FFFFFF",
+          "badge_bg":         "rgba(255,255,255,0.15)",
+          "badge_text":       "#FFFFFF",
+          "difficulty_easy_bg":   "rgba(45,74,62,0.7)",
+          "difficulty_easy_text": "#FFFFFF",
+          "difficulty_medium_bg": "rgba(212,168,67,0.3)",
+          "difficulty_medium_text": "#F0C868",
+          "difficulty_hard_bg":   "rgba(200,80,26,0.7)",
+          "difficulty_hard_text": "#FFFFFF",
+          "meta_text":        "rgba(255,255,255,0.6)"
+        },
+        "author_row": {
+          "background":       "#FFFFFF",
+          "border":           "#E2D9CE",
+          "name_color":       "#1C1C1C",
+          "meta_color":       "#6B6B6B",
+          "follow_btn_bg":    "#2D4A3E",
+          "follow_btn_text":  "#FFFFFF",
+          "profile_btn_border":"#C8501A",
+          "profile_btn_text": "#C8501A"
+        },
+        "stat_cards": {
+          "background":   "#FFFFFF",
+          "border":       "#E2D9CE",
+          "value_color":  "#2D4A3E",
+          "label_color":  "#B0A898",
+          "font":         "'DM Mono', monospace"
+        },
+        "description": {
+          "text_color":   "#6B6B6B",
+          "line_height":  "1.7"
+        },
+        "section_heading": {
+          "color":        "#1C1C1C",
+          "divider":      "#E2D9CE",
+          "font":         "'Playfair Display', serif"
+        },
+        "ingredients": {
+          "item_bg":      "#FFFFFF",
+          "item_border":  "#E2D9CE",
+          "dot_color":    "#C8501A",
+          "text_color":   "#1C1C1C"
+        },
+        "steps": {
+          "item_bg":      "#FFFFFF",
+          "item_border":  "#E2D9CE",
+          "number_bg":    "#2D4A3E",
+          "number_text":  "#FFFFFF",
+          "text_color":   "#2C2C2C",
+          "line_height":  "1.6"
+        },
+        "action_bar": {
+          "background":         "#FFFFFF",
+          "border":             "#E2D9CE",
+          "like_bg":            "rgba(200,80,26,0.08)",
+          "like_border":        "#C8501A",
+          "like_text":          "#C8501A",
+          "like_active_bg":     "#C8501A",
+          "like_active_text":   "#FFFFFF",
+          "save_bg":            "rgba(45,74,62,0.08)",
+          "save_border":        "#2D4A3E",
+          "save_text":          "#2D4A3E",
+          "comment_bg":         "#FAFAFA",
+          "comment_border":     "#E2D9CE",
+          "comment_text":       "#6B6B6B"
+        },
+        "comments": {
+          "section_bg":       "#FAFAFA",
+          "item_bg":          "#FFFFFF",
+          "item_border":      "#E2D9CE",
+          "author_name":      "#1C1C1C",
+          "author_meta":      "#B0A898",
+          "content_color":    "#2C2C2C",
+          "like_color":       "#B0A898",
+          "like_active":      "#C8501A",
+          "reply_color":      "#6B6B6B",
+          "input_bg":         "#FFFFFF",
+          "input_border":     "#E2D9CE",
+          "submit_bg":        "#C8501A",
+          "submit_text":      "#FFFFFF"
+        }
+      }
+    },
+
+    "CreateRecipePage": {
+      "description": "New recipe creation form",
+      "background":       "#FDF6EC",
+      "header_bg":        "#FFFFFF",
+      "header_border":    "#E2D9CE",
+      "header_title":     "#1C1C1C",
+      "draft_btn_border": "#C8501A",
+      "draft_btn_text":   "#C8501A",
+      "publish_btn_bg":   "#C8501A",
+      "publish_btn_text": "#FFFFFF",
+      "form_sections": {
+        "label_color":       "#4A4A4A",
+        "required_marker":   "#C8501A",
+        "input_bg":          "#FFFFFF",
+        "input_border":      "#E2D9CE",
+        "input_border_focus":"#2D4A3E",
+        "input_text":        "#1C1C1C",
+        "input_placeholder": "#B0A898",
+        "textarea_bg":       "#FFFFFF",
+        "select_bg":         "#FFFFFF",
+        "image_upload_bg":      "#FAFAFA",
+        "image_upload_border":  "#E2D9CE",
+        "image_upload_border_hover": "#C8501A",
+        "image_upload_text":    "#6B6B6B",
+        "image_upload_accent":  "#C8501A",
+        "ingredient_del_bg":    "rgba(200,80,26,0.1)",
+        "ingredient_del_text":  "#C8501A",
+        "add_row_btn_border":   "#E2D9CE",
+        "add_row_btn_text":     "#6B6B6B",
+        "add_row_btn_hover_border": "#2D4A3E",
+        "add_row_btn_hover_text":   "#2D4A3E",
+        "step_number_bg":       "#2D4A3E",
+        "step_number_text":     "#FFFFFF"
+      }
+    },
+
+    "EditRecipePage": {
+      "description": "Edit existing recipe — inherits CreateRecipePage tokens",
+      "inherits": "CreateRecipePage",
+      "extras": {
+        "header_title":  "Edit recipe",
+        "save_btn_bg":   "#2D4A3E",
+        "save_btn_text": "#FFFFFF",
+        "danger_zone_bg":      "#FFF5F5",
+        "danger_zone_border":  "#F5C6CB",
+        "danger_zone_title":   "#721C24",
+        "delete_btn_bg":       "#DC3545",
+        "delete_btn_text":     "#FFFFFF"
+      }
+    },
+
+    "DashboardPage": {
+      "description": "Logged-in user's personal dashboard",
+      "background":     "#F5F5F5",
+      "sections": {
+        "sidebar": {
+          "background":       "#2D4A3E",
+          "logo_emoji":       "#FFFFFF",
+          "icon_default":     "rgba(255,255,255,0.5)",
+          "icon_active_bg":   "#C8501A",
+          "icon_active_text": "#FFFFFF",
+          "icon_hover_bg":    "rgba(255,255,255,0.1)",
+          "icon_hover_text":  "#FFFFFF"
+        },
+        "topbar": {
+          "background":       "#FFFFFF",
+          "border":           "#E2D9CE",
+          "greeting_color":   "#1C1C1C",
+          "date_color":       "#B0A898",
+          "new_recipe_btn_bg":"#C8501A",
+          "new_recipe_btn_text":"#FFFFFF"
+        },
+        "stat_cards": {
+          "background":    "#FFFFFF",
+          "border":        "#E2D9CE",
+          "number_color":  "#1C1C1C",
+          "label_color":   "#B0A898",
+          "trend_color":   "#28A745",
+          "font_number":   "'DM Mono', monospace"
+        },
+        "recipe_list": {
+          "section_title":    "#1C1C1C",
+          "item_bg":          "#FFFFFF",
+          "item_border":      "#E2D9CE",
+          "recipe_name":      "#1C1C1C",
+          "recipe_meta":      "#6B6B6B",
+          "published_badge_bg":   "#D4EDDA",
+          "published_badge_text": "#155724",
+          "draft_badge_bg":       "#E8E2DA",
+          "draft_badge_text":     "#6B6B6B",
+          "edit_icon_bg":         "#FAFAFA",
+          "edit_icon_border":     "#E2D9CE",
+          "edit_icon_color":      "#6B6B6B",
+          "delete_icon_bg":       "rgba(200,80,26,0.08)",
+          "delete_icon_border":   "rgba(200,80,26,0.2)",
+          "delete_icon_color":    "#C8501A"
+        }
+      }
+    },
+
+    "ProfilePage": {
+      "description": "Public chef profile viewable by anyone",
+      "background":  "#FDF6EC",
+      "sections": {
+        "cover": {
+          "background":  "#2D4A3E",
+          "overlay":     "rgba(255,255,255,0.08)"
+        },
+        "profile_info": {
+          "background":        "#FFFFFF",
+          "border":            "#E2D9CE",
+          "avatar_bg":         "#D4A843",
+          "avatar_text":       "#1C1C1C",
+          "avatar_border":     "#FFFFFF",
+          "name_color":        "#1C1C1C",
+          "username_color":    "#6B6B6B",
+          "bio_color":         "#4A4A4A",
+          "stat_number":       "#1C1C1C",
+          "stat_label":        "#B0A898",
+          "follow_btn_bg":     "#2D4A3E",
+          "follow_btn_text":   "#FFFFFF",
+          "following_btn_bg":  "#FFFFFF",
+          "following_btn_border":"#2D4A3E",
+          "following_btn_text":"#2D4A3E",
+          "message_btn_bg":    "#FAFAFA",
+          "message_btn_border":"#E2D9CE",
+          "message_btn_text":  "#6B6B6B"
+        },
+        "profile_tabs": {
+          "background":        "#FFFFFF",
+          "border":            "#E2D9CE",
+          "tab_active_color":  "#C8501A",
+          "tab_active_border": "#C8501A",
+          "tab_inactive":      "#6B6B6B"
+        },
+        "recipe_grid": {
+          "background":        "#FDF6EC"
+        }
+      }
+    },
+
+    "SearchPage": {
+      "description": "Search results with filters",
+      "background":         "#FDF6EC",
+      "header_bg":          "#FFFFFF",
+      "header_border":      "#E2D9CE",
+      "search_bar": {
+        "background":       "#FFFFFF",
+        "border":           "#E2D9CE",
+        "border_active":    "#C8501A",
+        "icon_color":       "#C8501A",
+        "input_text":       "#1C1C1C",
+        "input_placeholder":"#B0A898",
+        "clear_btn":        "#B0A898"
+      },
+      "filters": {
+        "label_color":      "#B0A898",
+        "pill_default_bg":  "#FFFFFF",
+        "pill_default_border":"#E2D9CE",
+        "pill_default_text":"#6B6B6B",
+        "pill_active_bg":   "rgba(200,80,26,0.06)",
+        "pill_active_border":"#C8501A",
+        "pill_active_text": "#C8501A"
+      },
+      "results": {
+        "count_color":      "#B0A898",
+        "sort_select_bg":   "#FFFFFF",
+        "sort_select_border":"#E2D9CE",
+        "sort_select_text": "#1C1C1C",
+        "no_results_icon":  "#E2D9CE",
+        "no_results_title": "#1C1C1C",
+        "no_results_text":  "#6B6B6B"
+      }
+    },
+
+    "SavedRecipesPage": {
+      "description": "User's bookmarked recipes in collections",
+      "background":       "#FDF6EC",
+      "header_bg":        "#FFFFFF",
+      "header_border":    "#E2D9CE",
+      "header_title":     "#1C1C1C",
+      "header_meta":      "#6B6B6B",
+      "tabs": {
+        "background":       "#FFFFFF",
+        "border":           "#E2D9CE",
+        "active_color":     "#C8501A",
+        "active_border":    "#C8501A",
+        "inactive_color":   "#6B6B6B",
+        "new_collection_color": "#C8501A"
+      },
+      "saved_item": {
+        "background":       "#FFFFFF",
+        "border":           "#E2D9CE",
+        "thumb_bg":         "#FAFAFA",
+        "title_color":      "#1C1C1C",
+        "meta_color":       "#6B6B6B",
+        "view_btn_border":  "#C8501A",
+        "view_btn_text":    "#C8501A",
+        "unsave_btn_bg":    "rgba(200,80,26,0.08)",
+        "unsave_btn_border":"rgba(200,80,26,0.2)",
+        "unsave_btn_text":  "#C8501A"
+      }
+    },
+
+    "NotFoundPage": {
+      "description": "404 error page",
+      "background":    "#FDF6EC",
+      "icon_color":    "#E2D9CE",
+      "code_color":    "#C8501A",
+      "title_color":   "#1C1C1C",
+      "body_text":     "#6B6B6B",
+      "home_btn_bg":   "#C8501A",
+      "home_btn_text": "#FFFFFF",
+      "back_btn_border":"#E2D9CE",
+      "back_btn_text": "#6B6B6B"
+    }
+  },
+
+  "components": {
+    "RecipeCard": {
+      "description": "Reusable grid card shown across Home, Search, Profile pages",
+      "container": {
+        "background":     "#FFFFFF",
+        "border":         "#E2D9CE",
+        "border_radius":  "12px",
+        "shadow_hover":   "0 6px 20px rgba(0,0,0,0.08)",
+        "transition":     "transform 0.15s, box-shadow 0.15s"
+      },
+      "image": {
+        "overlay_gradient": "linear-gradient(to top, rgba(0,0,0,0.4), transparent 60%)",
+        "placeholder_bg":   "#E8E2DA"
+      },
+      "body": {
+        "title_color":      "#1C1C1C",
+        "title_font":       "DM Sans",
+        "title_weight":     500,
+        "meta_color":       "#6B6B6B",
+        "meta_font_size":   "12px"
+      },
+      "footer": {
+        "border":           "#E2D9CE",
+        "author_color":     "#6B6B6B",
+        "likes_color":      "#6B6B6B",
+        "likes_active":     "#C8501A"
+      },
+      "badges": {
+        "easy":   { "bg": "rgba(45,74,62,0.1)",   "text": "#2D4A3E" },
+        "medium": { "bg": "rgba(212,168,67,0.15)", "text": "#7B5A00" },
+        "hard":   { "bg": "rgba(200,80,26,0.12)",  "text": "#C8501A" }
+      }
+    },
+
+    "Navbar": {
+      "description": "Top navigation bar — dark forest background",
+      "background":         "#2D4A3E",
+      "height":             "56px",
+      "logo_text":          "#FFFFFF",
+      "logo_dot":           "#D4A843",
+      "logo_font":          "'Playfair Display', serif",
+      "logo_weight":        700,
+      "nav_link_color":     "rgba(255,255,255,0.7)",
+      "nav_link_active":    "#FFFFFF",
+      "nav_link_hover":     "#FFFFFF",
+      "ghost_btn_bg":       "rgba(255,255,255,0.12)",
+      "ghost_btn_text":     "#FFFFFF",
+      "primary_btn_bg":     "#C8501A",
+      "primary_btn_text":   "#FFFFFF",
+      "avatar_bg":          "#D4A843",
+      "avatar_text":        "#1C1C1C",
+      "mobile_menu_bg":     "#2D4A3E",
+      "mobile_menu_border": "rgba(255,255,255,0.1)"
+    },
+
+    "Footer": {
+      "background":         "#1C1C1C",
+      "primary_text":       "rgba(253,246,236,0.5)",
+      "accent_text":        "#D4A843",
+      "link_color":         "rgba(253,246,236,0.7)",
+      "link_hover":         "#FFFFFF",
+      "border_top":         "rgba(255,255,255,0.08)",
+      "logo_text":          "#FFFFFF",
+      "logo_dot":           "#D4A843"
+    },
+
+    "Sidebar": {
+      "description": "Dashboard sidebar navigation",
+      "background":         "#2D4A3E",
+      "width":              "60px",
+      "width_expanded":     "200px",
+      "logo_color":         "#FFFFFF",
+      "icon_default_color": "rgba(255,255,255,0.5)",
+      "icon_hover_bg":      "rgba(255,255,255,0.1)",
+      "icon_hover_color":   "#FFFFFF",
+      "icon_active_bg":     "#C8501A",
+      "icon_active_color":  "#FFFFFF",
+      "border_right":       "rgba(255,255,255,0.06)",
+      "tooltip_bg":         "#1C1C1C",
+      "tooltip_text":       "#FFFFFF"
+    },
+
+    "Button": {
+      "description": "All button variants",
+      "border_radius": "8px",
+      "font_weight":   500,
+      "font_family":   "DM Sans",
+      "transition":    "all 0.15s",
+      "variants": {
+        "primary": {
+          "background":       "#C8501A",
+          "text":             "#FFFFFF",
+          "border":           "transparent",
+          "hover_background": "#A03D12",
+          "active_background":"#7A2D0C",
+          "disabled_bg":      "#E8E2DA",
+          "disabled_text":    "#B0A898"
+        },
+        "ghost": {
+          "background":       "rgba(255,255,255,0.12)",
+          "text":             "#FFFFFF",
+          "border":           "transparent",
+          "hover_background": "rgba(255,255,255,0.2)"
+        },
+        "outline": {
+          "background":       "transparent",
+          "text":             "#C8501A",
+          "border":           "#C8501A",
+          "hover_background": "rgba(200,80,26,0.05)"
+        },
+        "forest": {
+          "background":       "#2D4A3E",
+          "text":             "#FFFFFF",
+          "border":           "transparent",
+          "hover_background": "#1E3229"
+        },
+        "danger": {
+          "background":       "#DC3545",
+          "text":             "#FFFFFF",
+          "border":           "transparent",
+          "hover_background": "#A32D2D"
+        },
+        "neutral": {
+          "background":       "#FAFAFA",
+          "text":             "#6B6B6B",
+          "border":           "#E2D9CE",
+          "hover_background": "#F5F5F5"
+        }
+      },
+      "sizes": {
+        "sm":  { "padding": "5px 12px",  "font_size": "12px" },
+        "md":  { "padding": "9px 18px",  "font_size": "14px" },
+        "lg":  { "padding": "12px 24px", "font_size": "15px" },
+        "full":{ "padding": "12px",      "font_size": "15px", "width": "100%" }
+      }
+    },
+
+    "Input": {
+      "background":          "#FFFFFF",
+      "border":              "#E2D9CE",
+      "border_radius":       "8px",
+      "border_focus":        "#C8501A",
+      "border_error":        "#DC3545",
+      "text_color":          "#1C1C1C",
+      "placeholder_color":   "#B0A898",
+      "label_color":         "#4A4A4A",
+      "label_font_size":     "13px",
+      "label_font_weight":   500,
+      "error_text_color":    "#DC3545",
+      "error_text_size":     "12px",
+      "helper_text_color":   "#8C8278",
+      "disabled_bg":         "#F5F5F5",
+      "disabled_text":       "#B0A898",
+      "padding":             "10px 14px",
+      "font_size":           "14px"
+    },
+
+    "Badge": {
+      "border_radius":  "20px",
+      "font_size":      "11px",
+      "font_weight":    600,
+      "padding":        "3px 10px",
+      "variants": {
+        "rust":    { "background": "rgba(200,80,26,0.12)",  "text": "#C8501A" },
+        "forest":  { "background": "rgba(45,74,62,0.1)",    "text": "#2D4A3E" },
+        "gold":    { "background": "rgba(212,168,67,0.15)", "text": "#7B5A00" },
+        "success": { "background": "#D4EDDA",               "text": "#155724" },
+        "warning": { "background": "#FFF3CD",               "text": "#856404" },
+        "error":   { "background": "#F8D7DA",               "text": "#721C24" },
+        "neutral": { "background": "#E8E2DA",               "text": "#6B6B6B" },
+        "info":    { "background": "#D1ECF1",               "text": "#0C5460" }
+      }
+    },
+
+    "Avatar": {
+      "border_radius":   "50%",
+      "font_family":     "DM Sans",
+      "font_weight":     600,
+      "fallback_bg":     "#D4A843",
+      "fallback_text":   "#1C1C1C",
+      "border_color":    "#FFFFFF",
+      "sizes": {
+        "xs":  { "size": "24px", "font_size": "9px"  },
+        "sm":  { "size": "32px", "font_size": "12px" },
+        "md":  { "size": "44px", "font_size": "16px" },
+        "lg":  { "size": "70px", "font_size": "26px" },
+        "xl":  { "size": "100px","font_size": "36px" }
+      }
+    },
+
+    "Modal": {
+      "overlay_bg":      "rgba(28,28,28,0.6)",
+      "background":      "#FFFFFF",
+      "border":          "#E2D9CE",
+      "border_radius":   "16px",
+      "shadow":          "0 20px 60px rgba(0,0,0,0.15)",
+      "header_border":   "#E2D9CE",
+      "title_color":     "#1C1C1C",
+      "title_font":      "'Playfair Display', serif",
+      "body_text":       "#4A4A4A",
+      "close_btn_color": "#B0A898",
+      "close_btn_hover": "#1C1C1C"
+    },
+
+    "LikeButton": {
+      "default_bg":      "rgba(200,80,26,0.08)",
+      "default_border":  "#C8501A",
+      "default_text":    "#C8501A",
+      "default_icon":    "#C8501A",
+      "liked_bg":        "#C8501A",
+      "liked_text":      "#FFFFFF",
+      "liked_icon":      "#FFFFFF",
+      "count_font":      "DM Sans",
+      "transition":      "all 0.15s"
+    },
+
+    "SaveButton": {
+      "default_bg":      "rgba(45,74,62,0.08)",
+      "default_border":  "#2D4A3E",
+      "default_text":    "#2D4A3E",
+      "saved_bg":        "#2D4A3E",
+      "saved_text":      "#FFFFFF",
+      "transition":      "all 0.15s"
+    },
+
+    "FollowButton": {
+      "default_bg":      "#2D4A3E",
+      "default_text":    "#FFFFFF",
+      "following_bg":    "#FFFFFF",
+      "following_border":"#2D4A3E",
+      "following_text":  "#2D4A3E",
+      "hover_unfollow_bg":"#F8D7DA",
+      "hover_unfollow_text":"#721C24",
+      "transition":      "all 0.2s"
+    },
+
+    "CategoryFilter": {
+      "pill_default_bg":    "#FFFFFF",
+      "pill_default_border":"#E2D9CE",
+      "pill_default_text":  "#6B6B6B",
+      "pill_active_bg":     "rgba(200,80,26,0.05)",
+      "pill_active_border": "#C8501A",
+      "pill_active_text":   "#C8501A",
+      "pill_hover_border":  "#C8501A",
+      "pill_hover_text":    "#C8501A",
+      "border_radius":      "20px",
+      "font_size":          "12px",
+      "font_weight":        500
+    },
+
+    "RecipeSearch": {
+      "wrapper_bg":         "#FAFAFA",
+      "wrapper_border":     "#E2D9CE",
+      "wrapper_border_focus":"#C8501A",
+      "border_radius":      "8px",
+      "icon_color":         "#B0A898",
+      "input_text":         "#1C1C1C",
+      "input_placeholder":  "#B0A898",
+      "dropdown_bg":        "#FFFFFF",
+      "dropdown_border":    "#E2D9CE",
+      "dropdown_shadow":    "0 8px 24px rgba(0,0,0,0.08)",
+      "dropdown_item_hover":"#FDF6EC",
+      "dropdown_item_text": "#1C1C1C"
+    },
+
+    "CommentSection": {
+      "section_bg":         "#FAFAFA",
+      "section_border":     "#E2D9CE",
+      "item_bg":            "#FFFFFF",
+      "item_border":        "#E2D9CE",
+      "author_name":        "#1C1C1C",
+      "author_name_weight": 500,
+      "timestamp":          "#B0A898",
+      "content_color":      "#2C2C2C",
+      "like_color":         "#B0A898",
+      "like_active":        "#C8501A",
+      "reply_color":        "#6B6B6B",
+      "reply_hover":        "#C8501A",
+      "input_bg":           "#FFFFFF",
+      "input_border":       "#E2D9CE",
+      "input_focus_border": "#C8501A",
+      "submit_bg":          "#C8501A",
+      "submit_text":        "#FFFFFF",
+      "nested_indent":      "16px",
+      "nested_border":      "#E8E2DA"
+    },
+
+    "Spinner": {
+      "color_primary":   "#C8501A",
+      "color_secondary": "#E2D9CE",
+      "sizes": {
+        "sm":  "16px",
+        "md":  "24px",
+        "lg":  "40px"
+      }
+    },
+
+    "Pagination": {
+      "btn_default_bg":    "#FFFFFF",
+      "btn_default_border":"#E2D9CE",
+      "btn_default_text":  "#6B6B6B",
+      "btn_active_bg":     "#C8501A",
+      "btn_active_text":   "#FFFFFF",
+      "btn_hover_border":  "#C8501A",
+      "btn_hover_text":    "#C8501A",
+      "btn_disabled_text": "#D4C9B8",
+      "border_radius":     "6px"
+    },
+
+    "ImageUpload": {
+      "background":         "#FAFAFA",
+      "border":             "#E2D9CE",
+      "border_style":       "dashed",
+      "border_radius":      "10px",
+      "border_hover":       "#C8501A",
+      "background_hover":   "rgba(200,80,26,0.03)",
+      "icon_color":         "#B0A898",
+      "text_color":         "#6B6B6B",
+      "accent_text":        "#C8501A",
+      "preview_border":     "#E2D9CE",
+      "preview_radius":     "8px",
+      "remove_btn_bg":      "#DC3545",
+      "remove_btn_text":    "#FFFFFF"
+    },
+
+    "EmptyState": {
+      "icon_color":         "#E2D9CE",
+      "title_color":        "#1C1C1C",
+      "title_font":         "'Playfair Display', serif",
+      "body_text":          "#6B6B6B",
+      "cta_bg":             "#C8501A",
+      "cta_text":           "#FFFFFF"
+    },
+
+    "Toast": {
+      "border_radius":  "8px",
+      "shadow":         "0 4px 16px rgba(0,0,0,0.12)",
+      "font_size":      "14px",
+      "variants": {
+        "success": { "background": "#D4EDDA", "text": "#155724", "icon": "#28A745", "border": "#C3E6CB" },
+        "error":   { "background": "#F8D7DA", "text": "#721C24", "icon": "#DC3545", "border": "#F5C6CB" },
+        "info":    { "background": "#D1ECF1", "text": "#0C5460", "icon": "#17A2B8", "border": "#BEE5EB" },
+        "warning": { "background": "#FFF3CD", "text": "#856404", "icon": "#FFC107", "border": "#FFEEBA" }
+      }
+    },
+
+    "DashboardStats": {
+      "card_bg":          "#FFFFFF",
+      "card_border":      "#E2D9CE",
+      "card_radius":      "10px",
+      "number_color":     "#1C1C1C",
+      "number_font":      "'DM Mono', monospace",
+      "number_size":      "22px",
+      "number_weight":    600,
+      "label_color":      "#B0A898",
+      "label_size":       "12px",
+      "trend_up_color":   "#28A745",
+      "trend_down_color": "#DC3545",
+      "trend_size":       "11px"
+    },
+
+    "ProfileCard": {
+      "cover_bg":           "#2D4A3E",
+      "cover_height":       "110px",
+      "info_bg":            "#FFFFFF",
+      "info_border":        "#E2D9CE",
+      "avatar_border":      "#FFFFFF",
+      "avatar_border_width":"4px",
+      "name_color":         "#1C1C1C",
+      "name_font":          "'Playfair Display', serif",
+      "name_size":          "20px",
+      "username_color":     "#6B6B6B",
+      "bio_color":          "#4A4A4A",
+      "stat_number_color":  "#1C1C1C",
+      "stat_label_color":   "#B0A898"
+    }
+  },
+
+  "tailwind_config": {
+    "description": "Paste this into tailwind.config.js theme.extend",
+    "colors": {
+      "rust":    { "DEFAULT": "#C8501A", "light": "#E8724A", "dark": "#A03D12" },
+      "forest":  { "DEFAULT": "#2D4A3E", "light": "#3D6B5C", "dark": "#1E3229" },
+      "gold":    { "DEFAULT": "#D4A843", "light": "#F0C868", "dark": "#A87E28" },
+      "cream":   { "DEFAULT": "#FDF6EC", "dark":  "#F5EAD8" },
+      "charcoal":"#1C1C1C"
+    },
+    "fontFamily": {
+      "display": ["Playfair Display", "Georgia", "serif"],
+      "body":    ["DM Sans", "-apple-system", "sans-serif"],
+      "mono":    ["DM Mono", "Fira Code", "monospace"]
+    },
+    "borderRadius": {
+      "pill":  "9999px",
+      "card":  "12px",
+      "input": "8px"
+    }
+  }
+}

@@ -10,14 +10,17 @@ import VerifyEmailPage from './pages/VerifyEmailPage'
 import DashboardPage from './pages/DashboardPage'
 import EditRecipePage from './pages/EditRecipePage'
 import NotFoundPage from './pages/NotFoundPage'
+import Navbar from './components/layout/Navbar'
+import Footer from './components/layout/Footer'
 
 
 function App() {
   return (
     <BrowserRouter>
+    <Navbar/>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/about" element={<LoginPage />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/about" element={<ProfilePage />} />
         <Route path="/about" element={<RecipeDetailPage />} />
         <Route path="/about" element={<ResetPassowrdPage />} />
@@ -27,8 +30,8 @@ function App() {
         <Route path="/about" element={<DashboardPage/>} />
         <Route path="/about" element={<EditRecipePage />} />
         <Route path="/about" element={<NotFoundPage/>} />
-
       </Routes>
+      <Footer/>
 </BrowserRouter>
   )
 }

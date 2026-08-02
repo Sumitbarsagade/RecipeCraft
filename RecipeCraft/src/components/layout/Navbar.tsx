@@ -1,80 +1,96 @@
+import { Menu, Search, User, Heart } from "lucide-react";
 import { useState } from "react";
-import { FaBars, FaTimes } from "react-icons/fa";
+
+const navLinks = [
+  "Home",
+  "Recipes",
+  "Categories",
+  "Trending",
+  "Community",
+];
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [mobileMenu, setMobileMenu] = useState(false);
 
   return (
-    <nav className="bg-[#26463B] text-white shadow-md">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <div className="flex items-center gap-2">
-            <span className="text-yellow-400 text-3xl leading-none">•</span>
-            <h1 className="text-2xl font-bold">RecipeCraft</h1>
+    <header className="fixed top-0 left-0 z-50 w-full border-b border-white/20 bg-white/70 backdrop-blur-xl">
+      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
+
+        {/* Logo */}
+        <div className="flex items-center gap-2">
+          <span className="text-3xl">🍳</span>
+
+          <div>
+            <h1 className="font-serif text-2xl font-bold text-[#C8501A]">
+              RecipeCraft
+            </h1>
           </div>
+        </div>
 
-          {/* Desktop Menu */}
-          <div className="hidden md:flex items-center gap-8">
-            <a href="#" className="hover:text-orange-400 transition">
-              Browse
+        {/* Desktop Navigation */}
+        <nav className="hidden gap-8 md:flex">
+          {navLinks.map((item) => (
+            <a
+              key={item}
+              href="#"
+              className="font-medium text-gray-700 transition hover:text-[#C8501A]"
+            >
+              {item}
             </a>
-            <a href="#" className="hover:text-orange-400 transition">
-              Trending
-            </a>
-            <a href="#" className="hover:text-orange-400 transition">
-              Chefs
-            </a>
+          ))}
+        </nav>
+
+        {/* Search */}
+        <div className="hidden lg:flex">
+          <div className="flex items-center rounded-full bg-gray-100 px-4 py-2">
+            <Search size={18} />
+            <input
+              className="ml-2 bg-transparent outline-none"
+              placeholder="Search recipes..."
+            />
           </div>
+        </div>
 
-          {/* Desktop Buttons */}
-          <div className="hidden md:flex items-center gap-3">
-            <button className="px-4 py-2 rounded-md bg-slate-700 hover:bg-slate-600 transition">
-              Sign in
-            </button>
+        {/* Right */}
+        <div className="hidden items-center gap-5 md:flex">
+          <Heart
+            className="cursor-pointer transition hover:text-red-500"
+            size={22}
+          />
 
-            <button className="px-4 py-2 rounded-md bg-orange-500 hover:bg-orange-600 transition">
-              Get started
-            </button>
-          </div>
+          <User
+            className="cursor-pointer transition hover:text-[#C8501A]"
+            size={22}
+          />
 
-          {/* Mobile Toggle */}
-          <button
-            className="md:hidden text-2xl"
-            onClick={() => setIsOpen(!isOpen)}
-          >
-            {isOpen ? <FaTimes /> : <FaBars />}
+          <button className="rounded-full bg-[#C8501A] px-5 py-2 text-white transition hover:bg-[#A63F13]">
+            Sign In
           </button>
         </div>
 
-        {/* Mobile Menu */}
-        <div
-          className={`md:hidden overflow-hidden transition-all duration-300 ${
-            isOpen ? "max-h-96 py-4" : "max-h-0"
-          }`}
+        {/* Mobile */}
+        <button
+          onClick={() => setMobileMenu(!mobileMenu)}
+          className="md:hidden"
         >
-          <div className="flex flex-col gap-4">
-            <a href="#" className="hover:text-orange-400">
-              Browse
-            </a>
-            <a href="#" className="hover:text-orange-400">
-              Trending
-            </a>
-            <a href="#" className="hover:text-orange-400">
-              Chefs
-            </a>
-
-            <button className="w-full rounded-md bg-slate-700 py-2 hover:bg-slate-600">
-              Sign in
-            </button>
-
-            <button className="w-full rounded-md bg-orange-500 py-2 hover:bg-orange-600">
-              Get started
-            </button>
-          </div>
-        </div>
+          <Menu />
+        </button>
       </div>
-    </nav>
+
+      {/* Mobile Menu */}
+      {mobileMenu && (
+        <div className="border-t bg-white md:hidden">
+          {navLinks.map((item) => (
+            <a
+              key={item}
+              href="#"
+              className="block px-6 py-4 hover:bg-orange-50"
+            >
+              {item}
+            </a>
+          ))}
+        </div>
+      )}
+    </header>
   );
 }
-

@@ -12,6 +12,7 @@ import EditRecipePage from './pages/EditRecipePage'
 import NotFoundPage from './pages/NotFoundPage'
 import Navbar from './components/layout/Navbar'
 import Footer from './components/layout/Footer'
+import SignupPage from './pages/SignupPage'
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
         <Route path="/about" element={<ProfilePage />} />
         <Route path="/about" element={<RecipeDetailPage />} />
         <Route path="/about" element={<ResetPassowrdPage />} />

@@ -1,4 +1,4 @@
-import Footer from "../components/layout/Footer";
+
 import Hero from "../components/layout/Hero";
 import LatestRecipes from "../components/layout/LatestRecipes";
 import Newsletter from "../components/layout/Newsletter";
@@ -19,7 +19,7 @@ const HomePage=()=>{
         <WhyChooseUs/>
         <PopularChefs/>
         <Newsletter/>
-        <Footer/>
+        
 
    </div>
   )

@@ -2,7 +2,6 @@ import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import ProfilePage from './pages/ProfilePage'
-import RecipeDetailPage from './pages/RecipeDetailPage'
 import ResetPassowrdPage from './pages/ResetPasswordPage'
 import SaveRecipesPage from './pages/SavedRecipesPage'
 import SearchPage from './pages/SearchPage'
@@ -13,6 +12,7 @@ import NotFoundPage from './pages/NotFoundPage'
 import Navbar from './components/layout/Navbar'
 import Footer from './components/layout/Footer'
 import SignupPage from './pages/SignupPage'
+import RecipesPage from './pages/RecipesPage'
 
 
 function App() {
@@ -24,7 +24,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/about" element={<ProfilePage />} />
-        <Route path="/about" element={<RecipeDetailPage />} />
+        <Route path="/recipes" element={<RecipesPage />} />
         <Route path="/about" element={<ResetPassowrdPage />} />
         <Route path="/about" element={<SaveRecipesPage />} />
         <Route path="/about" element={<SearchPage />} />

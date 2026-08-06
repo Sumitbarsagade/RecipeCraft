@@ -1,5 +1,5 @@
 import { useState } from "react";
-import RecipeHero from "../components/recipes/RecipeHero";
+
 import RecipeFilterBar from "../components/recipes/RecipeFilterBar";
 
 import ActiveFilters from "../components/recipes/ActiveFilters";
@@ -10,7 +10,7 @@ import { recipes } from "../utils/recipes";
 
 
 export default function RecipesPage() {
-  const [search, setSearch] = useState("");
+  
 
   const [category, setCategory] = useState("All");
   const [difficulty, setDifficulty] = useState("Any");
@@ -27,11 +27,8 @@ const filters = [
 
   return (
     <>
-    
-      <RecipeHero
-        search={search}
-        setSearch={setSearch}
-      />
+    <main className="mx-auto max-w-7xl px-6 py-8 mt-12">
+  <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-8">
 
       <RecipeFilterBar
         selectedCategory={category}
@@ -40,7 +37,15 @@ const filters = [
         onCategoryChange={setCategory}
         onDifficultyChange={setDifficulty}
         onCookTimeChange={setCookTime}
+
+        
       />
+
+    <section className="min-w-0">
+
+   
+
+   
       
       <ActiveFilters
   filters={filters}
@@ -61,6 +66,10 @@ const filters = [
 
 <RecipeGrid recipes={recipes} />
       {/* Recipe Grid */}
+ </section>
+
+  </div>
+</main>
 
       
     </>

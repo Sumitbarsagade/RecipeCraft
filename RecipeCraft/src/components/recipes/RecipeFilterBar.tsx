@@ -24,7 +24,7 @@ export default function RecipeFilterBar({
   onCookTimeChange,
 }: Props) {
   return (
-    <section className="sticky top-20 z-30 border-y bg-white/90 backdrop-blur">
+    <section className="fixed w-[20%] -z-30 h-[80%] top-20 z-30 border-y bg-white/90 backdrop-blur">
       <div className="mx-auto max-w-7xl space-y-8 px-6 py-8">
 
         {/* Categories */}

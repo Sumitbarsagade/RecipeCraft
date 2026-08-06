@@ -12,6 +12,7 @@ interface Recipe {
   rating: number;
   time: string;
   saves: number;
+  likes?:number;
 }
 
 
@@ -35,6 +36,16 @@ export default function RecipeGrid({
       }}
       className="pb-20"
     >
+
+      <section
+    className="
+        min-w-0
+        h-[calc(100vh-96px)]
+        overflow-y-auto
+        scrollbar-hide
+        pb-20
+    "
+>
       <div className="mx-auto grid max-w-7xl gap-8 px-6 md:grid-cols-2 xl:grid-cols-3">
 
         {recipes.map((recipe) => (
@@ -56,6 +67,7 @@ export default function RecipeGrid({
         ))}
 
       </div>
+      </section>
     </motion.section>
   );
 }

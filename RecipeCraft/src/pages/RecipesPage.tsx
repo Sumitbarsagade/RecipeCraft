@@ -27,9 +27,29 @@ const filters = [
 
   return (
     <>
-    <main className="mx-auto max-w-7xl px-6 py-8 mt-12">
-  <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-8">
+  <main
+  className="
+    mx-auto
+    max-w-7xl
+    px-4
+    lg:px-6
+    py-6
+  "
+>
+  <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-8">
 
+    {/* Sidebar */}
+    <aside className="hidden lg:block">
+      <section
+  className="
+    sticky
+    top-24
+    h-[calc(100vh-90px)]
+    overflow-y-auto
+    pr-2
+    scrollbar-hide
+  "
+>
       <RecipeFilterBar
         selectedCategory={category}
         selectedDifficulty={difficulty}
@@ -37,36 +57,38 @@ const filters = [
         onCategoryChange={setCategory}
         onDifficultyChange={setDifficulty}
         onCookTimeChange={setCookTime}
+      />
+      </section>
+    </aside>
 
-        
+    {/* Mobile Filter */}
+    <div className="lg:hidden">
+      {/* <RecipeFilterDrawer /> */}
+    </div>
+
+    {/* Recipe Area */}
+    <section className="min-w-0 mt-8">
+
+      <ActiveFilters
+        filters={filters}
+        onRemove={(filter) => {
+          if (filter === category) setCategory("All");
+          if (filter === difficulty) setDifficulty("Any");
+          if (filter === cookTime) setCookTime("Any");
+        }}
       />
 
-    <section className="min-w-0">
+      <RecipeToolbar
+        total={recipes.length}
+        sort={sort}
+        setSort={setSort}
+        grid={grid}
+        setGrid={setGrid}
+      />
 
-   
+      <RecipeGrid recipes={recipes} />
 
-   
-      
-      <ActiveFilters
-  filters={filters}
-  onRemove={(filter) => {
-    if (filter === category) setCategory("All");
-    if (filter === difficulty) setDifficulty("Any");
-    if (filter === cookTime) setCookTime("Any");
-  }}
-/>
-
-<RecipeToolbar
-  total={recipes.length}
-  sort={sort}
-  setSort={setSort}
-  grid={grid}
-  setGrid={setGrid}
-/>
-
-<RecipeGrid recipes={recipes} />
-      {/* Recipe Grid */}
- </section>
+    </section>
 
   </div>
 </main>

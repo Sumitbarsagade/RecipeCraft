@@ -8,7 +8,7 @@ interface Props {
   image: string;
   rating: number;
   time: string;
-  likes: string;
+  likes?: number;
 }
 
 export default function RecipeCard({

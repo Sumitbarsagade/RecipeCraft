@@ -27,7 +27,7 @@ export default function RecipesPage() {
 
   return (
     <>
-      <main
+  <main
   className="
     mx-auto
     max-w-7xl
@@ -40,6 +40,16 @@ export default function RecipesPage() {
 
     {/* Sidebar */}
     <aside className="hidden lg:block">
+      <section
+  className="
+    sticky
+    top-24
+    h-[calc(100vh-90px)]
+    overflow-y-auto
+    pr-2
+    scrollbar-hide
+  "
+>
       <RecipeFilterBar
         selectedCategory={category}
         selectedDifficulty={difficulty}
@@ -48,6 +58,7 @@ export default function RecipesPage() {
         onDifficultyChange={setDifficulty}
         onCookTimeChange={setCookTime}
       />
+      </section>
     </aside>
 
     {/* Mobile Filter */}

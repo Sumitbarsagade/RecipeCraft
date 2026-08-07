@@ -12,6 +12,7 @@ interface Recipe {
   rating: number;
   time: string;
   saves: number;
+  likes?:number;
 }
 
 
@@ -66,6 +67,7 @@ export default function RecipeGrid({
         ))}
 
       </div>
+
     </motion.section>
     </section>
   );

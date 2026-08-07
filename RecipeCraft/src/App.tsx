@@ -13,6 +13,7 @@ import Navbar from './components/layout/Navbar'
 import Footer from './components/layout/Footer'
 import SignupPage from './pages/SignupPage'
 import RecipesPage from './pages/RecipesPage'
+import RecipeDetailsPage from './pages/RecipeDetailPage'
 
 
 function App() {
@@ -25,7 +26,7 @@ function App() {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/about" element={<ProfilePage />} />
         <Route path="/recipes" element={<RecipesPage />} />
-        <Route path="/about" element={<ResetPassowrdPage />} />
+        <Route path="/recipes/:id" element={<RecipeDetailsPage />} />
         <Route path="/about" element={<SaveRecipesPage />} />
         <Route path="/about" element={<SearchPage />} />
         <Route path="/about" element={<VerifyEmailPage />} />

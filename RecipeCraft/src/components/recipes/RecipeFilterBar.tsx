@@ -44,7 +44,7 @@ export default function RecipeFilterBar({
             Categories
           </h3>
 
-          <div className="flex gap-3 overflow-auto">
+          <div className="grid gap-2  grid-cols-2">
 
             {categories.map((item) => (
               <FilterChip

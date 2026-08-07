@@ -1,227 +1,219 @@
-export default interface Recipe {
+export interface Recipe {
   id: number;
   title: string;
   image: string;
   chef: string;
+  chefAvatar?: string;
+
   category: string;
+
   difficulty: "Easy" | "Medium" | "Hard";
+
   rating: number;
+  reviewCount?: number;
+
   time: string;
   saves: number;
-  likes?: number;
+
+  description?: string;
 }
+
 export const recipes: Recipe[] = [
   {
     id: 1,
     title: "Creamy Garlic Pasta",
     image: "/recipes/pasta.jpg",
     chef: "Maria Rossi",
+    chefAvatar: "/chefs/maria.jpg",
     category: "Italian",
     difficulty: "Easy",
     rating: 4.8,
+    reviewCount: 124,
     time: "25 min",
     saves: 2500,
+    description:
+      "A rich and creamy pasta with garlic, parmesan and fresh herbs.",
   },
+
+  {
+    id: 1,
+    title: "Creamy Garlic Pasta",
+    image: "/recipes/pasta.jpg",
+    chef: "Maria Rossi",
+    chefAvatar: "/chefs/maria.jpg",
+    category: "Italian",
+    difficulty: "Easy",
+    rating: 4.8,
+    reviewCount: 124,
+    time: "25 min",
+    saves: 2500,
+    description:
+      "A rich and creamy pasta with garlic, parmesan and fresh herbs.",
+  },
+
+  {
+    id: 1,
+    title: "Creamy Garlic Pasta",
+    image: "/recipes/pasta.jpg",
+    chef: "Maria Rossi",
+    chefAvatar: "/chefs/maria.jpg",
+    category: "Italian",
+    difficulty: "Easy",
+    rating: 4.8,
+    reviewCount: 124,
+    time: "25 min",
+    saves: 2500,
+    description:
+      "A rich and creamy pasta with garlic, parmesan and fresh herbs.",
+  },
+
+  {
+    id: 1,
+    title: "Creamy Garlic Pasta",
+    image: "/recipes/pasta.jpg",
+    chef: "Maria Rossi",
+    chefAvatar: "/chefs/maria.jpg",
+    category: "Italian",
+    difficulty: "Easy",
+    rating: 4.8,
+    reviewCount: 124,
+    time: "25 min",
+    saves: 2500,
+    description:
+      "A rich and creamy pasta with garlic, parmesan and fresh herbs.",
+  },
+
+
+  {
+    id: 1,
+    title: "Creamy Garlic Pasta",
+    image: "/recipes/pasta.jpg",
+    chef: "Maria Rossi",
+    chefAvatar: "/chefs/maria.jpg",
+    category: "Italian",
+    difficulty: "Easy",
+    rating: 4.8,
+    reviewCount: 124,
+    time: "25 min",
+    saves: 2500,
+    description:
+      "A rich and creamy pasta with garlic, parmesan and fresh herbs.",
+  },
+
+
+  {
+    id: 1,
+    title: "Creamy Garlic Pasta",
+    image: "/recipes/pasta.jpg",
+    chef: "Maria Rossi",
+    chefAvatar: "/chefs/maria.jpg",
+    category: "Italian",
+    difficulty: "Easy",
+    rating: 4.8,
+    reviewCount: 124,
+    time: "25 min",
+    saves: 2500,
+    description:
+      "A rich and creamy pasta with garlic, parmesan and fresh herbs.",
+  },
+
+
+  {
+    id: 1,
+    title: "Creamy Garlic Pasta",
+    image: "/recipes/pasta.jpg",
+    chef: "Maria Rossi",
+    chefAvatar: "/chefs/maria.jpg",
+    category: "Italian",
+    difficulty: "Easy",
+    rating: 4.8,
+    reviewCount: 124,
+    time: "25 min",
+    saves: 2500,
+    description:
+      "A rich and creamy pasta with garlic, parmesan and fresh herbs.",
+  },
+
+
+  {
+    id: 1,
+    title: "Creamy Garlic Pasta",
+    image: "/recipes/pasta.jpg",
+    chef: "Maria Rossi",
+    chefAvatar: "/chefs/maria.jpg",
+    category: "Italian",
+    difficulty: "Easy",
+    rating: 4.8,
+    reviewCount: 124,
+    time: "25 min",
+    saves: 2500,
+    description:
+      "A rich and creamy pasta with garlic, parmesan and fresh herbs.",
+  },
+
+
+  {
+    id: 1,
+    title: "Creamy Garlic Pasta",
+    image: "/recipes/pasta.jpg",
+    chef: "Maria Rossi",
+    chefAvatar: "/chefs/maria.jpg",
+    category: "Italian",
+    difficulty: "Easy",
+    rating: 4.8,
+    reviewCount: 124,
+    time: "25 min",
+    saves: 2500,
+    description:
+      "A rich and creamy pasta with garlic, parmesan and fresh herbs.",
+  },
+
+  {
+    id: 1,
+    title: "Creamy Garlic Pasta",
+    image: "/recipes/pasta.jpg",
+    chef: "Maria Rossi",
+    chefAvatar: "/chefs/maria.jpg",
+    category: "Italian",
+    difficulty: "Easy",
+    rating: 4.8,
+    reviewCount: 124,
+    time: "25 min",
+    saves: 2500,
+    description:
+      "A rich and creamy pasta with garlic, parmesan and fresh herbs.",
+  },
+  
+
   {
     id: 2,
     title: "Butter Chicken",
     image: "/recipes/butter-chicken.jpg",
     chef: "Rahul Sharma",
+    chefAvatar: "/chefs/rahul.jpg",
     category: "Indian",
     difficulty: "Medium",
     rating: 4.9,
+    reviewCount: 218,
     time: "45 min",
     saves: 4100,
+    description:
+      "Tender chicken simmered in a rich, buttery tomato sauce.",
   },
+
   {
     id: 3,
     title: "Healthy Buddha Bowl",
     image: "/recipes/bowl.jpg",
     chef: "Emma Wilson",
+    chefAvatar: "/chefs/emma.jpg",
     category: "Healthy",
     difficulty: "Easy",
     rating: 4.7,
+    reviewCount: 96,
     time: "20 min",
     saves: 1800,
-  },
-<<<<<<< HEAD
-   {
-    id: 4,
-    title: "Healthy Buddha Bowl",
-    image: "/recipes/bowl.jpg",
-    chef: "Emma Wilson",
-    category: "Healthy",
-    difficulty: "Easy",
-    rating: 4.7,
-    time: "20 min",
-    saves: 1800,
-  },
-   {
-    id: 5,
-    title: "Healthy Buddha Bowl",
-    image: "/recipes/bowl.jpg",
-    chef: "Emma Wilson",
-    category: "Healthy",
-    difficulty: "Easy",
-    rating: 4.7,
-    time: "20 min",
-    saves: 1800,
-  },
-   {
-=======
-  {
-    id: 4,
-    title: "Creamy Garlic Pasta",
-    image: "/recipes/pasta.jpg",
-    chef: "Maria Rossi",
-    category: "Italian",
-    difficulty: "Easy",
-    rating: 4.8,
-    time: "25 min",
-    saves: 2500,
-  },
-  {
-    id: 5,
-    title: "Butter Chicken",
-    image: "/recipes/butter-chicken.jpg",
-    chef: "Rahul Sharma",
-    category: "Indian",
-    difficulty: "Medium",
-    rating: 4.9,
-    time: "45 min",
-    saves: 4100,
-  },
-  {
->>>>>>> 2e2bcd409c5451a4ace8f119fedc80c034022f66
-    id: 6,
-    title: "Healthy Buddha Bowl",
-    image: "/recipes/bowl.jpg",
-    chef: "Emma Wilson",
-    category: "Healthy",
-    difficulty: "Easy",
-    rating: 4.7,
-    time: "20 min",
-    saves: 1800,
-  },
-  {
-    id: 7,
-    title: "Creamy Garlic Pasta",
-    image: "/recipes/pasta.jpg",
-    chef: "Maria Rossi",
-    category: "Italian",
-    difficulty: "Easy",
-    rating: 4.8,
-    time: "25 min",
-    saves: 2500,
-  },
-  {
-    id: 8,
-    title: "Butter Chicken",
-    image: "/recipes/butter-chicken.jpg",
-    chef: "Rahul Sharma",
-    category: "Indian",
-    difficulty: "Medium",
-    rating: 4.9,
-    time: "45 min",
-    saves: 4100,
-  },
-  {
-    id: 9,
-    title: "Healthy Buddha Bowl",
-    image: "/recipes/bowl.jpg",
-    chef: "Emma Wilson",
-    category: "Healthy",
-    difficulty: "Easy",
-    rating: 4.7,
-    time: "20 min",
-    saves: 1800,
-  },
-  {
-    id: 10,
-    title: "Butter Chicken",
-    image: "/recipes/butter-chicken.jpg",
-    chef: "Rahul Sharma",
-    category: "Indian",
-    difficulty: "Medium",
-    rating: 4.9,
-    time: "45 min",
-    saves: 4100,
-  },
-  {
-    id: 11,
-    title: "Healthy Buddha Bowl",
-    image: "/recipes/bowl.jpg",
-    chef: "Emma Wilson",
-    category: "Healthy",
-    difficulty: "Easy",
-    rating: 4.7,
-    time: "20 min",
-    saves: 1800,
-  },
-  {
-    id: 12,
-    title: "Creamy Garlic Pasta",
-    image: "/recipes/pasta.jpg",
-    chef: "Maria Rossi",
-    category: "Italian",
-    difficulty: "Easy",
-    rating: 4.8,
-    time: "25 min",
-    saves: 2500,
-  },
-  {
-    id: 13,
-    title: "Butter Chicken",
-    image: "/recipes/butter-chicken.jpg",
-    chef: "Rahul Sharma",
-    category: "Indian",
-    difficulty: "Medium",
-    rating: 4.9,
-    time: "45 min",
-    saves: 4100,
-  },
-  {
-    id: 14,
-    title: "Healthy Buddha Bowl",
-    image: "/recipes/bowl.jpg",
-    chef: "Emma Wilson",
-    category: "Healthy",
-    difficulty: "Easy",
-    rating: 4.7,
-    time: "20 min",
-    saves: 1800,
-  },
-  {
-    id: 15,
-    title: "Creamy Garlic Pasta",
-    image: "/recipes/pasta.jpg",
-    chef: "Maria Rossi",
-    category: "Italian",
-    difficulty: "Easy",
-    rating: 4.8,
-    time: "25 min",
-    saves: 2500,
-  },
-  {
-    id: 16,
-    title: "Butter Chicken",
-    image: "/recipes/butter-chicken.jpg",
-    chef: "Rahul Sharma",
-    category: "Indian",
-    difficulty: "Medium",
-    rating: 4.9,
-    time: "45 min",
-    saves: 4100,
-  },
-  {
-    id: 17,
-    title: "Healthy Buddha Bowl",
-    image: "/recipes/bowl.jpg",
-    chef: "Emma Wilson",
-    category: "Healthy",
-    difficulty: "Easy",
-    rating: 4.7,
-    time: "20 min",
-    saves: 1800,
+    description:
+      "A colorful bowl packed with vegetables, grains and fresh flavors.",
   },
 ];

@@ -21,7 +21,7 @@ export default function FilterChip({
         scale: 0.95,
       }}
       onClick={onClick}
-      className={`rounded-full px-5 py-2 text-sm font-medium transition-all duration-300
+      className={`rounded-full px-5 py-2  w-fit text-sm font-medium transition-all duration-300
 
       ${
         active

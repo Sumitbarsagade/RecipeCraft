@@ -42,6 +42,7 @@ export default function RecipesPage() {
     <aside className="hidden lg:block">
       <section
   className="
+
     sticky
     top-24
     h-[calc(100vh-90px)]

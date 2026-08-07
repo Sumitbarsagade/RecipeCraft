@@ -57,6 +57,15 @@ export interface RecipeDetail {
   ingredientGroups: IngredientGroup[];
 
   instructions: InstructionStep[];
+
+  chefTips: ChefTip[];
+
+  substitutions: Substitution[];
+
+  equipment: Equipment[];
+
+  nutrition: NutritionItem[];
+
 }
 
 export const recipeDetails: RecipeDetail = {
@@ -251,4 +260,157 @@ export const recipeDetails: RecipeDetail = {
       duration: "1 min",
     },
   ],
+
+  chefTips: [
+  {
+    id: 1,
+    title: "Don't burn the garlic",
+    description:
+      "Cook the garlic over medium heat until fragrant and lightly golden. Burnt garlic can make the entire sauce bitter.",
+  },
+
+  {
+    id: 2,
+    title: "Save your pasta water",
+    description:
+      "Reserve some starchy pasta water before draining. It helps loosen the sauce and gives it a silky texture.",
+  },
+
+  {
+    id: 3,
+    title: "Use freshly grated parmesan",
+    description:
+      "Freshly grated parmesan melts much better than pre-shredded cheese and creates a smoother sauce.",
+  },
+
+  {
+    id: 4,
+    title: "Serve immediately",
+    description:
+      "Cream sauces naturally thicken as they cool, so serve the pasta while it is hot and silky.",
+  },
+],
+
+substitutions: [
+  {
+    id: 1,
+    original: "Heavy cream",
+    replacement: "Half-and-half",
+    note: "The sauce will be slightly lighter.",
+  },
+
+  {
+    id: 2,
+    original: "Parmesan",
+    replacement: "Pecorino Romano",
+    note: "Expect a slightly saltier and sharper flavor.",
+  },
+
+  {
+    id: 3,
+    original: "Spaghetti",
+    replacement: "Fettuccine",
+    note: "Works especially well with creamy sauces.",
+  },
+
+  {
+    id: 4,
+    original: "Fresh basil",
+    replacement: "Fresh parsley",
+    note: "Use the same quantity.",
+  },
+],
+
+equipment: [
+  {
+    id: 1,
+    name: "Large pot",
+    description: "For cooking the pasta.",
+  },
+
+  {
+    id: 2,
+    name: "Large skillet",
+    description: "For preparing the creamy sauce.",
+  },
+
+  {
+    id: 3,
+    name: "Colander",
+    description: "For draining the pasta.",
+  },
+
+  {
+    id: 4,
+    name: "Fine grater",
+    description: "For freshly grating parmesan.",
+  },
+],
+
+nutrition: [
+  {
+    label: "Calories",
+    value: "520",
+    unit: "kcal",
+  },
+
+  {
+    label: "Protein",
+    value: "18",
+    unit: "g",
+  },
+
+  {
+    label: "Carbs",
+    value: "58",
+    unit: "g",
+  },
+
+  {
+    label: "Fat",
+    value: "24",
+    unit: "g",
+  },
+
+  {
+    label: "Fiber",
+    value: "3",
+    unit: "g",
+  },
+
+  {
+    label: "Sugar",
+    value: "4",
+    unit: "g",
+  },
+]
 };
+
+
+export interface ChefTip {
+  id: number;
+  title: string;
+  description: string;
+}
+
+export interface Substitution {
+  id: number;
+  original: string;
+  replacement: string;
+  note?: string;
+}
+
+export interface Equipment {
+  id: number;
+  name: string;
+  description?: string;
+}
+
+export interface NutritionItem {
+  label: string;
+  value: string;
+  unit?: string;
+}
+
+
+

@@ -7,6 +7,7 @@ import RecipeHero from "../components/recipe-details/RecipeHero";
 import RecipeMeta from "../components/recipe-details/RecipeMeta";
 import JumpToRecipe from "../components/recipe-details/JumpToRecipe";
 import RecipeIntro from "../components/recipe-details/RecipeIntro";
+import RecipeInfoGrid from "../components/recipe-details/RecipeInfoGrid";
 
 export default function RecipeDetailsPage() {
   const recipe = recipeDetails;
@@ -139,8 +140,20 @@ export default function RecipeDetailsPage() {
       instructions={recipe.instructions}
     />
   </div>
-</section>
 
+
+
+</section>
+{/* =================================================
+            PHASE 3
+        ================================================== */}
+
+        <RecipeInfoGrid
+          tips={recipe.chefTips}
+          substitutions={recipe.substitutions}
+          equipment={recipe.equipment}
+          nutrition={recipe.nutrition}
+        />
       </main>
     </div>
   );

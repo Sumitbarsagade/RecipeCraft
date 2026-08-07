@@ -1,36 +1,7 @@
 import RecipeCard from "../common/RecipeCard";
 import SectionHeader from "../common/SectionHeader";
-
-const recipes = [
-  {
-    title: "Creamy Garlic Pasta",
-    image: "/recipes/pasta.jpg",
-    rating: 4.9,
-    time: "25 mins",
-    likes: "2.4K",
-  },
-  {
-    title: "Butter Chicken",
-    image: "/recipes/chicken.jpg",
-    rating: 4.8,
-    time: "40 mins",
-    likes: "5.2K",
-  },
-  {
-    title: "Veg Pizza",
-    image: "/recipes/pizza.jpg",
-    rating: 4.7,
-    time: "30 mins",
-    likes: "3.9K",
-  },
-  {
-    title: "Chocolate Brownie",
-    image: "/recipes/brownie.jpg",
-    rating: 5,
-    time: "45 mins",
-    likes: "7.1K",
-  },
-];
+import { motion } from "framer-motion";
+import { recipes } from "../../utils/recipes";
 
 export default function TrendingRecipes() {
   return (
@@ -45,11 +16,22 @@ export default function TrendingRecipes() {
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           {recipes.map((recipe) => (
-            <RecipeCard
-              key={recipe.title}
-              {...recipe}
-            />
-          ))}
+          <motion.div
+            key={recipe.id}
+            variants={{
+              hidden: {
+                opacity: 0,
+                y: 40,
+              },
+              visible: {
+                opacity: 1,
+                y: 0,
+              },
+            }}
+          >
+            <RecipeCard {...recipe} />
+          </motion.div>
+        ))}
         </div>
 
       </div>

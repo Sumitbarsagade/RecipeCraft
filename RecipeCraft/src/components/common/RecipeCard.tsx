@@ -349,9 +349,7 @@ export default function RecipeCard({
                   text-[#2D4A3E]
                 "
               >
-                {chef
-                  .split(" ")
-                  .map((name) => name[0])
+                {chef.split('').map((name) => name[0])
                   .slice(0, 2)
                   .join("")}
               </div>

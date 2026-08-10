@@ -1,2 +1,7 @@
+const DashboardMobileHeader= ()=>{
+    return(
+        <></>
+    )
+}
 
-const 
+export default DashboardMobileHeader;

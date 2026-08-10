@@ -1,27 +1,28 @@
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
-import ProfilePage from './pages/ProfilePage'
-import ResetPassowrdPage from './pages/ResetPasswordPage'
+import ProfilePage from './components/dashboard/ProfilePage'
 import SaveRecipesPage from './pages/SavedRecipesPage'
 import SearchPage from './pages/SearchPage'
 import VerifyEmailPage from './pages/VerifyEmailPage'
 import DashboardPage from './pages/DashboardPage'
-import EditRecipePage from './pages/EditRecipePage'
+import EditRecipePage from './components/dashboard/EditRecipePage'
 import NotFoundPage from './pages/NotFoundPage'
-import Navbar from './components/layout/Navbar'
-import Footer from './components/layout/Footer'
 import SignupPage from './pages/SignupPage'
 import RecipesPage from './pages/RecipesPage'
 import RecipeDetailsPage from './pages/RecipeDetailPage'
-import AddRecipePage from './pages/AddRecipePage'
-
+import DashboardLayout from './components/layout/DashboardLayout'
+import PublicLayout from './components/layout/PublicLayout'
+import
 
 function App() {
   return (
     <BrowserRouter>
-    <Navbar/>
+      {/* ================================
+          PUBLIC WEBSITE
+      ================================= */}
       <Routes>
+      <Route element={<PublicLayout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
@@ -31,17 +32,43 @@ function App() {
         <Route path="/about" element={<SaveRecipesPage />} />
         <Route path="/about" element={<SearchPage />} />
         <Route path="/about" element={<VerifyEmailPage />} />
-       
-        
         <Route path="/about" element={<NotFoundPage/>} />
-      </Routes>
-      <Footer/>
+      </Route>
+  
 
-      <Routes>
-         <Route path="/dashboard" element={<DashboardPage/>} />
-         <Route path="/dashboard/addrecipe" element={<AddRecipePage />} />
-         <Route path="/dashboard/editrecipe" element={<EditRecipePage />} />
-      </Routes>
+      {/* ================================
+          DASHBOARD
+      ================================= */}
+
+      <Route element={<DashboardLayout />}>
+        <Route path="/dashboard" element={<DashboardPage />} />
+
+        <Route
+          path="/dashboard/profile"
+          element={<ProfilePage />}
+        />
+
+        <Route
+          path="/dashboard/recipes"
+          element={<MyRecipesPage />}
+        />
+
+        <Route
+          path="/dashboard/recipes/new"
+          element={<CreateRecipePage />}
+        />
+
+        <Route
+          path="/dashboard/recipes/:id/edit"
+          element={<EditRecipePage />}
+        />
+
+        <Route
+          path="/dashboard/analytics"
+          element={<AnalyticsPage />}
+        />
+        </Route>
+        </Routes>
 </BrowserRouter>
   )
 }

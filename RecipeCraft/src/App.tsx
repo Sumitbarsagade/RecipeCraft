@@ -14,6 +14,7 @@ import Footer from './components/layout/Footer'
 import SignupPage from './pages/SignupPage'
 import RecipesPage from './pages/RecipesPage'
 import RecipeDetailsPage from './pages/RecipeDetailPage'
+import AddRecipePage from './pages/AddRecipePage'
 
 
 function App() {
@@ -30,11 +31,17 @@ function App() {
         <Route path="/about" element={<SaveRecipesPage />} />
         <Route path="/about" element={<SearchPage />} />
         <Route path="/about" element={<VerifyEmailPage />} />
-        <Route path="/about" element={<DashboardPage/>} />
-        <Route path="/about" element={<EditRecipePage />} />
+       
+        
         <Route path="/about" element={<NotFoundPage/>} />
       </Routes>
       <Footer/>
+
+      <Routes>
+         <Route path="/dashboard" element={<DashboardPage/>} />
+         <Route path="/dashboard/addrecipe" element={<AddRecipePage />} />
+         <Route path="/dashboard/editrecipe" element={<EditRecipePage />} />
+      </Routes>
 </BrowserRouter>
   )
 }

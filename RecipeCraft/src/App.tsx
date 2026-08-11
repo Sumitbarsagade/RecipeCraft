@@ -5,7 +5,7 @@ import ProfilePage from './components/dashboard/ProfilePage'
 import SaveRecipesPage from './pages/SavedRecipesPage'
 import SearchPage from './pages/SearchPage'
 import VerifyEmailPage from './pages/VerifyEmailPage'
-import DashboardPage from './pages/DashboardPage'
+import DashboardPage from './pages/dashboard/DashboardHomePage'
 import EditRecipePage from './components/dashboard/EditRecipePage'
 import NotFoundPage from './pages/NotFoundPage'
 import SignupPage from './pages/SignupPage'
@@ -13,9 +13,11 @@ import RecipesPage from './pages/RecipesPage'
 import RecipeDetailsPage from './pages/RecipeDetailPage'
 import DashboardLayout from './components/layout/DashboardLayout'
 import PublicLayout from './components/layout/PublicLayout'
-import
+import DashboardHomePage from './pages/dashboard/DashboardHomePage'
+import DashboardRecipesPage from './pages/dashboard/DashboardRecipesPage'
 
-function App() {
+
+const App =()=>{
   return (
     <BrowserRouter>
       {/* ================================
@@ -48,7 +50,7 @@ function App() {
           element={<ProfilePage />}
         />
 
-        <Route
+        {/* <Route
           path="/dashboard/recipes"
           element={<MyRecipesPage />}
         />
@@ -56,20 +58,33 @@ function App() {
         <Route
           path="/dashboard/recipes/new"
           element={<CreateRecipePage />}
-        />
+        /> */}
 
         <Route
           path="/dashboard/recipes/:id/edit"
           element={<EditRecipePage />}
         />
 
+         <Route
+          index
+          element={<DashboardHomePage />}
+        />
+
         <Route
+          path="recipes"
+          element={<DashboardRecipesPage />}
+        />
+
+        {/* <Route
           path="/dashboard/analytics"
           element={<AnalyticsPage />}
-        />
+        /> */}
         </Route>
         </Routes>
-</BrowserRouter>
+
+
+
+    </BrowserRouter>
   )
 }
 

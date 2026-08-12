@@ -6,7 +6,7 @@ import SaveRecipesPage from './pages/SavedRecipesPage'
 import SearchPage from './pages/SearchPage'
 import VerifyEmailPage from './pages/VerifyEmailPage'
 import DashboardPage from './pages/dashboard/DashboardHomePage'
-import EditRecipePage from './components/dashboard/EditRecipePage'
+import EditRecipePage from './pages/dashboard/EditRecipePage'
 import NotFoundPage from './pages/NotFoundPage'
 import SignupPage from './pages/SignupPage'
 import RecipesPage from './pages/RecipesPage'
@@ -15,6 +15,7 @@ import DashboardLayout from './components/layout/DashboardLayout'
 import PublicLayout from './components/layout/PublicLayout'
 import DashboardHomePage from './pages/dashboard/DashboardHomePage'
 import DashboardRecipesPage from './pages/dashboard/DashboardRecipesPage'
+import CreateRecipePage from './pages/dashboard/CreateRecipePage'
 
 
 const App =()=>{
@@ -75,6 +76,11 @@ const App =()=>{
           element={<DashboardRecipesPage />}
         />
 
+              <Route
+          path="/dashboard/recipes/new"
+          element={<CreateRecipePage />}
+        />
+      
         {/* <Route
           path="/dashboard/analytics"
           element={<AnalyticsPage />}

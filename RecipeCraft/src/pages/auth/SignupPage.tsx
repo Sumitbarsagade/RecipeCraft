@@ -1,5 +1,5 @@
-import SignupForm from "../components/auth/SignupForm";
-import AuthLayout from "../components/layout/AuthLayout";
+import SignupForm from "../../components/auth/SignupForm";
+import AuthLayout from "../../components/layout/AuthLayout";
 
 
 

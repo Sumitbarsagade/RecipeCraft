@@ -1,11 +1,11 @@
 import { useState } from "react";
 
-import RecipeFilterBar from "../components/recipes/RecipeFilterBar";
+import RecipeFilterBar from "../../components/recipes/RecipeFilterBar";
 
-import ActiveFilters from "../components/recipes/ActiveFilters";
-import RecipeToolbar from "../components/recipes/RecipeToolbar";
-import RecipeGrid from "../components/recipes/RecipeGrid";
-import { recipes } from "../utils/recipes";
+import ActiveFilters from "../../components/recipes/ActiveFilters";
+import RecipeToolbar from "../../components/recipes/RecipeToolbar";
+import RecipeGrid from "../../components/recipes/RecipeGrid";
+import { recipes } from "../../utils/recipes";
 
 
 

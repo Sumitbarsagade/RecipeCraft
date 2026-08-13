@@ -1,13 +1,13 @@
 import { motion } from "framer-motion";
 
-import { recipeDetails } from "../utils/recipeDetails";
-import IngredientsSection from "../components/recipe-details/IngredientsSection";
-import InstructionsSection from "../components/recipe-details/InstructionsSection";
-import RecipeHero from "../components/recipe-details/RecipeHero";
-import RecipeMeta from "../components/recipe-details/RecipeMeta";
-import JumpToRecipe from "../components/recipe-details/JumpToRecipe";
-import RecipeIntro from "../components/recipe-details/RecipeIntro";
-import RecipeInfoGrid from "../components/recipe-details/RecipeInfoGrid";
+import { recipeDetails } from "../../utils/recipeDetails";
+import IngredientsSection from "../../components/recipe-details/IngredientsSection";
+import InstructionsSection from "../../components/recipe-details/InstructionsSection";
+import RecipeHero from "../../components/recipe-details/RecipeHero";
+import RecipeMeta from "../../components/recipe-details/RecipeMeta";
+import JumpToRecipe from "../../components/recipe-details/JumpToRecipe";
+import RecipeIntro from "../../components/recipe-details/RecipeIntro";
+import RecipeInfoGrid from "../../components/recipe-details/RecipeInfoGrid";
 
 export default function RecipeDetailsPage() {
   const recipe = recipeDetails;

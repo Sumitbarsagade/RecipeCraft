@@ -17,6 +17,7 @@ import DashboardRecipesPage from "./pages/dashboard/DashboardRecipesPage";
 import CreateRecipePage from "./pages/dashboard/CreateRecipePage";
 import EditRecipePage from "./pages/dashboard/EditRecipePage";
 import ProfilePage from "./pages/dashboard/ProfilePage";
+import AnalyticsPage from "./pages/dashboard/AnalyticsPage";
 
 // Layouts
 import DashboardLayout from "./components/layout/DashboardLayout";
@@ -121,8 +122,19 @@ const App = () => {
             element={<EditRecipePage />}
           />
 
+          <Route
+              path="analytics"
+              element={<AnalyticsPage />}
+            />
+
         </Route>
 
+
+        
+       
+
+
+          
 
         {/* =========================================
             404

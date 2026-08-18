@@ -60,14 +60,15 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF8F4] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
-      <div className="mx-auto max-w-7xl">
+     <div className="min-h-screen bg-[#FAF9F6]">
+      {/* Page container */}
+      <div className="mx-auto w-full my-2 max-w-7xl px-4  sm:pt-12  lg-pt-24  sm:px-2 sm:m-0  lg:pt-10">
 
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
+          className="mb-6 sm:mb-2"
         >
           <div className="flex items-center gap-4">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#C8501A] text-white">
@@ -93,7 +94,7 @@ export default function SettingsPage() {
         {/* Mobile section selector */}
         
 
-        <div className="flex gap-6">
+        <div className="w-full lg:flex gap-2">
 
           {/* Settings navigation */}
           <SettingsSidebar
@@ -102,7 +103,7 @@ export default function SettingsPage() {
           />
 
           {/* Content */}
-          <main className="min-w-0 flex-1">
+          <main className="mt-5 w-full lg:mt-0 flex ">
 
             {/* Account */}
             {activeSection === "account" && (
@@ -367,7 +368,11 @@ export default function SettingsPage() {
 
           </main>
         </div>
+
+
       </div>
     </div>
   );
 }
+
+

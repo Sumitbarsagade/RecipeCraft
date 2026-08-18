@@ -18,6 +18,7 @@ import CreateRecipePage from "./pages/dashboard/CreateRecipePage";
 import EditRecipePage from "./pages/dashboard/EditRecipePage";
 import ProfilePage from "./pages/dashboard/ProfilePage";
 import AnalyticsPage from "./pages/dashboard/AnalyticsPage";
+import SettingsPage from "./pages/dashboard/SettingsPage";
 
 // Layouts
 import DashboardLayout from "./components/layout/DashboardLayout";
@@ -125,6 +126,12 @@ const App = () => {
           <Route
               path="analytics"
               element={<AnalyticsPage />}
+            />
+
+
+            <Route
+              path="settings"
+              element={<SettingsPage />}
             />
 
         </Route>

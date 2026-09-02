@@ -1,5 +1,6 @@
 export const categories = [
   "All",
+  "trending",
   "Breakfast",
   "Lunch",
   "Dinner",

@@ -5,7 +5,7 @@ import { recipes } from "../../utils/recipes";
 
 export default function TrendingRecipes() {
   return (
-    <section className="py-24">
+    <section id="trending" className="py-24">
       <div className="mx-auto max-w-7xl px-6">
 
         <SectionHeader

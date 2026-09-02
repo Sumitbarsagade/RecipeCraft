@@ -26,7 +26,7 @@ const categories = [
 
 export default function PopularCategories() {
   return (
-    <section className="bg-[#FFFDF9] py-24">
+    <section id="categories" className="bg-[#FFFDF9] py-24">
       <div className="mx-auto max-w-7xl px-6">
 
         <SectionHeader

@@ -223,6 +223,10 @@ const authSlice = createSlice({
       state.error = null;
     },
 
+    markAuthInitialized: (state) => {
+      state.initialized = true;
+    },
+
     setUser: (
       state,
       action: PayloadAction<User | null>
@@ -427,6 +431,7 @@ export const {
   clearAuthError,
   setUser,
   clearAuth,
+  markAuthInitialized
 } = authSlice.actions;
 
 

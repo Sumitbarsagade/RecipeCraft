@@ -4,7 +4,7 @@ import './index.css'
 import App from './App.tsx'
 import { Provider } from "react-redux";
 import { store } from "./store/store";
-import AuthInitializer from './AuthInitializer.tsx';
+import AuthInitializer from './components/auth/AuthInitializer.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

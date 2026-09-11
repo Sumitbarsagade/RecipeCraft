@@ -1,12 +1,15 @@
-import { useEffect } from "react";
+import {
+  useEffect,
+} from "react";
 
 import {
   useAppDispatch,
-} from "./store/hooks";
+} from "../../store/hooks";
 
 import {
   fetchCurrentUser,
-} from "./features/auth/authSlice";
+   markAuthInitialized
+} from "../../features/auth/authSlice";
 
 
 const AuthInitializer = () => {
@@ -14,20 +17,34 @@ const AuthInitializer = () => {
   const dispatch =
     useAppDispatch();
 
+
   useEffect(() => {
 
-    const token =
+    const accessToken =
       localStorage.getItem(
         "accessToken"
       );
 
-    if (token) {
+
+    /*
+     * If there is an access token,
+     * try to restore the session.
+     */
+
+    if (accessToken) {
 
       dispatch(
         fetchCurrentUser()
       );
 
     }
+    else {
+
+    dispatch(
+      markAuthInitialized()
+    );
+
+  }
 
   }, [dispatch]);
 

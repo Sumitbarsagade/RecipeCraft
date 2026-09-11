@@ -1,4 +1,5 @@
 import { Search } from "lucide-react";
+import axiosInstance from "../../api/axiosInstance";
 
 const categories = [
   "Breakfast",
@@ -9,6 +10,24 @@ const categories = [
   "Vegan",
 ];
 
+
+const testApi = async () => {
+  try {
+    const response =
+      await axiosInstance.get("/recipes");
+
+    console.log(
+      "API Response:",
+      response.data
+    );
+  } catch (error) {
+    console.error(
+      "API Error:",
+      error
+    );
+  }
+};
+
 export default function Hero() {
   return (
     <section className="relative overflow-hidden bg-[#FFFDF9] pt-32">
@@ -17,7 +36,7 @@ export default function Hero() {
         {/* Left */}
 
         <div>
-
+          <button onClick={testApi} >Click me</button>
           <span className="rounded-full bg-orange-100 px-4 py-2 text-sm font-semibold text-[#C8501A]">
             🍴 Trusted by 25,000+ Food Lovers
           </span>

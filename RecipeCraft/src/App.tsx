@@ -24,134 +24,70 @@ import SettingsPage from "./pages/dashboard/SettingsPage";
 import DashboardLayout from "./components/layout/DashboardLayout";
 import PublicLayout from "./components/layout/PublicLayout";
 
+import ProtectedRoute from "./components/auth/ProtectedRoute";
+import PublicOnlyRoute from "./components/auth/PublicOnlyRoute";
 
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-
         {/* =========================================
             PUBLIC WEBSITE
         ========================================= */}
+        <Route element={<PublicOnlyRoute />}>
+          <Route element={<PublicLayout />}>
+            <Route path="/" element={<Navigate to="/home" replace />} />
 
-        <Route element={<PublicLayout />}>
+            <Route path="/home" element={<HomePage />} />
 
-          <Route
-            path="/"
-            element={<Navigate to="/home" replace />}
-          />
+            <Route path="/login" element={<LoginPage />} />
 
-          <Route
-            path="/home"
-            element={<HomePage />}
-          />
+            <Route path="/signup" element={<SignupPage />} />
 
-          <Route
-            path="/login"
-            element={<LoginPage />}
-          />
+            <Route path="/recipes" element={<RecipesPage />} />
 
-          <Route
-            path="/signup"
-            element={<SignupPage />}
-          />
+            <Route path="/recipes/:id" element={<RecipeDetailsPage />} />
 
-          <Route
-            path="/recipes"
-            element={<RecipesPage />}
-          />
+            <Route path="/saved-recipes" element={<SaveRecipesPage />} />
 
-          <Route
-            path="/recipes/:id"
-            element={<RecipeDetailsPage />}
-          />
+            <Route path="/search" element={<SearchPage />} />
 
-          <Route
-            path="/saved-recipes"
-            element={<SaveRecipesPage />}
-          />
-
-          <Route
-            path="/search"
-            element={<SearchPage />}
-          />
-
-          <Route
-            path="/verify-email"
-            element={<VerifyEmailPage />}
-          />
-
+            <Route path="/verify-email" element={<VerifyEmailPage />} />
+          </Route>
         </Route>
-
 
         {/* =========================================
-            DASHBOARD
+            DASHBOARD (PROTECTED)
         ========================================= */}
 
-        <Route
-          path="/dashboard"
-          element={<DashboardLayout />}
-        >
+        <Route element={<ProtectedRoute />}>
+          <Route path="/dashboard" element={<DashboardLayout />}>
+            {/* /dashboard */}
+            <Route index element={<DashboardHomePage />} />
 
-          {/* /dashboard */}
-          <Route
-            index
-            element={<DashboardHomePage />}
-          />
+            {/* /dashboard/profile */}
+            <Route path="profile" element={<ProfilePage />} />
 
-          {/* /dashboard/profile */}
-          <Route
-            path="profile"
-            element={<ProfilePage />}
-          />
+            {/* /dashboard/recipes */}
+            <Route path="recipes" element={<DashboardRecipesPage />} />
 
-          {/* /dashboard/recipes */}
-          <Route
-            path="recipes"
-            element={<DashboardRecipesPage />}
-          />
+            {/* /dashboard/recipes/new */}
+            <Route path="recipes/new" element={<CreateRecipePage />} />
 
-          {/* /dashboard/recipes/new */}
-          <Route
-            path="recipes/new"
-            element={<CreateRecipePage />}
-          />
+            {/* /dashboard/recipes/:id/edit */}
+            <Route path="recipes/:id/edit" element={<EditRecipePage />} />
 
-          {/* /dashboard/recipes/:id/edit */}
-          <Route
-            path="recipes/:id/edit"
-            element={<EditRecipePage />}
-          />
+            <Route path="analytics" element={<AnalyticsPage />} />
 
-          <Route
-              path="analytics"
-              element={<AnalyticsPage />}
-            />
-
-
-            <Route
-              path="settings"
-              element={<SettingsPage />}
-            />
-
+            <Route path="settings" element={<SettingsPage />} />
+          </Route>
         </Route>
-
-
-        
-       
-
-
-          
 
         {/* =========================================
             404
         ========================================= */}
 
-        <Route
-          path="*"
-          element={<NotFoundPage />}
-        />
-
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   );

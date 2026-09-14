@@ -10,6 +10,9 @@ const navLinks = [
   "Community",
 ];
 
+
+
+
 export default function Navbar() {
   const [mobileMenu, setMobileMenu] = useState(false);
   const [isloggedIn, setloggedIn]  = useState(true);

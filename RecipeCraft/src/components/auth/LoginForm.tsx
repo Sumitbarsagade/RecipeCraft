@@ -1,10 +1,37 @@
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import AuthInput from "./AuthInput";
 import PasswordInput from "./PasswordInput";
 import GoogleButton from "./GoogleButton";
 import AuthDivider from "./AuthDivider";
+const dispatch = useAppDispatch();
+const navigate = useNavigate();
+
+const handleSubmit = async (
+  e: React.FormEvent
+) => {
+  e.preventDefault();
+
+  try {
+    const result = await dispatch(
+      login({
+        email,
+        password,
+      })
+    ).unwrap();
+
+    if (result.success) {
+      navigate("/dashboard", {
+        replace: true,
+      });
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
 
 export default function LoginForm() {
   return (

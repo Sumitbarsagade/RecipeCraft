@@ -5,6 +5,10 @@ import {
 import authReducer
   from "../features/auth/authSlice";
 
+import {
+  recipeApi,
+} from "../features/recipes/recipeApiSlice";  
+
 export const store =
   configureStore({
 
@@ -12,7 +16,15 @@ export const store =
 
       auth: authReducer,
 
+       [recipeApi.reducerPath]:
+      recipeApi.reducer,
+
     },
+
+    middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(
+      recipeApi.middleware
+    ),
 
   });
 

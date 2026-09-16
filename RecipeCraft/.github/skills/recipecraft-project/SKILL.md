@@ -117,3 +117,89 @@ Do not:
 - duplicate existing components
 - introduce unnecessary libraries
 - replace working architecture without justification
+
+
+# RecipeCraft Development Roadmap
+
+## Phase 1 — API Foundation
+
+Completed / established:
+
+- Axios instance
+- API base URL
+- Axios configuration
+- API response types
+- Axios base query
+
+## Phase 2 — Authentication
+
+Current work:
+
+- signup
+- login
+- logout
+- auth Redux state
+- current-user restoration
+- protected routes
+
+## Phase 2.5 — Authentication Security
+
+- access token handling
+- refresh token interceptor
+- session restoration
+- ProtectedRoute
+- PublicOnlyRoute
+- logout handling
+
+## Phase 3 — Recipe Management
+
+Next:
+
+- recipe types
+- recipe API
+- RTK Query
+- recipe listing
+- recipe detail
+- create recipe
+- edit recipe
+- delete recipe
+- search
+- filters
+- sorting
+- draft/published state
+
+## Phase 4 — Recipe Experience
+
+- favorites
+- saved recipes
+- ratings
+- reviews
+- comments
+- sharing
+
+## Phase 5 — User/Profile
+
+- profile
+- avatar
+- bio
+- account settings
+- security
+- connected accounts
+
+## Phase 6 — Analytics
+
+- recipe views
+- saves
+- likes
+- ratings
+- recipe performance
+
+## Phase 7 — Production
+
+- testing
+- performance
+- accessibility
+- SEO
+- error boundaries
+- security review
+- deployment

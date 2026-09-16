@@ -1,41 +1,70 @@
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 import AuthInput from "./AuthInput";
 import PasswordInput from "./PasswordInput";
 import GoogleButton from "./GoogleButton";
 import AuthDivider from "./AuthDivider";
-const dispatch = useAppDispatch();
-const navigate = useNavigate();
 
-const handleSubmit = async (
-  e: React.FormEvent
-) => {
-  e.preventDefault();
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../store/hooks";
 
-  try {
-    const result = await dispatch(
-      login({
-        email,
-        password,
-      })
-    ).unwrap();
-
-    if (result.success) {
-      navigate("/dashboard", {
-        replace: true,
-      });
-    }
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-
+import {
+  login,
+  clearAuthError,
+} from "../../features/auth/authSlice";
 
 export default function LoginForm() {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const {
+    isLoading,
+    error,
+  } = useAppSelector(
+    (state) => state.auth
+  );
+
+  const [email, setEmail] =
+    useState("");
+
+  const [password, setPassword] =
+    useState("");
+
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
+    e.preventDefault();
+
+    dispatch(clearAuthError());
+
+    try {
+      const result = await dispatch(
+        login({
+          email,
+          password,
+        })
+      ).unwrap();
+
+      if (result.success) {
+        navigate("/dashboard", {
+          replace: true,
+        });
+      }
+    } catch (error) {
+      console.error(
+        "Login failed:",
+        error
+      );
+    }
+  };
+
   return (
     <motion.form
+      onSubmit={handleSubmit}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       className="space-y-5"
@@ -44,12 +73,26 @@ export default function LoginForm() {
         label="Email Address"
         type="email"
         placeholder="Enter your email"
+        value={email}
+        onChange={(e) =>
+          setEmail(e.target.value)
+        }
       />
 
       <PasswordInput
         label="Password"
         placeholder="Enter password"
+        value={password}
+        onChange={(e) =>
+          setPassword(e.target.value)
+        }
       />
+
+      {error && (
+        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+          {error}
+        </div>
+      )}
 
       <div className="flex items-center justify-between text-sm">
         <label className="flex items-center gap-2">
@@ -70,15 +113,19 @@ export default function LoginForm() {
       </div>
 
       <motion.button
+        type="submit"
         whileHover={{
-          scale: 1.02,
+          scale: isLoading ? 1 : 1.02,
         }}
         whileTap={{
-          scale: 0.98,
+          scale: isLoading ? 1 : 0.98,
         }}
-        className="w-full rounded-xl bg-[#C8501A] py-3 font-semibold text-white shadow-lg transition hover:bg-[#a63f13]"
+        disabled={isLoading}
+        className="w-full rounded-xl bg-[#C8501A] py-3 font-semibold text-white shadow-lg transition hover:bg-[#a63f13] disabled:cursor-not-allowed disabled:opacity-60"
       >
-        Sign In
+        {isLoading
+          ? "Signing In..."
+          : "Sign In"}
       </motion.button>
 
       <AuthDivider />

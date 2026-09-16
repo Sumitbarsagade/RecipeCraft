@@ -1,4 +1,5 @@
 export interface User {
+  success: any;
   _id: string;
   name: string;
   email: string;

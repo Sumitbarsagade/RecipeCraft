@@ -15,6 +15,7 @@ import type {
   User,
   LoginRequest,
   SignupRequest,
+  LoginResult
 } from "./authTypes";
 
 
@@ -53,7 +54,7 @@ const initialState: AuthState = {
 ========================================================= */
 
 export const login = createAsyncThunk<
-  User,
+  LoginResult,
   LoginRequest,
   { rejectValue: string }
 >(
@@ -63,6 +64,9 @@ export const login = createAsyncThunk<
     try {
       const response =
         await loginUser(credentials);
+
+
+      const {success, status, message, data} = response;
 
       if (
         response.data.accessToken
@@ -275,7 +279,7 @@ const authSlice = createSlice({
           state.isLoading = false;
 
           state.user =
-            action.payload;
+            action.payload.user;
 
           state.isAuthenticated = true;
 

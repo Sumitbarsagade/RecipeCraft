@@ -1,3 +1,5 @@
+import type { ApiResponse } from "../../api/apiTypes";
+
 export interface User {
   success: any;
   _id: string;
@@ -25,9 +27,7 @@ export interface SignupRequest {
   confirmPassword: string;
 }
 
-export interface AuthResponse {
-  success: boolean;
-  message: string;
+export interface AuthResponse  {
 
   data: {
     user: User;
@@ -43,3 +43,16 @@ export interface CurrentUserResponse {
     user: User;
   };
 }
+
+
+
+
+export type LoginResponse =
+  ApiResponse<AuthResponse>;
+
+export interface LoginResult {
+  success: boolean;
+  status: number;
+  message: string;
+  user: User;
+}  

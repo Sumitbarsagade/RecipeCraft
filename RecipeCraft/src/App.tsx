@@ -1,5 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
+//Toast
+import { Toaster } from "sonner";
+
 // Public pages
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/auth/LoginPage";
@@ -30,6 +33,11 @@ import PublicOnlyRoute from "./components/auth/PublicOnlyRoute";
 const App = () => {
   return (
     <BrowserRouter>
+    <Toaster
+        position="top-right"
+        richColors
+        closeButton
+      />
       <Routes>
         {/* =========================================
             PUBLIC WEBSITE

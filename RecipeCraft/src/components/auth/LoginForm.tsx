@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-
+import { toast } from "sonner";
 import AuthInput from "./AuthInput";
 import PasswordInput from "./PasswordInput";
 import GoogleButton from "./GoogleButton";
@@ -48,6 +48,11 @@ export default function LoginForm() {
           password,
         })
       ).unwrap();
+
+      toast.success(
+      result.message || "Login successful!"
+    );
+
 
       if (result.success) {
         navigate("/dashboard", {

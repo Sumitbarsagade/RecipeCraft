@@ -15,9 +15,8 @@ import {
 } from "../../store/hooks";
 
 import {
-  login,
-  clearAuthError,
   signup,
+  clearAuthError,
 } from "../../features/auth/authSlice";
 
 export default function SignupForm() {
@@ -37,16 +36,12 @@ const [email, setEmail] = useState("");
 const [password, setPassword]= useState("");
 const [confirmPassword, setConfirmPassword]= useState("");
 
-const handleSubmit= async (e: React.InputEvent<HTMLFormElement>)=>{
+const handleSubmit= async (e: React.FormEvent<HTMLFormElement>)=>{
   e.preventDefault();
  
   dispatch(clearAuthError());
-
-  try{
-    if(confirmPassword!==password){
-      return;
-    }
-
+   
+  try {
     const result = await dispatch(signup({username, email, password, confirmPassword})).unwrap();
 
     if (result.success) {
@@ -64,6 +59,7 @@ const handleSubmit= async (e: React.InputEvent<HTMLFormElement>)=>{
 
   return (
     <motion.form
+      onSubmit={handleSubmit}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       className="space-y-5"
@@ -123,16 +119,20 @@ const handleSubmit= async (e: React.InputEvent<HTMLFormElement>)=>{
       </label>
 
       <motion.button
+        type="submit"
         whileHover={{
-          scale: 1.02,
-          y: -2,
+          scale: isLoading ? 1 : 1.02,
         }}
         whileTap={{
-          scale: 0.98,
+          scale: isLoading ? 1 : 0.98,
         }}
+        disabled={isLoading}
         className="w-full rounded-xl bg-[#C8501A] py-3 font-semibold text-white shadow-lg transition hover:bg-[#a63f13]"
-      >
-        Create Free Account
+      > 
+      {isLoading
+          ? "Creating Your Free Account..."
+          : "Create Free Account"}
+        
       </motion.button>
 
       <AuthDivider />

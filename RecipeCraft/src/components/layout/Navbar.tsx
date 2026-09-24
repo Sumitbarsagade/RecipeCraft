@@ -1,6 +1,7 @@
 import { Menu, Search, User, Heart } from "lucide-react";
 import { useState } from "react";
 import UserProfile from "../common/UserProfile";
+import { useAppSelector } from "../../store/hooks";
 
 const navLinks = [
   "Home",
@@ -15,8 +16,15 @@ const navLinks = [
 
 export default function Navbar() {
   const [mobileMenu, setMobileMenu] = useState(false);
-  const [isloggedIn, setloggedIn]  = useState(true);
-   console.log(isloggedIn);
+
+
+  const {
+    isAuthenticated
+  } = useAppSelector(
+    (state) => state.auth
+  );
+
+   console.log("isAuthenticated:",isAuthenticated);
   return (
     <header className="fixed top-0 left-0 z-50 w-full border-b border-white/20 bg-white/70 backdrop-blur-xl">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
@@ -99,7 +107,7 @@ export default function Navbar() {
           />
 
           <button className="rounded-full bg-[#C8501A] px-5 py-2 text-white transition hover:bg-[#A63F13]">
-            {isloggedIn ?  <UserProfile />: <a href="/login">  Sign In </a>}
+            {isAuthenticated ?  <UserProfile />: <a href="/login">  Sign In </a>}
             
             
           </button>

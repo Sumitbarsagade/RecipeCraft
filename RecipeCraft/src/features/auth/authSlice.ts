@@ -15,8 +15,10 @@ import type {
   User,
   LoginRequest,
   SignupRequest,
-  LoginResult
+  AuthResult,
+  AuthResponse
 } from "./authTypes";
+import type { ApiResponse } from "../../api/apiTypes";
 
 
 /* =========================================================
@@ -25,13 +27,9 @@ import type {
 
 interface AuthState {
   user: User | null;
-
   isAuthenticated: boolean;
-
   isLoading: boolean;
-
   error: string | null;
-
   initialized: boolean;
 }
 
@@ -54,7 +52,7 @@ const initialState: AuthState = {
 ========================================================= */
 
 export const login = createAsyncThunk<
-  LoginResult,
+  AuthResult,
   LoginRequest,
   { rejectValue: string }
 >(
@@ -66,18 +64,25 @@ export const login = createAsyncThunk<
         await loginUser(credentials);
 
 
-      const {success, status, message, data} = response;
 
-      if (
-        response.data.accessToken
-      ) {
+      if (response.data.accessToken) {
         localStorage.setItem(
           "accessToken",
           response.data.accessToken
         );
       }
+      
 
-      return response.data.user;
+
+      // IMPORTANT:
+      // Return LoginResult, not User
+      return {
+        status: response.status,
+        success: response.success,
+        message: response.message,
+        user: response.data.user,
+      }
+        
 
     } catch (error: any) {
 
@@ -98,7 +103,7 @@ export const login = createAsyncThunk<
 ========================================================= */
 
 export const signup = createAsyncThunk<
-  User,
+  AuthResult,
   SignupRequest,
   { rejectValue: string }
 >(
@@ -106,9 +111,8 @@ export const signup = createAsyncThunk<
 
   async (userData, thunkAPI) => {
     try {
-      const response =
-        await signupUser(userData);
-
+      const response = await signupUser(userData);
+  
       if (
         response.data.accessToken
       ) {
@@ -118,7 +122,12 @@ export const signup = createAsyncThunk<
         );
       }
 
-      return response.data.user;
+      return {
+        status: response.status,
+        success: response.success,
+        message: response.message,
+        user: response.data.user,
+      }
 
     } catch (error: any) {
 
@@ -309,9 +318,8 @@ const authSlice = createSlice({
       .addCase(
         signup.pending,
         (state) => {
-
+          
           state.isLoading = true;
-
           state.error = null;
         }
       )
@@ -323,7 +331,7 @@ const authSlice = createSlice({
           state.isLoading = false;
 
           state.user =
-            action.payload;
+            action.payload.user;
 
           state.isAuthenticated = true;
 

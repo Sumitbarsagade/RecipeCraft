@@ -48,22 +48,23 @@ export default function LoginForm() {
           password,
         })
       ).unwrap();
-
+    
       toast.success(
       result.message || "Login successful!"
     );
 
 
       if (result.success) {
-        navigate("/dashboard", {
+        navigate("/", {
           replace: true,
         });
       }
     } catch (error) {
-      console.error(
-        "Login failed:",
-        error
-      );
+      toast.error(
+      typeof error === "string"
+        ? error
+        : "Unable to sign in. Please try again."
+    );
     }
   };
 

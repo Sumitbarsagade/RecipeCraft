@@ -44,10 +44,10 @@ const App = () => {
         ========================================= */}
         <Route element={<PublicOnlyRoute />}>
           <Route element={<PublicLayout />}>
-            <Route path="/" element={<Navigate to="/home" replace />} />
+            <Route path="/home" element={<Navigate to="/" replace />} />
 
-            <Route path="/home" element={<HomePage />} />
-
+            <Route path="/" element={<HomePage />} />
+            
             <Route path="/login" element={<LoginPage />} />
 
             <Route path="/signup" element={<SignupPage />} />

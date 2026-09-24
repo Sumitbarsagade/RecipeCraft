@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-
+import { toast } from "sonner";
 import AuthInput from "./AuthInput";
 import PasswordInput from "./PasswordInput";
 import GoogleButton from "./GoogleButton";
@@ -49,6 +49,10 @@ const handleSubmit= async (e: React.FormEvent<HTMLFormElement>)=>{
           replace: true,
         });
       }
+
+      toast.success(
+      result.message || " Account created successfully. Welcome to RecipeCraft!"
+    );
 
   }
   catch (error){

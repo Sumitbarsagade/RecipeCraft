@@ -27,14 +27,26 @@ export interface SignupRequest {
   confirmPassword: string;
 }
 
-export interface AuthResponse  {
+export interface AuthResponse extends User {
+  success: boolean;
+  status: number;
+  message: string;
 
   data: {
     user: User;
-    accessToken?: string;
-    
+    accessToken: string;
   };
 }
+
+export interface AuthResult {
+  status: number;
+  success: boolean;
+  message: string;
+  user: User;
+}
+  
+  
+
 
 export interface CurrentUserResponse {
   success: boolean;
@@ -46,9 +58,6 @@ export interface CurrentUserResponse {
 
 
 
-
-export type LoginResponse =
-  ApiResponse<AuthResponse>;
 
 export interface LoginResult {
   success: boolean;

@@ -42,11 +42,10 @@ const App = () => {
         {/* =========================================
             PUBLIC WEBSITE
         ========================================= */}
+        <Route element={<PublicLayout />}>
         <Route element={<PublicOnlyRoute />}>
-          <Route element={<PublicLayout />}>
-      
-            <Route path="/home" index element={<HomePage />} />
-            
+          <Route path="/" index element={<HomePage />} />
+          
             <Route path="/login" element={<LoginPage />} />
 
             <Route path="/signup" element={<SignupPage />} />

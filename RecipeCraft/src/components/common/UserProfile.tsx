@@ -7,11 +7,16 @@ import {
   Settings,
   ChevronRight,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useAppSelector } from "../../store/hooks";
 
 const UserProfile = () => {
+   const navigate= useNavigate()
+  const user = useAppSelector(
+    (state) => state.auth.user
+  );
   const [isOpen, setIsOpen] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -144,11 +149,11 @@ const UserProfile = () => {
                 {/* User information */}
                 <div className="min-w-0">
                   <p className="truncate text-sm font-semibold text-[#26352E]">
-                    UserName
+                    {user?.username}
                   </p>
 
                   <p className="mt-0.5 truncate text-xs text-[#8A938D]">
-                    user@example.com
+                    {user?.email}
                   </p>
                 </div>
               </div>
@@ -282,6 +287,65 @@ const UserProfile = () => {
               </button>
 
             </div>
+
+            <div className="border-t border-[#EEE8E2] p-2">
+
+              <button
+                type="button"
+                onClick={
+                  ()=>{
+                    navigate('/login')
+                  }
+                }
+                className="
+                  group
+                  flex
+                  w-full
+                  items-center
+                  gap-3
+                  rounded-xl
+                  px-3
+                  py-3
+                  text-left
+                  transition-all
+                  duration-150
+                  hover:bg-[#FFF1EC]
+                "
+              >
+
+                <span
+                  className="
+                    flex
+                    h-9
+                    w-9
+                    shrink-0
+                    items-center
+                    justify-center
+                    rounded-lg
+                    bg-[#FFF1EC]
+                    text-[#C8501A]
+                    transition
+                    group-hover:bg-[#C8501A]
+                    group-hover:text-white
+                  "
+                >
+                  <LogOut size={17} />
+                </span>
+
+                <div>
+                  <p className="text-sm font-semibold text-[#4A554F] group-hover:text-[#C8501A]">
+                    Sign In
+                  </p>
+
+                  <p className="text-[11px] text-[#9BA19D]">
+                    Sign In with different account
+                  </p>
+                </div>
+
+              </button>
+
+            </div>
+
           </motion.div>
         )}
       </AnimatePresence>

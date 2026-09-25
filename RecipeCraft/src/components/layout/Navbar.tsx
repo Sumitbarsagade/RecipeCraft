@@ -24,7 +24,6 @@ export default function Navbar() {
     (state) => state.auth
   );
 
-   console.log("isAuthenticated:",isAuthenticated);
   return (
     <header className="fixed top-0 left-0 z-50 w-full border-b border-white/20 bg-white/70 backdrop-blur-xl">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">

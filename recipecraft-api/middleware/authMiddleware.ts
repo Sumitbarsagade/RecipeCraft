@@ -16,25 +16,31 @@ const protect = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const authHeader = req.headers.authorization;
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      
+     const authHeader =
+      req.headers.authorization;
+      console.log(authHeader);
+       if (
+      !authHeader ||
+      !authHeader.startsWith("Bearer ")
+    ) {
       res.status(401).json({
         success: false,
         message: "Access token is missing",
       });
+
       return;
     }
-
     const token = authHeader.split(" ")[1];
-
+    console.log(token)
     const decoded = jwt.verify(
       token,
-      process.env.JWT_ACCESS_SECRET as string
+      process.env.JWT_SECRET as string
     ) as TokenPayload;
 
     const user = await User.findById(decoded.id).select("-password -refreshToken");
-
+    console.log(user)
     if (!user) {
       res.status(401).json({
         success: false,
@@ -44,9 +50,10 @@ const protect = async (
     }
 
     (req as AuthenticatedRequest).user = user; // Cast req to AuthenticatedRequest
-
+    console.log( "request:", req)
     next();
   } catch (error) {
+
     res.status(401).json({
       success: false,
       message: "Invalid or expired access token",

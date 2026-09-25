@@ -53,7 +53,7 @@ export const getCurrentUser =
       await axiosInstance.get<CurrentUserResponse>(
         "/auth/me"
       );
-
+    console.log("response :",response);
     return response.data;
   };
 

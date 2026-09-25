@@ -160,7 +160,8 @@ export const fetchCurrentUser =
 
         const response =
           await getCurrentUser();
-
+        
+          
         return response.data.user;
 
       } catch (error: any) {

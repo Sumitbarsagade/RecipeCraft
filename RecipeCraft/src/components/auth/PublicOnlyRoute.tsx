@@ -24,12 +24,12 @@ const PublicOnlyRoute = () => {
 
   }
 
- console.log("public route",isAuthenticated)
+
   if (isAuthenticated) {
   
     return (
       <Navigate
-        to="/"
+        to="/home"
         replace
       />
     );

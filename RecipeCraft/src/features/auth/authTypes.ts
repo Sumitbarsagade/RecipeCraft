@@ -1,7 +1,7 @@
 import type { ApiResponse } from "../../api/apiTypes";
 
 export interface User {
-  success: any;
+
   _id: string;
   name: string;
   email: string;

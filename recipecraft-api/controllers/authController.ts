@@ -5,11 +5,14 @@ import User from "../models/User";
 import { otpStore } from "../middleware/otpStore";
 import crypto from "crypto"; // Import crypto module
 import sendMail from "../utils/sendMail.js";
-
+import { IUser } from "../models/User";
 interface RefreshTokenPayload {
   id: string;
 }
 
+interface AuthenticatedRequest extends Request {
+  user?: IUser;
+}
 // ---------------------------------------------------------------------------
 // Token helpers
 // ---------------------------------------------------------------------------
@@ -165,6 +168,62 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+// ---------------------------------------------------------------------------
+// getUser
+// ---------------------------------------------------------------------------
+
+
+
+// controllers/authController.ts
+
+export const getCurrentUser = async (
+  req:  AuthenticatedRequest,
+  res: Response
+): Promise<void> => {
+  try {
+    
+   
+
+   const user = req.user;
+
+  if (!user) {
+    res.status(401).json({
+      success: false,
+      message: "Not authenticated.",
+    });
+    return;
+  }
+
+   res.status(200).json({
+      success: true,
+      message: "User retrieved successfully.",
+      data: {
+        user: {
+          _id: user._id,
+          username: user.username,
+          email: user.email,
+          followers: user.followers,
+          following: user.following,
+          isVerified: user.isVerified,
+          role: user.role,
+          
+        },
+      },
+    });
+}
+
+   catch (error) {
+    console.error(
+      "getCurrentUser error:",
+      error
+    );
+
+    res.status(500).json({
+      success: false,
+      message: "Server error.",
+    });
+  }
+};
 // ---------------------------------------------------------------------------
 // Logout
 // ---------------------------------------------------------------------------

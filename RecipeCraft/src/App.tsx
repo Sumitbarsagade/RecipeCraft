@@ -44,9 +44,8 @@ const App = () => {
         ========================================= */}
         <Route element={<PublicOnlyRoute />}>
           <Route element={<PublicLayout />}>
-            <Route path="/home" element={<Navigate to="/" replace />} />
-
-            <Route path="/" element={<HomePage />} />
+      
+            <Route path="/home" index element={<HomePage />} />
             
             <Route path="/login" element={<LoginPage />} />
 

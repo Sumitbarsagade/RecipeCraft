@@ -1,4 +1,8 @@
-import express from 'express';
+import express, {
+  Request,
+  Response,
+  NextFunction,
+} from "express";
 import cors from 'cors';
 import dotenv from 'dotenv';
 import connectDB from '../config/db';
@@ -21,10 +25,48 @@ app.use(cors({
     credentials: true,
   }));
 
+
+
+
+
+app.use(
+  (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const start = Date.now();
+
+    console.log(
+      `→ ${req.method} ${req.originalUrl}`
+    );
+
+    console.log(
+      "Authorization:",
+      req.headers.authorization
+        ? "Bearer token present"
+        : "Not provided"
+    );
+
+    res.on("finish", () => {
+      const duration =
+        Date.now() - start;
+
+      console.log(
+        `← ${req.method} ${req.originalUrl} ` +
+        `${res.statusCode} ${duration}ms`
+      );
+    });
+
+    next();
+  }
+);
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/recipes', recipeRoutes);
 app.use('/api/users', userRoutes);
+
 
 
 const PORT = process.env.PORT || 5000;

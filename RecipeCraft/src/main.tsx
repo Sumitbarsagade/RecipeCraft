@@ -8,7 +8,7 @@ import AuthInitializer from './components/auth/AuthInitializer.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <Provider store={store}>\
+    <Provider store={store}>
     <AuthInitializer />
     <App />
     </Provider>

@@ -78,8 +78,8 @@ export const refreshAccessToken =
   async (): Promise<AuthResponse> => {
     const response =
       await axiosInstance.post<AuthResponse>(
-        "/auth/refresh"
+        "/auth/refresh-token"
       );
-
+  console.log(response)
     return response.data;
   };

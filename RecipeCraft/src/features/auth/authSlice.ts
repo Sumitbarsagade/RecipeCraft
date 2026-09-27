@@ -11,14 +11,16 @@ import {
   getCurrentUser,
 } from "./authApi";
 
+
+
 import type {
-  User,
   LoginRequest,
   SignupRequest,
   AuthResult,
-  AuthResponse
 } from "./authTypes";
-import type { ApiResponse } from "../../api/apiTypes";
+
+import type { User }
+  from "../../types/user.types";
 
 
 /* =========================================================
@@ -251,6 +253,20 @@ const authSlice = createSlice({
         Boolean(action.payload);
     },
 
+    syncAuthUser: (
+  state,
+  action: PayloadAction<Partial<User>>
+) => {
+  if (!state.user) {
+    return;
+  }
+
+  Object.assign(
+    state.user,
+    action.payload
+  );
+},
+
     clearAuth: (state) => {
 
       state.user = null;
@@ -422,6 +438,8 @@ const authSlice = createSlice({
           state.isAuthenticated = false;
 
           state.error = null;
+
+          
         }
       )
 
@@ -441,6 +459,7 @@ const authSlice = createSlice({
 
 
 export const {
+  syncAuthUser,
   clearAuthError,
   setUser,
   clearAuth,

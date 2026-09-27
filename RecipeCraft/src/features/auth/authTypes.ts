@@ -1,18 +1,7 @@
-import type { ApiResponse } from "../../api/apiTypes";
 
-export interface User {
 
-  _id: string;
-  name: string;
-  email: string;
-  username?: string;
-  profileImage?: string;
-  bio?: string;
-  role?: string;
-  isEmailVerified?: boolean;
-  createdAt?: string;
-  updatedAt?: string;
-}
+import type { User }
+  from "../../types/user.types";
 
 export interface LoginRequest {
   email: string;

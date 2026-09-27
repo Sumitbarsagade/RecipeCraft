@@ -1,6 +1,7 @@
 import type { Request, Response } from 'express';
 import User from '../models/User.js';
 import Recipe from '../models/Recipe.js';
+import { IUser } from "../models/User";
 
 interface AuthenticatedRequest extends Request {
   user?: { id: string };
@@ -10,27 +11,49 @@ interface AuthenticatedRequest extends Request {
 // GET USER PROFILE
 // ---------------------------------------------------------------------------
 
-export const getProfile = async (req: Request, res: Response): Promise<void> => {
+
+
+export const getProfile = async (
+  req: AuthenticatedRequest ,
+  res: Response
+): Promise<void> => {
   try {
-    const { id } = req.params;
+    const userinfo= req.body.user;
 
-    const user = await User.findById(id)
-      .select('-password -refreshToken -resetOtp -resetOtpExpire')
-      .populate('followers', 'username email avatar')
-      .populate('following', 'username email avatar');
-
-    if (!user) {
-      res.status(404).json({ success: false, message: 'User not found' });
+    if (!userinfo._id) {
+      res.status(401).json({
+        success: false,
+        message: "Not authenticated.",
+      });
       return;
     }
 
-    const recipesCount = await Recipe.countDocuments({ author: id });
+    const user = await User.findById(
+      userinfo._id
+    ).select("-password -refreshToken");
 
-    res.status(200).json({ success: true, user, recipesCount });
+    if (!user) {
+      res.status(404).json({
+        success: false,
+        message: "User not found.",
+      });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      message:
+        "Profile retrieved successfully.",
+      data: {
+        user,
+      },
+    });
   } catch (error) {
+    console.error("getProfile:", error);
+
     res.status(500).json({
       success: false,
-      message: error instanceof Error ? error.message : 'Server error',
+      message: "Server error.",
     });
   }
 };
@@ -39,46 +62,115 @@ export const getProfile = async (req: Request, res: Response): Promise<void> => 
 // UPDATE PROFILE
 // ---------------------------------------------------------------------------
 
-export const updateProfile = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+export const updateProfile = async (
+  req: AuthenticatedRequest,
+  res: Response
+): Promise<void> => {
   try {
-    const userId = req.user?.id;
-    const { username, email, bio, avatar } = req.body;
-
-    const user = await User.findById(userId);
-
-    if (!user) {
-      res.status(404).json({ success: false, message: 'User not found' });
+    const userinfo= req.body.user;
+    if (!userinfo?._id) {
+      res.status(401).json({
+        success: false,
+        message: "Not authenticated.",
+      });
       return;
     }
 
-    if (username && username !== user.username) {
-      const existingUsername = await User.findOne({ username });
-      if (existingUsername) {
-        res.status(400).json({ success: false, message: 'Username already taken' });
+    const {
+      fullName,
+      username,
+      bio,
+      profileImage,
+      location,
+      website,
+    } = userinfo;
+
+    if (
+      username &&
+      username !== userinfo.username
+    ) {
+      const existingUser =
+        await User.findOne({
+          username,
+          _id: { $ne: userinfo._id },
+        });
+
+      if (existingUser) {
+        res.status(409).json({
+          success: false,
+          message:
+            "Username is already in use.",
+        });
         return;
       }
-      user.username = username;
     }
 
-    if (email && email !== user.email) {
-      const existingEmail = await User.findOne({ email });
-      if (existingEmail) {
-        res.status(400).json({ success: false, message: 'Email already in use' });
-        return;
-      }
-      user.email = email;
+    const updates: Record<
+      string,
+      string
+    > = {};
+
+    if (fullName !== undefined) {
+      updates.fullName = fullName;
     }
 
-    if (bio !== undefined) user.bio = bio;
-    if (avatar !== undefined) user.avatar = avatar;
+    if (username !== undefined) {
+      updates.username = username;
+    }
 
-    await user.save();
+    if (bio !== undefined) {
+      updates.bio = bio;
+    }
 
-    res.status(200).json({ success: true, message: 'Profile updated successfully', user });
+    if (profileImage !== undefined) {
+      updates.profileImage = profileImage;
+    }
+
+    if (location !== undefined) {
+      updates.location = location;
+    }
+
+    if (website !== undefined) {
+      updates.website = website;
+    }
+
+    const user =
+      await User.findByIdAndUpdate(
+        req.body.user._id,
+        {
+          $set: updates,
+        },
+        {
+          new: true,
+          runValidators: true,
+        }
+      ).select("-password -refreshToken");
+
+    if (!user) {
+      res.status(404).json({
+        success: false,
+        message: "User not found.",
+      });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      message:
+        "Profile updated successfully.",
+      data: {
+        user,
+      },
+    });
   } catch (error) {
+    console.error(
+      "updateProfile:",
+      error
+    );
+
     res.status(500).json({
       success: false,
-      message: error instanceof Error ? error.message : 'Server error',
+      message: "Server error.",
     });
   }
 };
@@ -87,29 +179,62 @@ export const updateProfile = async (req: AuthenticatedRequest, res: Response): P
 // DELETE PROFILE
 // ---------------------------------------------------------------------------
 
-export const deleteProfile = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+export const deleteProfile = async (
+  req: AuthenticatedRequest,
+  res: Response
+): Promise<void> => {
   try {
-    const userId = req.user?.id;
+    const userinfo= req.body.user;
 
-    const user = await User.findById(userId);
-
-    if (!user) {
-      res.status(404).json({ success: false, message: 'User not found' });
+    if (!userinfo._id) {
+      res.status(401).json({
+        success: false,
+        message: "Not authenticated.",
+      });
       return;
     }
 
-    await Recipe.deleteMany({ author: userId });
-    await User.findByIdAndDelete(userId);
+    const user =
+      await User.findByIdAndDelete(
+        userinfo._id
+      );
 
-    res.status(200).json({ success: true, message: 'Profile deleted successfully' });
+    if (!user) {
+      res.status(404).json({
+        success: false,
+        message: "User not found.",
+      });
+      return;
+    }
+
+    res.clearCookie(
+      "refreshToken",
+      {
+        httpOnly: true,
+        secure:
+          process.env.NODE_ENV ===
+          "production",
+        sameSite: "lax",
+      }
+    );
+
+    res.status(200).json({
+      success: true,
+      message:
+        "Account deleted successfully.",
+    });
   } catch (error) {
+    console.error(
+      "deleteProfile:",
+      error
+    );
+
     res.status(500).json({
       success: false,
-      message: error instanceof Error ? error.message : 'Server error',
+      message: "Server error.",
     });
   }
 };
-
 // ---------------------------------------------------------------------------
 // GET USER BY USERNAME
 // ---------------------------------------------------------------------------

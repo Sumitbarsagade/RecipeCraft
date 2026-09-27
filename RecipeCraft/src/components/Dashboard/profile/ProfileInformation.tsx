@@ -9,21 +9,19 @@ import {
 interface ProfileInformationProps {
   isEditing: boolean;
 
-  fullName: string;
+  fullName?: string;
   username: string;
   email: string;
-  bio: string;
-  location: string;
-  website: string;
+  bio?: string;
+  location?: string;
+  website?: string;
 
   setFullName: (value: string) => void;
   setUsername: (value: string) => void;
-  setEmail: (value: string) => void;
   setBio: (value: string) => void;
   setLocation: (value: string) => void;
   setWebsite: (value: string) => void;
 }
-
 export default function ProfileInformation({
   isEditing,
 
@@ -36,7 +34,6 @@ export default function ProfileInformation({
 
   setFullName,
   setUsername,
-  setEmail,
   setBio,
   setLocation,
   setWebsite,
@@ -77,8 +74,6 @@ export default function ProfileInformation({
             label="Email Address"
             icon={<Mail size={16} />}
             value={email}
-            editing={isEditing}
-            onChange={setEmail}
             type="email"
           />
 
@@ -146,6 +141,7 @@ interface ProfileFieldProps {
   type?: string;
   placeholder?: string;
   prefix?: string;
+
 }
 
 function ProfileField({

@@ -1,24 +1,53 @@
-import { Router } from 'express';
+import { Router } from "express";
+import protect from "../middleware/authMiddleware";
+
 import {
   getProfile,
   updateProfile,
   deleteProfile,
-
-  getUserByUsername,
-
   getSavedRecipes,
-} from '../controllers/userController';
+  getUserByUsername,
+} from "../controllers/userController";
 
 const router = Router();
 
-// Private routes (auth middleware to be added)
-router.get('/me', getProfile);
-router.put('/me', updateProfile);
-router.delete('/me', deleteProfile);
-router.get('/me/saved-recipes', getSavedRecipes);  // must be before /:username
+/* =========================================================
+   PRIVATE ROUTES
+========================================================= */
 
-// Public routes
-router.get('/:username', getUserByUsername);
+router.get(
+  "/me",
+  protect,
+  getProfile
+);
 
+router.put(
+  "/me",
+  protect,
+  updateProfile
+);
+
+router.delete(
+  "/me",
+  protect,
+  deleteProfile
+);
+
+router.get(
+  "/me/saved-recipes",
+  protect,
+  getSavedRecipes
+);
+
+
+/* =========================================================
+   PUBLIC ROUTES
+========================================================= */
+
+// Keep dynamic route LAST
+router.get(
+  "/:username",
+  getUserByUsername
+);
 
 export default router;

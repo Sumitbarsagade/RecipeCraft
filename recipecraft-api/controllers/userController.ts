@@ -1,10 +1,13 @@
 import type { Request, Response } from 'express';
 import User from '../models/User.js';
 import Recipe from '../models/Recipe.js';
-import { IUser } from "../models/User";
+import { IUser } from "../types/user.types";
 
 interface AuthenticatedRequest extends Request {
-  user?: { id: string };
+  
+      user?: { _id: string };
+  
+  
 }
 
 // ---------------------------------------------------------------------------
@@ -18,9 +21,9 @@ export const getProfile = async (
   res: Response
 ): Promise<void> => {
   try {
-    const userinfo= req.body.user;
-
-    if (!userinfo._id) {
+    const userinfo= req.user;
+    
+    if (!userinfo) {
       res.status(401).json({
         success: false,
         message: "Not authenticated.",
@@ -33,6 +36,7 @@ export const getProfile = async (
     ).select("-password -refreshToken");
 
     if (!user) {
+      console.log(user)
       res.status(404).json({
         success: false,
         message: "User not found.",
@@ -50,7 +54,7 @@ export const getProfile = async (
     });
   } catch (error) {
     console.error("getProfile:", error);
-
+    console.log(error)
     res.status(500).json({
       success: false,
       message: "Server error.",
@@ -67,8 +71,7 @@ export const updateProfile = async (
   res: Response
 ): Promise<void> => {
   try {
-    const userinfo= req.body.user;
-    if (!userinfo?._id) {
+    if (!req.user?._id) {
       res.status(401).json({
         success: false,
         message: "Not authenticated.",
@@ -77,22 +80,25 @@ export const updateProfile = async (
     }
 
     const {
-      fullName,
+      name,
       username,
+      avatar,
       bio,
-      profileImage,
       location,
       website,
-    } = userinfo;
+    } = req.body;
 
+    // Username uniqueness check
     if (
       username &&
-      username !== userinfo.username
+      username !== req.body.username
     ) {
       const existingUser =
         await User.findOne({
           username,
-          _id: { $ne: userinfo._id },
+          _id: {
+            $ne: req.user._id,
+          },
         });
 
       if (existingUser) {
@@ -105,38 +111,51 @@ export const updateProfile = async (
       }
     }
 
-    const updates: Record<
-      string,
-      string
+    /*
+     * Only fields explicitly listed here
+     * can be updated.
+     *
+     * email, role, password, etc.
+     * cannot be modified through this API.
+     */
+    const updates: Partial<
+      Pick<
+        IUser,
+        | "name"
+        | "username"
+        | "avatar"
+        | "bio"
+        | "location"
+        | "website"
+      >
     > = {};
 
-    if (fullName !== undefined) {
-      updates.fullName = fullName;
+    if (name !== undefined) {
+      updates.name = name;
     }
 
     if (username !== undefined) {
       updates.username = username;
     }
 
+    if (avatar !== undefined) {
+      updates.avatar = avatar;
+    }
+
     if (bio !== undefined) {
       updates.bio = bio;
     }
-
-    if (profileImage !== undefined) {
-      updates.profileImage = profileImage;
-    }
-
     if (location !== undefined) {
       updates.location = location;
     }
-
     if (website !== undefined) {
       updates.website = website;
     }
+    
 
     const user =
       await User.findByIdAndUpdate(
-        req.body.user._id,
+        req.user._id,
         {
           $set: updates,
         },
@@ -144,7 +163,9 @@ export const updateProfile = async (
           new: true,
           runValidators: true,
         }
-      ).select("-password -refreshToken");
+      ).select(
+        "-password -refreshToken -resetOtp -resetOtpExpire -resetPasswordToken"
+      );
 
     if (!user) {
       res.status(404).json({
@@ -164,13 +185,14 @@ export const updateProfile = async (
     });
   } catch (error) {
     console.error(
-      "updateProfile:",
+      "updateProfile error:",
       error
     );
 
     res.status(500).json({
       success: false,
-      message: "Server error.",
+      message:
+        "Unable to update profile.",
     });
   }
 };
@@ -184,9 +206,9 @@ export const deleteProfile = async (
   res: Response
 ): Promise<void> => {
   try {
-    const userinfo= req.body.user;
-
-    if (!userinfo._id) {
+     const userinfo= req.user;
+    
+    if (!userinfo) {
       res.status(401).json({
         success: false,
         message: "Not authenticated.",

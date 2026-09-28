@@ -2,10 +2,10 @@ import type { User }
   from "../../types/user.types";
 
 export interface UpdateUserProfileRequest {
-  fullName?: string;
+  name?: string;
   username?: string;
   bio?: string;
-  profileImage?: string;
+  avatar?: string;
   location?: string;
   website?: string;
 }

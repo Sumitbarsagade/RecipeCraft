@@ -1,20 +1,6 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
-export interface IUser extends Document {
-  username: string;
-  email: string;
-  password: string;
-  avatar?: string;
-  bio?: string;
-  followers: string[];
-  following: string[];
-  isVerified: boolean;
-  refreshToken?: string;
-  role: 'user' | 'admin';
-  resetOtp?: string;
-  resetOtpExpire?: Date;
-  resetPasswordToken?: string;
-}
+import type { IUser } from '../types/user.types';
 
 const userSchema = new Schema<IUser>(
   {
@@ -30,6 +16,10 @@ const userSchema = new Schema<IUser>(
       lowercase: true,
       trim: true,
     },
+    name: {
+      type: String,
+      trim: true,
+    },
     password: {
       type: String,
       required: true,
@@ -40,6 +30,14 @@ const userSchema = new Schema<IUser>(
     bio: {
       type: String,
       maxlength: 250,
+    },
+    location: {
+      type: String,
+      maxlength: 250
+    },
+    website: {
+      type: String,
+      maxLength: 160
     },
     followers: {
       type: [String],

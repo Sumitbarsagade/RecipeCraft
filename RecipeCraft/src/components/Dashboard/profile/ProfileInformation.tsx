@@ -6,37 +6,22 @@ import {
   User,
 } from "lucide-react";
 
-interface ProfileInformationProps {
-  isEditing: boolean;
+import type {ProfileInformationProps}  from "../../../types/user.types";
 
-  fullName?: string;
-  username: string;
-  email: string;
-  bio?: string;
-  location?: string;
-  website?: string;
-
-  setFullName: (value: string) => void;
-  setUsername: (value: string) => void;
-  setBio: (value: string) => void;
-  setLocation: (value: string) => void;
-  setWebsite: (value: string) => void;
-}
 export default function ProfileInformation({
   isEditing,
-
-  fullName,
+  name,
   username,
   email,
   bio,
   location,
   website,
-
-  setFullName,
+  setName,
   setUsername,
   setBio,
   setLocation,
   setWebsite,
+  
 }: ProfileInformationProps) {
   return (
     <div className="rounded-2xl border border-[#E8E1D8] bg-white p-6 shadow-sm">
@@ -55,15 +40,15 @@ export default function ProfileInformation({
         <ProfileField
           label="Full Name"
           icon={<User size={16} />}
-          value={fullName}
+          value={name ?? ""}
           editing={isEditing}
-          onChange={setFullName}
+          onChange={setName}
         />
 
         <ProfileField
           label="Username"
           icon={<AtSign size={16} />}
-          value={username}
+          value={username ?? ""}
           editing={isEditing}
           onChange={setUsername}
           prefix="@"
@@ -74,7 +59,9 @@ export default function ProfileInformation({
             label="Email Address"
             icon={<Mail size={16} />}
             value={email}
+            editing={false}
             type="email"
+           
           />
 
           <p className="mt-1.5 text-xs text-[#969E99]">
@@ -85,7 +72,7 @@ export default function ProfileInformation({
         <ProfileField
           label="Location"
           icon={<MapPin size={16} />}
-          value={location}
+          value={location?? ""}
           editing={isEditing}
           onChange={setLocation}
           placeholder="e.g. Pune, India"
@@ -94,7 +81,7 @@ export default function ProfileInformation({
         <ProfileField
           label="Website"
           icon={<Globe size={16} />}
-          value={website}
+          value={website?? ""}
           editing={isEditing}
           onChange={setWebsite}
           placeholder="https://example.com"
@@ -117,7 +104,7 @@ export default function ProfileInformation({
               />
 
               <p className="mt-1 text-right text-xs text-[#969E99]">
-                {bio.length}/300
+                {bio?.length}/300
               </p>
             </>
           ) : (
@@ -137,7 +124,7 @@ interface ProfileFieldProps {
   icon: React.ReactNode;
   value: string;
   editing: boolean;
-  onChange: (value: string) => void;
+  onChange?: (value: string) => void;
   type?: string;
   placeholder?: string;
   prefix?: string;
@@ -153,6 +140,7 @@ function ProfileField({
   type = "text",
   placeholder,
   prefix,
+
 }: ProfileFieldProps) {
   return (
     <div>
@@ -173,10 +161,11 @@ function ProfileField({
           )}
 
           <input
+            
             type={type}
             value={value}
             placeholder={placeholder}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={(e) => onChange?.(e.target.value)}
             className={`w-full rounded-xl border border-[#E4DDD4] bg-[#FFFEFC] py-3 pr-4 text-sm text-[#36413B] outline-none transition focus:border-[#C8501A] focus:ring-2 focus:ring-[#C8501A]/10 ${
               prefix ? "pl-14" : "pl-10"
             }`}

@@ -1,24 +1,105 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Schema } from "mongoose";
 
-export interface IRecipe extends Document {
-  title: string;
-  slug: string;
-  description?: string;
-  author: mongoose.Types.ObjectId;
-  coverImage?: string;
-  ingredients: object;
-  step: object;
-  category: 'appetizer' | 'snack' | 'breakfast' | 'main course' | 'dessert' | 'beverage' | 'other';
-  cuisine?: 'Italian' | 'Mexican' | 'Chinese' | 'American' | 'French' | 'Indian' | 'other';
-  tags: string[];
-  prepTime?: number;
-  cookTime?: number;
-  servings?: number;
-  difficulty?: 'easy' | 'medium' | 'hard';
-  likes: mongoose.Types.ObjectId[];
-  isPublished: boolean;
-  views: number;
-}
+import type {
+  IRecipe,
+  IRecipeIngredient,
+  IRecipeInstruction,
+  IRecipeNutrition,
+} from "../types/recipe.types";
+
+
+/* =========================================================
+   INGREDIENT SCHEMA
+========================================================= */
+
+const ingredientSchema =
+  new Schema<IRecipeIngredient>(
+    {
+      name: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+
+      quantity: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+
+      unit: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+    },
+    {
+      _id: false,
+    }
+  );
+
+
+/* =========================================================
+   INSTRUCTION SCHEMA
+========================================================= */
+
+const instructionSchema =
+  new Schema<IRecipeInstruction>(
+    {
+      step: {
+        type: Number,
+        required: true,
+        min: 1,
+      },
+
+      description: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+    },
+    {
+      _id: false,
+    }
+  );
+
+
+/* =========================================================
+   NUTRITION SCHEMA
+========================================================= */
+
+const nutritionSchema =
+  new Schema<IRecipeNutrition>(
+    {
+      calories: {
+        type: Number,
+        min: 0,
+      },
+
+      protein: {
+        type: Number,
+        min: 0,
+      },
+
+      carbohydrates: {
+        type: Number,
+        min: 0,
+      },
+
+      fat: {
+        type: Number,
+        min: 0,
+      },
+    },
+    {
+      _id: false,
+    }
+  );
+
+
+/* =========================================================
+   RECIPE SCHEMA
+========================================================= */
 
 const recipeSchema = new Schema<IRecipe>(
   {
@@ -27,72 +108,196 @@ const recipeSchema = new Schema<IRecipe>(
       required: true,
       trim: true,
     },
+
     slug: {
       type: String,
+      required: true,
       unique: true,
       lowercase: true,
+      trim: true,
     },
+
     description: {
       type: String,
+      trim: true,
     },
+
     author: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true,
     },
+
     coverImage: {
       type: String,
+      trim: true,
     },
-    ingredients: {
-      type: Schema.Types.Mixed,
-      required: true,
-    },
-    step: {
-      type: Schema.Types.Mixed,
-    },
+
+
+    /* ===============================
+       RECIPE DETAILS
+    =============================== */
+
     category: {
       type: String,
       required: true,
-      enum: ['appetizer', 'snack', 'breakfast', 'main course', 'dessert', 'beverage', 'other'],
+
+      enum: [
+        "appetizer",
+        "snack",
+        "breakfast",
+        "main course",
+        "dessert",
+        "beverage",
+        "other",
+      ],
     },
+
     cuisine: {
       type: String,
-      enum: ['Italian', 'Mexican', 'Chinese', 'American', 'French', 'Indian', 'other'],
+
+      enum: [
+        "Italian",
+        "Mexican",
+        "Chinese",
+        "American",
+        "French",
+        "Indian",
+        "other",
+      ],
     },
+
     tags: {
       type: [String],
       default: [],
     },
+
     prepTime: {
       type: Number,
+      min: 0,
     },
+
     cookTime: {
       type: Number,
+      min: 0,
     },
+
     servings: {
       type: Number,
+      min: 1,
     },
+
     difficulty: {
       type: String,
-      enum: ['easy', 'medium', 'hard'],
+
+      enum: [
+        "easy",
+        "medium",
+        "hard",
+      ],
     },
-    likes: {
-      type: [Schema.Types.ObjectId],
-      ref: 'User',
+
+
+    /* ===============================
+       INGREDIENTS
+    =============================== */
+
+    ingredients: {
+      type: [ingredientSchema],
+   
+       default: [],
+    },
+
+
+    /* ===============================
+       INSTRUCTIONS
+    =============================== */
+
+    instructions: {
+      type: [instructionSchema],
+    
       default: [],
     },
-    isPublished: {
-      type: Boolean,
-      default: false,
+
+
+    /* ===============================
+       NUTRITION
+    =============================== */
+
+    nutrition: {
+      type: nutritionSchema,
+      default: undefined,
     },
+
+
+    /* ===============================
+       EXTRA INFORMATION
+    =============================== */
+
+    tips: {
+      type: String,
+      trim: true,
+    },
+
+    notes: {
+      type: String,
+      trim: true,
+    },
+
+
+    /* ===============================
+       STATUS
+    =============================== */
+
+    status: {
+      type: String,
+
+      enum: [
+        "draft",
+        "published",
+      ],
+
+      default: "draft",
+      required: true,
+    },
+
+
+    /* ===============================
+       ENGAGEMENT
+    =============================== */
+
+    likes: {
+      type: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: "User",
+        },
+      ],
+
+      default: [],
+    },
+
     views: {
       type: Number,
       default: 0,
+      min: 0,
     },
   },
-  { timestamps: true }
+
+  {
+    timestamps: true,
+  }
 );
 
-const Recipe = mongoose.model<IRecipe>('Recipe', recipeSchema);
+
+/* =========================================================
+   MODEL
+========================================================= */
+
+const Recipe =
+  mongoose.model<IRecipe>(
+    "Recipe",
+    recipeSchema
+  );
 
 export default Recipe;

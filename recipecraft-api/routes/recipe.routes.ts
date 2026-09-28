@@ -26,11 +26,11 @@ router.get('/:slug', getRecipeBySlug);
 
 // Private routes (auth middleware to be added)
 router.use(protect)
-router.get('/feed', getRecipeFeed);
-router.post('/', createRecipe);
-router.put('/:id', updateRecipeById);
-router.delete('/:id', deleteRecipeById);
-router.post('/:id/like', likeRecipeById);
-router.post('/:id/save', saveRecipeById);
+router.get('/feed',protect, getRecipeFeed);
+router.post('/', protect, createRecipe);
+router.put('/:id', protect, updateRecipeById);
+router.delete('/:id', protect, deleteRecipeById);
+router.post('/:id/like', protect,  likeRecipeById);
+router.post('/:id/save', protect, saveRecipeById);
 
 export default router;

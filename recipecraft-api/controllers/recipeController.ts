@@ -2,13 +2,11 @@ import type { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import slugify from 'slugify';
 import Recipe from '../models/Recipe.js';
-
+import type {CreateRecipeRequestBody, UpdateRecipeRequestBody} from '../types/recipe.types'
 // Extend Request to include the authenticated user
-interface AuthenticatedRequest extends Request {
-  user?: { id: string };
+import type {AuthenticatedRequest} from '../types/auth.types';
 
-}
-
+import {validateRecipeForPublish} from '../helper/publishValidationHelper'
 // ---------------------------------------------------------------------------
 // GET ALL RECIPES
 // ---------------------------------------------------------------------------
@@ -143,103 +141,601 @@ export const getRecipeBySlug = async (req: {params: {slug: any}}, res: Response)
   }
 };
 
-// ---------------------------------------------------------------------------
-// CREATE RECIPE
-// ---------------------------------------------------------------------------
-
-export const createRecipe = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+export const createRecipe = async (
+  req: AuthenticatedRequest<CreateRecipeRequestBody>,
+  res: Response
+): Promise<void> => {
   try {
     const {
       title,
       description,
       coverImage,
-      ingredients,
-      step,
+
       category,
       cuisine,
       tags,
+
       prepTime,
       cookTime,
       servings,
       difficulty,
-      isPublished,
+
+      ingredients,
+      instructions,
+
+      nutrition,
+
+      tips,
+      notes,
+
+      status = "draft",
     } = req.body;
 
-    if (!title || !description || !ingredients) {
-      res.status(400).json({ success: false, message: 'Title, description, and ingredients are required' });
-      return;
-    }
 
-    const userId = req.user?.id;
+    /* =====================================================
+       AUTHENTICATED USER
+    ===================================================== */
+
+    const userId =
+      (req.user as { _id?: mongoose.Types.ObjectId | string; id?: string } | undefined)?._id ??
+      (req.user as { _id?: mongoose.Types.ObjectId | string; id?: string } | undefined)?.id;
+
     if (!userId) {
-      res.status(401).json({ success: false, message: 'Unauthorized' });
+      res.status(401).json({
+        success: false,
+        message: "Not authenticated.",
+      });
       return;
     }
 
-    const slug = slugify(title as string, { lower: true, strict: true });
-    const recipe = await Recipe.create({
+
+    /* =====================================================
+       BASIC VALIDATION
+    ===================================================== */
+
+    if (!title?.trim()) {
+      res.status(400).json({
+        success: false,
+        message: "Recipe title is required.",
+      });
+
+      return;
+    }
+
+    if (!category) {
+      res.status(400).json({
+        success: false,
+        message: "Recipe category is required.",
+      });
+
+      return;
+    }
+
+
+    /* =====================================================
+       STATUS VALIDATION
+    ===================================================== */
+
+    if (
+      status !== "draft" &&
+      status !== "published"
+    ) {
+      res.status(400).json({
+        success: false,
+        message:
+          "Recipe status must be draft or published.",
+      });
+
+      return;
+    }
+
+
+    /* =====================================================
+       PUBLISH VALIDATION
+    ===================================================== */
+
+    if (status === "published") {
+      const validationError =
+        validateRecipeForPublish({
+          title,
+          category,
+          ingredients,
+          instructions,
+        });
+
+      if (validationError) {
+        res.status(400).json({
+          success: false,
+          message: validationError,
+        });
+
+        return;
+      }
+    }
+
+
+    /* =====================================================
+       GENERATE SLUG
+    ===================================================== */
+
+    const baseSlug = slugify(
       title,
-      slug,
-      description,
-      author: userId,
-      coverImage,
-      ingredients,
-      step,
-      category,
-      cuisine,
-      tags,
-      prepTime,
-      cookTime,
-      servings,
-      difficulty,
-      isPublished,
-      views: 0,
+      {
+        lower: true,
+        strict: true,
+        trim: true,
+      }
+    );
+
+    let slug = baseSlug;
+
+    /*
+     * Make sure the slug is unique.
+     *
+     * chicken-curry
+     * chicken-curry-2
+     * chicken-curry-3
+     */
+    let counter = 2;
+
+    while (
+      await Recipe.exists({ slug })
+    ) {
+      slug = `${baseSlug}-${counter}`;
+      counter++;
+    }
+
+
+    /* =====================================================
+       CREATE RECIPE
+    ===================================================== */
+
+    const recipe =
+      await Recipe.create({
+        title: title.trim(),
+
+        slug,
+
+        description:
+          description?.trim(),
+
+        author: userId,
+
+        coverImage,
+
+        category,
+
+        cuisine,
+
+        tags:
+          Array.isArray(tags)
+            ? tags
+            : [],
+
+        prepTime,
+
+        cookTime,
+
+        servings,
+
+        difficulty,
+
+        ingredients:
+          Array.isArray(ingredients)
+            ? ingredients
+            : [],
+
+        instructions:
+          Array.isArray(instructions)
+            ? instructions
+            : [],
+
+        nutrition,
+
+        tips:
+          tips?.trim(),
+
+        notes:
+          notes?.trim(),
+
+        status,
+
+        /*
+         * Backend-managed fields
+         */
+        likes: [],
+        views: 0,
+      });
+
+
+    /* =====================================================
+       RESPONSE
+    ===================================================== */
+
+    res.status(201).json({
+      success: true,
+
+      message:
+        status === "published"
+          ? "Recipe published successfully."
+          : "Recipe saved as draft.",
+
+      data: {
+        recipe,
+      },
     });
 
-    res.status(201).json({ success: true, message: 'Recipe created successfully', recipe });
   } catch (error) {
+    console.error(
+      "createRecipe error:",
+      error
+    );
+
     res.status(500).json({
       success: false,
-      message: error instanceof Error ? error.message : 'Server error',
+
+      message:
+        error instanceof Error
+          ? error.message
+          : "Server error.",
     });
   }
 };
 
-// ---------------------------------------------------------------------------
-// UPDATE RECIPE
-// ---------------------------------------------------------------------------
-
-export const updateRecipeById = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+export const updateRecipeById = async (
+  req: AuthenticatedRequest<UpdateRecipeRequestBody>,
+  res: Response
+): Promise<void> => {
   try {
     const { id } = req.params;
 
-    const recipe = await Recipe.findById(id);
+
+    /* =====================================================
+       FIND RECIPE
+    ===================================================== */
+
+    const recipe =
+      await Recipe.findById(id);
 
     if (!recipe) {
-      res.status(404).json({ success: false, message: 'Recipe not found' });
+      res.status(404).json({
+        success: false,
+        message: "Recipe not found.",
+      });
+
       return;
     }
 
-    if (recipe.author.toString() !== req.user?.id) {
-      res.status(403).json({ success: false, message: 'Unauthorized' });
+
+    /* =====================================================
+       AUTHORIZATION
+    ===================================================== */
+
+    const userId =
+      (req.user as { _id?: mongoose.Types.ObjectId | string; id?: string } | undefined)?._id ??
+      (req.user as { _id?: mongoose.Types.ObjectId | string; id?: string } | undefined)?.id;
+
+    if (!userId) {
+      res.status(401).json({
+        success: false,
+        message: "Not authenticated.",
+      });
       return;
     }
 
-    const updates = { ...req.body } as Record<string, unknown>;
-    if (updates['title']) {
-      updates['slug'] = slugify(updates['title'] as string, { lower: true, strict: true });
+
+    if (
+      recipe.author.toString() !==
+      userId.toString()
+    ) {
+      res.status(403).json({
+        success: false,
+        message:
+          "You are not authorized to update this recipe.",
+      });
+
+      return;
     }
 
-    const updatedRecipe = await Recipe.findByIdAndUpdate(id, updates, {
-      new: true,
-      runValidators: true,
+
+    /* =====================================================
+       ALLOWED UPDATE FIELDS
+    ===================================================== */
+
+    const {
+      title,
+      description,
+      coverImage,
+
+      category,
+      cuisine,
+      tags,
+
+      prepTime,
+      cookTime,
+      servings,
+      difficulty,
+
+      ingredients,
+      instructions,
+
+      nutrition,
+
+      tips,
+      notes,
+
+      status,
+    } = req.body;
+
+
+    /* =====================================================
+       STATUS VALIDATION
+    ===================================================== */
+
+    if (
+      status !== undefined &&
+      status !== "draft" &&
+      status !== "published"
+    ) {
+      res.status(400).json({
+        success: false,
+        message:
+          "Recipe status must be draft or published.",
+      });
+
+      return;
+    }
+
+
+    /* =====================================================
+       BUILD FINAL RECIPE STATE
+    ===================================================== */
+
+    /*
+     * This is important when publishing an existing draft.
+     *
+     * req.body may only contain changed fields, so validation
+     * needs to consider both:
+     *
+     * existing DB values + incoming values.
+     */
+
+    const finalTitle =
+      title !== undefined
+        ? title
+        : recipe.title;
+
+    const finalCategory =
+      category !== undefined
+        ? category
+        : recipe.category;
+
+    const finalIngredients =
+      ingredients !== undefined
+        ? ingredients
+        : recipe.ingredients;
+
+    const finalInstructions =
+      instructions !== undefined
+        ? instructions
+        : recipe.instructions;
+
+    const finalStatus =
+      status !== undefined
+        ? status
+        : recipe.status;
+
+
+    /* =====================================================
+       PUBLISH VALIDATION
+    ===================================================== */
+
+    if (finalStatus === "published") {
+      const validationError =
+        validateRecipeForPublish({
+          title: finalTitle,
+          category: finalCategory,
+          ingredients:
+            finalIngredients,
+          instructions:
+            finalInstructions,
+        });
+
+      if (validationError) {
+        res.status(400).json({
+          success: false,
+          message: validationError,
+        });
+
+        return;
+      }
+    }
+
+
+    /* =====================================================
+       UPDATE ALLOWED FIELDS
+    ===================================================== */
+
+    if (title !== undefined) {
+      recipe.title =
+        title.trim();
+
+
+      /* =============================
+         REGENERATE SLUG
+      ============================= */
+
+      if (
+        title.trim() !==
+        recipe.title
+      ) {
+        // handled below
+      }
+
+      const baseSlug =
+        slugify(title, {
+          lower: true,
+          strict: true,
+          trim: true,
+        });
+
+      let newSlug =
+        baseSlug;
+
+      let counter = 2;
+
+      while (
+        await Recipe.exists({
+          slug: newSlug,
+
+          _id: {
+            $ne: recipe._id,
+          },
+        })
+      ) {
+        newSlug =
+          `${baseSlug}-${counter}`;
+
+        counter++;
+      }
+
+      recipe.slug =
+        newSlug;
+    }
+
+
+    if (description !== undefined) {
+      recipe.description =
+        description.trim();
+    }
+
+
+    if (coverImage !== undefined) {
+      recipe.coverImage =
+        coverImage;
+    }
+
+
+    if (category !== undefined) {
+      recipe.category =
+        category;
+    }
+
+
+    if (cuisine !== undefined) {
+      recipe.cuisine =
+        cuisine || undefined;
+    }
+
+
+    if (tags !== undefined) {
+      recipe.tags =
+        Array.isArray(tags)
+          ? tags
+          : [];
+    }
+
+
+    if (prepTime !== undefined) {
+      recipe.prepTime =
+        prepTime;
+    }
+
+
+    if (cookTime !== undefined) {
+      recipe.cookTime =
+        cookTime;
+    }
+
+
+    if (servings !== undefined) {
+      recipe.servings =
+        servings;
+    }
+
+
+    if (difficulty !== undefined) {
+      recipe.difficulty =
+        difficulty;
+    }
+
+
+    if (ingredients !== undefined) {
+      recipe.ingredients =
+        ingredients;
+    }
+
+
+    if (instructions !== undefined) {
+      recipe.instructions =
+        instructions;
+    }
+
+
+    if (nutrition !== undefined) {
+      recipe.nutrition =
+        nutrition;
+    }
+
+
+    if (tips !== undefined) {
+      recipe.tips =
+        tips.trim();
+    }
+
+
+    if (notes !== undefined) {
+      recipe.notes =
+        notes.trim();
+    }
+
+
+    if (status !== undefined) {
+      recipe.status =
+        status;
+    }
+
+
+    /* =====================================================
+       SAVE
+    ===================================================== */
+
+    const updatedRecipe =
+      await recipe.save();
+
+
+    /* =====================================================
+       RESPONSE
+    ===================================================== */
+
+    res.status(200).json({
+      success: true,
+
+      message:
+        updatedRecipe.status ===
+        "published"
+          ? "Recipe updated successfully."
+          : "Draft updated successfully.",
+
+      data: {
+        recipe:
+          updatedRecipe,
+      },
     });
 
-    res.status(200).json({ success: true, message: 'Recipe updated successfully', recipe: updatedRecipe });
   } catch (error) {
+    console.error(
+      "updateRecipeById error:",
+      error
+    );
+
     res.status(500).json({
       success: false,
-      message: error instanceof Error ? error.message : 'Server error',
+
+      message:
+        error instanceof Error
+          ? error.message
+          : "Server error.",
     });
   }
 };

@@ -21,6 +21,58 @@ interface Props {
   isEditing?: boolean;
 }
 
+const handleSubmitRecipe =
+  async (
+    status:
+      | "draft"
+      | "published"
+  ) => {
+    try {
+       if (
+      status === "published"
+    ) {
+      const validationError =
+        validateForPublish(
+          formData
+        );
+
+      if (validationError) {
+        toast.error(
+          validationError
+        );
+
+        return;
+      }
+    }
+      const payload =
+        prepareRecipePayload(
+          formData,
+          status
+        );
+
+      const response =
+        await createRecipe(
+          payload
+        ).unwrap();
+
+      toast.success(
+        response.message
+      );
+
+    } catch (error) {
+      console.error(
+        "Recipe creation error:",
+        error
+      );
+
+      toast.error(
+        status === "published"
+          ? "Unable to publish recipe."
+          : "Unable to save draft."
+      );
+    }
+  };
+
 export default function RecipeForm({
   initialData,
   isEditing = false,
@@ -218,8 +270,8 @@ export default function RecipeForm({
 
       <RecipeFormActions
         isEditing={isEditing}
-        onSaveDraft={handleSaveDraft}
-        onPublish={handlePublish}
+        onSaveDraft={handleSubmitRecipe("draft")}
+        onPublish={handleSubmitRecipe("published")}
         onPreview={handlePreview}
       />
     </motion.form>

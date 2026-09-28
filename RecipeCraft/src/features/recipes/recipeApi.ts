@@ -1,115 +1,56 @@
-import axiosInstance from "../../api/axiosInstance";
+import {
+  createApi,
+} from "@reduxjs/toolkit/query/react";
+
+import 
+  axiosBaseQuery,
+ from "../../api/axiosBaseQuery";
 
 import type {
-  Recipe,
-  RecipeFormData,
-} from "./recipeTypes";
+  CreateRecipeRequest,
+  RecipeResponse,
+} from "../../types/recipe.types";
+import axiosInstance from "../../api/axiosInstance";
 
-import {
-  formToRecipePayload,
-} from "./recipeMappers";
 
-import {
-  RECIPE_ENDPOINTS,
-} from "./recipeEndpoints";
+export const recipeApi =
+  createApi({
+    reducerPath:
+      "recipeApi",
 
-export interface RecipeListResponse {
-  success: boolean;
-  message?: string;
-  data: Recipe[];
-  pagination?: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-  };
-}
+    baseQuery:
+      axiosBaseQuery(),
 
-export interface RecipeResponse {
-  success: boolean;
-  message?: string;
-  data: Recipe;
-}
+    tagTypes: [
+      "Recipe",
+    ],
 
-export interface RecipeQueryParams {
-  page?: number;
-  limit?: number;
+    endpoints: (builder) => ({
 
-  search?: string;
+      /* =========================
+         CREATE RECIPE
+      ========================= */
 
-  category?: string;
+      createRecipe:
+        builder.mutation<
+          RecipeResponse,
+          CreateRecipeRequest
+        >({
+          query: (recipe) => ({
+            url: "/recipes",
+            method: "POST",
+            data: recipe,
+          }),
 
-  cuisine?: string;
+          invalidatesTags: [
+            "Recipe",
+          ],
+        }),
 
-  status?: "draft" | "published";
+    }),
+  });
 
-  sort?:
-    | "latest"
-    | "oldest"
-    | "rating"
-    | "popular";
-}
 
-export const getRecipes = async (
-  params?: RecipeQueryParams
-): Promise<RecipeListResponse> => {
-  const response =
-    await axiosInstance.get<RecipeListResponse>(
-      RECIPE_ENDPOINTS.all,
-      {
-        params,
-      }
-    );
-
-  return response.data;
-};
-
-export const getRecipeById = async (
-  id: string
-): Promise<RecipeResponse> => {
-  const response =
-    await axiosInstance.get<RecipeResponse>(
-      RECIPE_ENDPOINTS.byId(id)
-    );
-
-  return response.data;
-};
-
-export const createRecipe = async (
-  formData: RecipeFormData
-): Promise<RecipeResponse> => {
-  const payload =
-    formToRecipePayload(formData);
-
-  const response =
-    await axiosInstance.post<RecipeResponse>(
-      RECIPE_ENDPOINTS.all,
-      payload
-    );
-
-  return response.data;
-};
-
-export const updateRecipe = async (
-  id: string,
-  formData: RecipeFormData
-): Promise<RecipeResponse> => {
-  const payload =
-    formToRecipePayload(formData);
-
-  const response =
-    await axiosInstance.put<RecipeResponse>(
-      RECIPE_ENDPOINTS.byId(id),
-      payload
-    );
-
-  return response.data;
-};
-
-export const deleteRecipe = async (
-  id: string
-): Promise<void> => {
-  await axiosInstance.delete(
-    RECIPE_ENDPOINTS.byId(id)
-  );
-};
+export const {
+  useCreateRecipeMutation,
+} = recipeApi;

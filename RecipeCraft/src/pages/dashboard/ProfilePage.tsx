@@ -157,8 +157,8 @@ export default function ProfilePage() {
 
     const updateData:
       UpdateUserProfileRequest = {
-        fullName:
-          profile.fullName?.trim(),
+        name:
+          profile.name?.trim(),
 
         username:
           profile.username.trim(),
@@ -166,8 +166,8 @@ export default function ProfilePage() {
         bio:
           profile.bio?.trim(),
 
-        profileImage:
-          profile.profileImage,
+        avatar:
+          profile.avatar,
 
         location:
           profile.location?.trim(),
@@ -279,14 +279,14 @@ export default function ProfilePage() {
           <div>
             <ProfileAvatar
               image={
-                profile.profileImage
+                profile?.avatar
               }
               isEditing={
                 isEditing
               }
               onImageChange={(image) =>
                 updateProfile(
-                  "profileImage",
+                  "avatar",
                   image
                 )
               }
@@ -303,8 +303,8 @@ export default function ProfilePage() {
             <ProfileInformation
               isEditing={isEditing}
 
-              fullName={
-                profile.fullName
+              name={
+                profile.name
               }
 
               username={
@@ -327,9 +327,9 @@ export default function ProfilePage() {
                 profile.website
               }
 
-              setFullName={(value) =>
+              setName={(value) =>
                 updateProfile(
-                  "fullName",
+                  "name",
                   value
                 )
               }

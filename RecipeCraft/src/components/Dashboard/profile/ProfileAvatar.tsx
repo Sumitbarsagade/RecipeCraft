@@ -2,7 +2,7 @@ import { Camera, UserRound, X } from "lucide-react";
 import { useRef } from "react";
 
 interface ProfileAvatarProps {
-  image: string;
+  image?: string;
   isEditing: boolean;
   onImageChange: (image: string) => void;
 }

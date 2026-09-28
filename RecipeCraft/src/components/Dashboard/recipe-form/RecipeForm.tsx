@@ -1,12 +1,23 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 
 import type {
   RecipeFormData,
   RecipeIngredient,
   RecipeInstruction,
+
+  RecipeStatus,
 } from "../../../types/recipe.types";
+
+import {
+  useCreateRecipeMutation,
+} from "../../../features/recipes/recipeApi";
+
+import {
+  prepareRecipePayload,
+} from "../../../features/recipes/recipeUtils";
 
 import RecipeBasicInfo from "./RecipeBasicInfo";
 import RecipeImageUpload from "./RecipeImageUpload";
@@ -16,110 +27,189 @@ import InstructionEditor from "./InstructionEditor";
 import RecipeAdditionalInfo from "./RecipeAdditionalInfo";
 import RecipeFormActions from "./RecipeFormActions";
 
+
 interface Props {
   initialData?: Partial<RecipeFormData>;
   isEditing?: boolean;
 }
 
-const handleSubmitRecipe =
-  async (
-    status:
-      | "draft"
-      | "published"
-  ) => {
-    try {
-       if (
-      status === "published"
-    ) {
-      const validationError =
-        validateForPublish(
-          formData
-        );
 
-      if (validationError) {
-        toast.error(
-          validationError
-        );
+/* =========================================================
+   PUBLISH VALIDATION
+========================================================= */
 
-        return;
-      }
-    }
-      const payload =
-        prepareRecipePayload(
-          formData,
-          status
-        );
+const validateForPublish = (
+  form: RecipeFormData
+): string | null => {
+  if (!form.title.trim()) {
+    return "Recipe title is required.";
+  }
 
-      const response =
-        await createRecipe(
-          payload
-        ).unwrap();
+  if (!form.category) {
+    return "Please select a category.";
+  }
 
-      toast.success(
-        response.message
-      );
+  const validIngredients =
+    form.ingredients.filter(
+      (ingredient) =>
+        ingredient.name.trim()
+    );
 
-    } catch (error) {
-      console.error(
-        "Recipe creation error:",
-        error
-      );
+  if (validIngredients.length === 0) {
+    return "Add at least one ingredient.";
+  }
 
-      toast.error(
-        status === "published"
-          ? "Unable to publish recipe."
-          : "Unable to save draft."
-      );
-    }
+  const validInstructions =
+    form.instructions.filter(
+      (instruction) =>
+        instruction.description.trim()
+    );
+
+  if (validInstructions.length === 0) {
+    return "Add at least one instruction.";
+  }
+
+  return null;
+};
+
+
+/* =========================================================
+   API ERROR
+========================================================= */
+
+interface ApiError {
+  status?: number;
+
+  data?: {
+    success?: boolean;
+    message?: string;
   };
+}
+
+
+const getApiErrorMessage = (
+  error: unknown
+): string => {
+  const apiError =
+    error as ApiError;
+
+  return (
+    apiError?.data?.message ??
+    "Something went wrong."
+  );
+};
+
+
+/* =========================================================
+   COMPONENT
+========================================================= */
 
 export default function RecipeForm({
   initialData,
   isEditing = false,
 }: Props) {
-  const navigate = useNavigate();
+  const navigate =
+    useNavigate();
 
-  const [title, setTitle] = useState(
-    initialData?.title ?? ""
-  );
 
-  const [description, setDescription] = useState(
+  /* =======================================================
+     CREATE RECIPE MUTATION
+  ======================================================= */
+
+  const [
+    createRecipe,
+    { isLoading },
+  ] = useCreateRecipeMutation();
+
+
+  /* =======================================================
+     FORM STATE
+  ======================================================= */
+
+  const [title, setTitle] =
+    useState(
+      initialData?.title ?? ""
+    );
+
+
+  const [
+    description,
+    setDescription,
+  ] = useState(
     initialData?.description ?? ""
   );
 
-  const [image, setImage] = useState(
-    initialData?.image ?? ""
+
+  const [
+    coverImage,
+    setCoverImage,
+  ] = useState(
+    initialData?.coverImage ?? ""
   );
 
-  const [category, setCategory] = useState(
+
+  const [
+    category,
+    setCategory,
+  ] = useState< >(
     initialData?.category ?? ""
   );
 
-  const [cuisine, setCuisine] = useState(
+
+  const [
+    cuisine,
+    setCuisine,
+  ] = useState<
+    RecipeCuisine | ""
+  >(
     initialData?.cuisine ?? ""
   );
 
-  const [tags, setTags] = useState<string[]>(
-    initialData?.tags ?? []
-  );
 
-  const [prepTime, setPrepTime] = useState(
+  const [tags, setTags] =
+    useState<string[]>(
+      initialData?.tags ?? []
+    );
+
+
+  const [
+    prepTime,
+    setPrepTime,
+  ] = useState(
     initialData?.prepTime ?? ""
   );
 
-  const [cookTime, setCookTime] = useState(
+
+  const [
+    cookTime,
+    setCookTime,
+  ] = useState(
     initialData?.cookTime ?? ""
   );
 
-  const [servings, setServings] = useState(
+
+  const [
+    servings,
+    setServings,
+  ] = useState(
     initialData?.servings ?? ""
   );
 
-  const [difficulty, setDifficulty] = useState<
-    "Easy" | "Medium" | "Hard"
-  >(initialData?.difficulty ?? "Easy");
 
-  const [ingredients, setIngredients] = useState<
+  const [
+    difficulty,
+    setDifficulty,
+  ] = useState<
+    RecipeDifficulty | ""
+  >(
+    initialData?.difficulty ?? ""
+  );
+
+
+  const [
+    ingredients,
+    setIngredients,
+  ] = useState<
     RecipeIngredient[]
   >(
     initialData?.ingredients ?? [
@@ -132,7 +222,11 @@ export default function RecipeForm({
     ]
   );
 
-  const [instructions, setInstructions] = useState<
+
+  const [
+    instructions,
+    setInstructions,
+  ] = useState<
     RecipeInstruction[]
   >(
     initialData?.instructions ?? [
@@ -144,7 +238,11 @@ export default function RecipeForm({
     ]
   );
 
-  const [nutrition, setNutrition] = useState(
+
+  const [
+    nutrition,
+    setNutrition,
+  ] = useState(
     initialData?.nutrition ?? {
       calories: "",
       protein: "",
@@ -153,126 +251,328 @@ export default function RecipeForm({
     }
   );
 
-  const [tips, setTips] = useState(
-    initialData?.tips ?? ""
-  );
 
-  const [notes, setNotes] = useState(
-    initialData?.notes ?? ""
-  );
-
-  const buildRecipeData = (
-    status: "draft" | "published"
-  ): RecipeFormData => ({
-    title,
-    description,
-    image,
-    category,
-    cuisine,
-    tags,
-    prepTime,
-    cookTime,
-    servings,
-    difficulty,
-    ingredients,
-    instructions,
-    nutrition,
-    tips,
-    notes,
-    status,
-  });
-
-  const handleSaveDraft = () => {
-    const data = buildRecipeData("draft");
-
-    console.log("Saving draft:", data);
-
-    // Later:
-    // POST /api/recipes
-    // or PUT /api/recipes/:id
-
-    navigate("/dashboard/recipes");
-  };
-
-  const handlePublish = () => {
-    const data = buildRecipeData("published");
-
-    console.log("Publishing recipe:", data);
-
-    // Later:
-    // POST /api/recipes
-
-    navigate("/dashboard/recipes");
-  };
-
-  const handlePreview = () => {
-    console.log(
-      buildRecipeData("draft")
+  const [tips, setTips] =
+    useState(
+      initialData?.tips ?? ""
     );
 
-    // Later we'll open the actual preview page.
+
+  const [notes, setNotes] =
+    useState(
+      initialData?.notes ?? ""
+    );
+
+
+  /* =======================================================
+     SUBMITTING STATUS
+
+     Used only for button UI:
+     "Saving..." / "Publishing..."
+  ======================================================= */
+
+  const [
+    submittingStatus,
+    setSubmittingStatus,
+  ] = useState<
+    RecipeStatus | null
+  >(null);
+
+
+  /* =======================================================
+     BUILD CURRENT FORM DATA
+
+     Notice:
+     status is NOT included here.
+  ======================================================= */
+
+  const getFormData =
+    (): RecipeFormData => ({
+      title,
+
+      description,
+
+      image,
+
+      category,
+
+      cuisine,
+
+      tags,
+
+      prepTime,
+
+      cookTime,
+
+      servings,
+
+      difficulty,
+
+      ingredients,
+
+      instructions,
+
+      nutrition,
+
+      tips,
+
+      notes,
+    });
+
+
+  /* =======================================================
+     SAVE / PUBLISH
+  ======================================================= */
+
+  const handleSubmitRecipe =
+    async (
+      status: RecipeStatus
+    ) => {
+      const currentForm =
+        getFormData();
+
+
+      /* =========================
+         PUBLISH VALIDATION
+      ========================= */
+
+      if (
+        status === "published"
+      ) {
+        const validationError =
+          validateForPublish(
+            currentForm
+          );
+
+        if (validationError) {
+          toast.error(
+            validationError
+          );
+
+          return;
+        }
+      }
+
+
+      /* =========================
+         PREPARE API PAYLOAD
+      ========================= */
+
+      const payload =
+        prepareRecipePayload(
+          currentForm,
+          status
+        );
+
+
+      try {
+        setSubmittingStatus(
+          status
+        );
+
+
+        /* =======================
+           POST /recipes
+        ======================= */
+
+        const response =
+          await createRecipe(
+            payload
+          ).unwrap();
+
+
+        /* =======================
+           SUCCESS
+        ======================= */
+
+        toast.success(
+          response.message
+        );
+
+
+        /* =======================
+           NAVIGATION
+        ======================= */
+
+        if (
+          status === "published"
+        ) {
+          navigate(
+            `/recipes/${
+              response.data.recipe.slug
+            }`
+          );
+        } else {
+          navigate(
+            "/dashboard/recipes"
+          );
+        }
+
+      } catch (error) {
+        console.error(
+          "Recipe creation error:",
+          error
+        );
+
+        toast.error(
+          getApiErrorMessage(
+            error
+          )
+        );
+
+      } finally {
+        setSubmittingStatus(
+          null
+        );
+      }
+    };
+
+
+  /* =======================================================
+     PREVIEW
+  ======================================================= */
+
+  const handlePreview = () => {
+    const data =
+      getFormData();
+
+    console.log(
+      "Recipe preview:",
+      data
+    );
+
+    // Later:
+    // navigate to preview page
+    // or open preview modal.
   };
+
+
+  /* =======================================================
+     UI
+  ======================================================= */
 
   return (
     <motion.form
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      onSubmit={(e) => e.preventDefault()}
+      initial={{
+        opacity: 0,
+      }}
+      animate={{
+        opacity: 1,
+      }}
+      onSubmit={(e) =>
+        e.preventDefault()
+      }
       className="space-y-5"
     >
       <RecipeBasicInfo
         title={title}
-        description={description}
+        description={
+          description
+        }
         category={category}
         cuisine={cuisine}
         tags={tags}
         setTitle={setTitle}
-        setDescription={setDescription}
-        setCategory={setCategory}
-        setCuisine={setCuisine}
+        setDescription={
+          setDescription
+        }
+        setCategory={
+          setCategory
+        }
+        setCuisine={
+          setCuisine
+        }
         setTags={setTags}
       />
 
+
       <RecipeImageUpload
-        image={image}
-        setImage={setImage}
+        image={coverImage}
+        setImage={
+          setCoverImage
+        }
       />
+
 
       <RecipeDetails
         prepTime={prepTime}
         cookTime={cookTime}
         servings={servings}
-        difficulty={difficulty}
-        setPrepTime={setPrepTime}
-        setCookTime={setCookTime}
-        setServings={setServings}
-        setDifficulty={setDifficulty}
+        difficulty={
+          difficulty
+        }
+        setPrepTime={
+          setPrepTime
+        }
+        setCookTime={
+          setCookTime
+        }
+        setServings={
+          setServings
+        }
+        setDifficulty={
+          setDifficulty
+        }
       />
+
 
       <IngredientEditor
-        ingredients={ingredients}
-        setIngredients={setIngredients}
+        ingredients={
+          ingredients
+        }
+        setIngredients={
+          setIngredients
+        }
       />
+
 
       <InstructionEditor
-        instructions={instructions}
-        setInstructions={setInstructions}
+        instructions={
+          instructions
+        }
+        setInstructions={
+          setInstructions
+        }
       />
 
+
       <RecipeAdditionalInfo
-        nutrition={nutrition}
+        nutrition={
+          nutrition
+        }
         tips={tips}
         notes={notes}
-        setNutrition={setNutrition}
+        setNutrition={
+          setNutrition
+        }
         setTips={setTips}
         setNotes={setNotes}
       />
 
+
       <RecipeFormActions
-        isEditing={isEditing}
-        onSaveDraft={handleSubmitRecipe("draft")}
-        onPublish={handleSubmitRecipe("published")}
-        onPreview={handlePreview}
+        isEditing={
+          isEditing
+        }
+        isLoading={
+          isLoading
+        }
+        submittingStatus={
+          submittingStatus
+        }
+        onSaveDraft={() =>
+          handleSubmitRecipe(
+            "draft"
+          )
+        }
+        onPublish={() =>
+          handleSubmitRecipe(
+            "published"
+          )
+        }
+        onPreview={
+          handlePreview
+        }
       />
     </motion.form>
   );

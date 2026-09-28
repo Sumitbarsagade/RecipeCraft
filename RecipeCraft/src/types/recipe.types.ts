@@ -43,5 +43,4 @@ export interface RecipeFormData {
   tips: string;
   notes: string;
 
-  status: RecipeStatus;
 }

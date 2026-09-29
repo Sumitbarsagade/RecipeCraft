@@ -1,27 +1,40 @@
-import type {
-  CreateRecipeRequest,
-  RecipeFormData,
-} from "./recipeTypes";
+import type { CreateRecipeRequest } from "./recipeTypes";
 
+import type { RecipeFormData } from "../../types/recipe.types";
 
-const optionalNumber = (
-  value: string
-): number | undefined => {
+const optionalNumber = (value: string): string | undefined => {
   if (!value.trim()) {
     return undefined;
   }
 
   const number = Number(value);
 
-  return Number.isNaN(number)
-    ? undefined
-    : number;
+  return Number.isNaN(number) ? undefined : String(number);
 };
 
+const timeToMinutes = (
+  value: string
+): string => {
+  if (!value) {
+    return "";
+  }
+
+  const [hours, minutes] =
+    value.split(":").map(Number);
+
+  if (
+    Number.isNaN(hours) ||
+    Number.isNaN(minutes)
+  ) {
+    return "";
+  }
+
+  return `${hours+minutes}`;
+};
 
 export const prepareRecipePayload = (
   form: RecipeFormData,
-  status: "draft" | "published"
+  status: "draft" | "published",
 ): CreateRecipeRequest => {
   const hasNutrition =
     form.nutrition.calories ||
@@ -32,109 +45,61 @@ export const prepareRecipePayload = (
   return {
     title: form.title.trim(),
 
-    description:
-      form.description.trim() ||
-      undefined,
+    description: form.description.trim(),
 
-    coverImage:
-      form.coverImage ||
-      undefined,
+    coverImage: form.coverImage,
 
-    category:
-      form.category,
+    category: form.category,
 
-    cuisine:
-      form.cuisine ||
-      undefined,
+    cuisine: form.cuisine,
 
-    tags: form.tags
-      .map((tag) => tag.trim())
-      .filter(Boolean),
+    tags: form.tags.map((tag) => tag.trim()).filter(Boolean),
 
-    prepTime:
-      optionalNumber(
-        form.prepTime
-      ),
+    prepTime: timeToMinutes(form.prepTime) ?? "",
 
-    cookTime:
-      optionalNumber(
-        form.cookTime
-      ),
+    cookTime: timeToMinutes(form.cookTime) ?? "",
 
-    servings:
-      optionalNumber(
-        form.servings
-      ),
+    servings: optionalNumber(form.servings) ?? "",
 
-    difficulty:
-      form.difficulty ||
-      undefined,
+    difficulty: form.difficulty || undefined,
 
-    ingredients:
-      form.ingredients
-        .filter(
-          (ingredient) =>
-            ingredient.name.trim()
-        )
-        .map((ingredient) => ({
-          name:
-            ingredient.name.trim(),
+    ingredients: form.ingredients
+      .filter((ingredient) => ingredient.name.trim())
+      .map((ingredient, index) => ({
+        id: String(index + 1),
 
-          quantity:
-            ingredient.quantity.trim(),
+        name: ingredient.name.trim(),
 
-          unit:
-            ingredient.unit.trim(),
-        })),
+        quantity: ingredient.quantity.trim(),
 
-    instructions:
-      form.instructions
-        .filter(
-          (instruction) =>
-            instruction.description.trim()
-        )
-        .map(
-          (instruction, index) => ({
-            step: index + 1,
+        unit: ingredient.unit.trim(),
+      })),
 
-            description:
-              instruction.description.trim(),
-          })
-        ),
+    instructions: form.instructions
+      .filter((instruction) => instruction.description.trim())
+      .map((instruction, index) => ({
+        id: String(index + 1),
 
-    nutrition:
-      hasNutrition
-        ? {
-            calories:
-              optionalNumber(
-                form.nutrition.calories
-              ),
+        step: index + 1,
 
-            protein:
-              optionalNumber(
-                form.nutrition.protein
-              ),
+        description: instruction.description.trim(),
+      })),
 
-            carbohydrates:
-              optionalNumber(
-                form.nutrition
-                  .carbohydrates
-              ),
+    nutrition: hasNutrition
+      ? {
+          calories: optionalNumber(form.nutrition.calories) ?? "",
 
-            fat:
-              optionalNumber(
-                form.nutrition.fat
-              ),
-          }
-        : undefined,
+          protein: optionalNumber(form.nutrition.protein) ?? "",
 
-    tips:
-      form.tips.trim() ||
-      undefined,
+          carbohydrates: optionalNumber(form.nutrition.carbohydrates) ?? "",
 
-    notes:
-      form.notes.trim() ||
-      undefined,
+          fat: optionalNumber(form.nutrition.fat) ?? "",
+        }
+      : { calories: "", protein: "", carbohydrates: "", fat: "" },
+
+    tips: form.tips.trim(),
+
+    notes: form.notes.trim(),
 
     status,
   };

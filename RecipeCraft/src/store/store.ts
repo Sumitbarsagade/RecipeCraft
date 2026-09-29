@@ -5,9 +5,7 @@ import {
 import authReducer
   from "../features/auth/authSlice";
 
-import {
-  recipeApi,
-} from "../features/recipes/recipeApiSlice";  
+import { recipeApi } from "../features/recipes/recipeApi";
 
 
 import userReducer

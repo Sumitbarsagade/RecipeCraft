@@ -3,13 +3,14 @@ import mongoose, {
 } from "mongoose";
 
 export type RecipeCategory =
-  | "appetizer"
-  | "snack"
-  | "breakfast"
-  | "main course"
-  | "dessert"
-  | "beverage"
-  | "other";
+  | "Appetizer"
+  | "Snack"
+  | "Breakfast"
+  | "Main Course"
+  | "Dessert"
+  | "Beverage"
+  | "Lunch"
+  | "Other";
 
 export type RecipeCuisine =
   | "Italian"
@@ -18,7 +19,9 @@ export type RecipeCuisine =
   | "American"
   | "French"
   | "Indian"
-  | "other";
+  | "Thai"
+  | "Mediterrarian"
+  | "Other";
 
 export type RecipeDifficulty =
   | "easy"

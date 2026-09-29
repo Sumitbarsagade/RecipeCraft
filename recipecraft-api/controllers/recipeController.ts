@@ -290,8 +290,7 @@ export const createRecipe = async (
        CREATE RECIPE
     ===================================================== */
 
-    const recipe =
-      await Recipe.create({
+    const recipe = await Recipe.create({
         title: title.trim(),
 
         slug,

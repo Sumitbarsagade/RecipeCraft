@@ -39,7 +39,7 @@ export default function RecipeDetails({
 
       <div className="grid gap-5 sm:grid-cols-2">
 
-        <Field
+        <TimeField
           label="Preparation Time"
           icon={<Clock3 size={16} />}
           value={prepTime}
@@ -47,8 +47,9 @@ export default function RecipeDetails({
           onChange={setPrepTime}
         />
 
-        <Field
+        <TimeField
           label="Cooking Time"
+        
           icon={<Clock3 size={16} />}
           value={cookTime}
           placeholder="e.g. 30 min"
@@ -118,18 +119,74 @@ function Field({
       <label className="mb-2 block text-sm font-semibold text-[#36413B]">
         {label}
       </label>
+       
+      <div className="relative">
+        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#858E88]">
+          {icon}
+        </div>
+      
+        <input
+        
+          value={value}
+          onChange={(e) =>
+            onChange(e.target.value)
+          }
+          placeholder={placeholder}
+          className="w-full rounded-xl border border-[#E4DDD4] bg-[#FFFEFC] py-3 pl-9 pr-4 text-sm outline-none focus:border-[#C8501A]"
+        />
+      </div>
+    </div>
+  );
+}
 
+function TimeField({
+  label,
+  icon,
+  value,
+  placeholder,
+  onChange,
+}: FieldProps) {
+  return (
+    <div>
+      <label className="mb-2 block text-sm font-semibold text-[#36413B]">
+        {label}
+      </label>
+       
       <div className="relative">
         <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#858E88]">
           {icon}
         </div>
 
+        <div className="flex flex-row flex-nowrap"> 
+
+        {/* input 1 */}
+       <div className="flex flex-row flex-nowrap">
         <input
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) =>
+            onChange(e.target.value)
+          }
           placeholder={placeholder}
-          className="w-full rounded-xl border border-[#E4DDD4] bg-[#FFFEFC] py-3 pl-9 pr-4 text-sm outline-none focus:border-[#C8501A]"
+          className="w-5 rounded-xl border border-[#E4DDD4] bg-[#FFFEFC] py-3 pl-3 pr-4 text-sm outline-none focus:border-[#C8501A]"
         />
+         <div>min</div>
+
+        </div>
+        {/* input 2 */}
+         <div className="flex flex-row flex-nowrap"> 
+
+        <input
+          value={value}
+          onChange={(e) =>
+            onChange(e.target.value)
+          }
+          placeholder={placeholder}
+          className=" w-5 rounded-xl border border-[#E4DDD4] bg-[#FFFEFC] py-3 pl-3 pr-4 text-sm outline-none focus:border-[#C8501A]"
+        />
+         <div>hours</div>
+        </div>
+
+       </div>
       </div>
     </div>
   );

@@ -5,6 +5,32 @@ export interface RecipeIngredient {
   unit: string;
 }
 
+export type RecipeCategory =
+  | "Appetizer"
+  | "Snack"
+  | "Breakfast"
+  | "Main Course"
+  | "Dessert"
+  | "Beverage"
+  | "Lunch"
+  | "Other";
+
+export type RecipeCuisine =
+  | "Italian"
+  | "Mexican"
+  | "Chinese"
+  | "American"
+  | "French"
+  | "Indian"
+  | "Thai"
+  | "Mediterrarian"
+  | "Other";
+
+export type RecipeDifficulty =
+  | "Easy"
+  | "Medium"
+  | "Hard";
+
 export interface RecipeInstruction {
   id: string;
   step: number;
@@ -13,21 +39,28 @@ export interface RecipeInstruction {
 
 export type RecipeStatus = "draft" | "published";
 
+export interface RecipeAuthor {
+  _id: string;
+  name: string;
+  username?: string;
+  profileImage?: string;
+}
+
 export interface RecipeFormData {
   title: string;
   description: string;
 
-  image: string;
+  coverImage: string;
 
-  category: string;
-  cuisine: string;
+  category: RecipeCategory;
+  cuisine: RecipeCuisine;
 
   tags: string[];
 
   prepTime: string;
   cookTime: string;
   servings: string;
-  difficulty: "Easy" | "Medium" | "Hard";
+  difficulty:  RecipeDifficulty;
 
   ingredients: RecipeIngredient[];
 
@@ -44,3 +77,9 @@ export interface RecipeFormData {
   notes: string;
 
 }
+
+
+
+
+
+

@@ -4,10 +4,12 @@ import { motion } from "framer-motion";
 import { toast } from "sonner";
 
 import type {
+  RecipeCategory,
+  RecipeCuisine,
+  RecipeDifficulty,
   RecipeFormData,
   RecipeIngredient,
   RecipeInstruction,
-
   RecipeStatus,
 } from "../../../types/recipe.types";
 
@@ -151,18 +153,16 @@ export default function RecipeForm({
   const [
     category,
     setCategory,
-  ] = useState< >(
-    initialData?.category ?? ""
+  ] = useState<RecipeCategory>(
+    initialData?.category ?? "Appetizer"
   );
 
 
   const [
     cuisine,
     setCuisine,
-  ] = useState<
-    RecipeCuisine | ""
-  >(
-    initialData?.cuisine ?? ""
+  ] = useState<RecipeCuisine>(
+    initialData?.cuisine ?? "Indian"
   );
 
 
@@ -199,10 +199,8 @@ export default function RecipeForm({
   const [
     difficulty,
     setDifficulty,
-  ] = useState<
-    RecipeDifficulty | ""
-  >(
-    initialData?.difficulty ?? ""
+  ] = useState<RecipeDifficulty>(
+    initialData?.difficulty ?? "Easy"
   );
 
 
@@ -292,7 +290,7 @@ export default function RecipeForm({
 
       description,
 
-      image,
+      coverImage,
 
       category,
 
@@ -398,15 +396,9 @@ export default function RecipeForm({
           status === "published"
         ) {
           navigate(
-            `/recipes/${
-              response.data.recipe.slug
-            }`
-          );
-        } else {
-          navigate(
             "/dashboard/recipes"
           );
-        }
+        } 
 
       } catch (error) {
         console.error(
@@ -476,11 +468,11 @@ export default function RecipeForm({
         setDescription={
           setDescription
         }
-        setCategory={
-          setCategory
+        setCategory={(value: string) =>
+          setCategory(value as RecipeCategory)
         }
-        setCuisine={
-          setCuisine
+        setCuisine={(value: string) =>
+          setCuisine(value as RecipeCuisine)
         }
         setTags={setTags}
       />

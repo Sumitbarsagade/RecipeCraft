@@ -2,15 +2,10 @@ import {
   createApi,
 } from "@reduxjs/toolkit/query/react";
 
-import 
-  axiosBaseQuery,
- from "../../api/axiosBaseQuery";
+import axiosBaseQuery from "../../api/axiosBaseQuery";
 
-import type {
-  CreateRecipeRequest,
-  RecipeResponse,
-} from "../../types/recipe.types";
-import axiosInstance from "../../api/axiosInstance";
+import type { CreateRecipeRequest, RecipeResponse } from "./recipeTypes";
+
 
 
 export const recipeApi =
@@ -32,10 +27,7 @@ export const recipeApi =
       ========================= */
 
       createRecipe:
-        builder.mutation<
-          RecipeResponse,
-          CreateRecipeRequest
-        >({
+        builder.mutation<RecipeResponse,CreateRecipeRequest>({
           query: (recipe) => ({
             url: "/recipes",
             method: "POST",

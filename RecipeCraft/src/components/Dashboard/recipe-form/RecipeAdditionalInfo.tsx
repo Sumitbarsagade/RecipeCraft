@@ -57,6 +57,7 @@ export default function RecipeAdditionalInfo({
 
             <div className="relative">
               <input
+                type="number"
                 value={
                   nutrition[
                     key as keyof typeof nutrition

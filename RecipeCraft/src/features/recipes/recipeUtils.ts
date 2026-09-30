@@ -1,6 +1,6 @@
 import type { CreateRecipeRequest } from "./recipeTypes";
 
-import type { RecipeFormData } from "../../types/recipe.types";
+import type { RecipeFormData, RecipeIngredient } from "../../types/recipe.types";
 
 const optionalNumber = (value: string): string | undefined => {
   if (!value.trim()) {
@@ -12,25 +12,25 @@ const optionalNumber = (value: string): string | undefined => {
   return Number.isNaN(number) ? undefined : String(number);
 };
 
-const timeToMinutes = (
-  value: string
-): string => {
-  if (!value) {
-    return "";
-  }
+// const timeToMinutes = (
+//   value: number
+// ): number | undefined => {
+//   if (!value) {
+//     return undefined;
+//   }
 
-  const [hours, minutes] =
-    value.split(":").map(Number);
+//   const [hours, minutes] =
+//     value.split(":").map(Number);
 
-  if (
-    Number.isNaN(hours) ||
-    Number.isNaN(minutes)
-  ) {
-    return "";
-  }
+//   if (
+//     Number.isNaN(hours) ||
+//     Number.isNaN(minutes)
+//   ) {
+//     return undefined;
+//   }
 
-  return `${hours+minutes}`;
-};
+//   return hours * 60 + minutes;
+// };
 
 export const prepareRecipePayload = (
   form: RecipeFormData,
@@ -55,11 +55,11 @@ export const prepareRecipePayload = (
 
     tags: form.tags.map((tag) => tag.trim()).filter(Boolean),
 
-    prepTime: timeToMinutes(form.prepTime) ?? "",
+    prepTime: form.prepTime ?? "",
 
-    cookTime: timeToMinutes(form.cookTime) ?? "",
+    cookTime: form.cookTime ?? "",
 
-    servings: optionalNumber(form.servings) ?? "",
+    servings: form.servings ?? "",
 
     difficulty: form.difficulty || undefined,
 
@@ -72,7 +72,7 @@ export const prepareRecipePayload = (
 
         quantity: ingredient.quantity.trim(),
 
-        unit: ingredient.unit.trim(),
+        unit: ingredient.unit.trim() as RecipeIngredient["unit"],
       })),
 
     instructions: form.instructions

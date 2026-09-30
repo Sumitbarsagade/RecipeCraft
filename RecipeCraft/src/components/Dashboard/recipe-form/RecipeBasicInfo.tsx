@@ -35,6 +35,9 @@ const cuisines = [
   "Mediterranean",
 ];
 
+
+
+
 export default function RecipeBasicInfo({
   title,
   description,
@@ -154,7 +157,8 @@ export default function RecipeBasicInfo({
               ))}
             </select>
           </div>
-
+          
+          
         </div>
 
         {/* Tags */}

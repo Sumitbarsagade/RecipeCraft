@@ -2,31 +2,45 @@ import mongoose, {
   Document,
 } from "mongoose";
 
+export const RECIPE_CATEGORIES = [
+  "Appetizer",
+  "Snack",
+  "Breakfast",
+  "Main Course",
+  "Dessert",
+  "Beverage",
+  "Lunch",
+  "Dinner",
+  "Other",
+] as const;
+
+export const RECIPE_CUISINES = [
+  "Italian",
+  "Mexican",
+  "Chinese",
+  "American",
+  "French",
+  "Indian",
+  "Thai",
+  "Mediterranean",
+  "Other",
+] as const;
+
+
 export type RecipeCategory =
-  | "Appetizer"
-  | "Snack"
-  | "Breakfast"
-  | "Main Course"
-  | "Dessert"
-  | "Beverage"
-  | "Lunch"
-  | "Other";
+  typeof RECIPE_CATEGORIES[number];
 
 export type RecipeCuisine =
-  | "Italian"
-  | "Mexican"
-  | "Chinese"
-  | "American"
-  | "French"
-  | "Indian"
-  | "Thai"
-  | "Mediterrarian"
-  | "Other";
+  typeof RECIPE_CUISINES[number];
 
 export type RecipeDifficulty =
-  | "easy"
-  | "medium"
-  | "hard";
+  typeof RECIPE_DIFFICULTIES[number];
+
+export const RECIPE_DIFFICULTIES = [
+  "Easy",
+  "Medium",
+  "Hard",
+] as const;
 
 export type RecipeStatus =
   | "draft"

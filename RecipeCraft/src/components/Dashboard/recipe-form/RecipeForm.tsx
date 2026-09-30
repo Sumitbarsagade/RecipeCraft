@@ -176,7 +176,7 @@ export default function RecipeForm({
     prepTime,
     setPrepTime,
   ] = useState(
-    initialData?.prepTime ?? ""
+    Number(initialData?.prepTime ?? 0)
   );
 
 
@@ -184,7 +184,7 @@ export default function RecipeForm({
     cookTime,
     setCookTime,
   ] = useState(
-    initialData?.cookTime ?? ""
+    Number(initialData?.cookTime ?? 0)
   );
 
 
@@ -192,7 +192,7 @@ export default function RecipeForm({
     servings,
     setServings,
   ] = useState(
-    initialData?.servings ?? ""
+    Number(initialData?.servings ?? 1)
   );
 
 
@@ -215,7 +215,7 @@ export default function RecipeForm({
         id: crypto.randomUUID(),
         name: "",
         quantity: "",
-        unit: "",
+        unit: "" as RecipeIngredient["unit"],
       },
     ]
   );

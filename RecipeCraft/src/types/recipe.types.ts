@@ -2,8 +2,21 @@ export interface RecipeIngredient {
   id: string;
   name: string;
   quantity: string;
-  unit: string;
+  unit: IngredientUnits;
 }
+
+export const ingredientUnits = [
+  "tsp", "tbsp", "cup", "ml", "l", "g", "kg", "mg",
+  "oz", "lb", "piece", "slice", "clove", "pinch",
+  "handful", "can", "packet", "bunch"
+] as const;
+
+
+
+
+
+// 2. Derive the union type from the array
+export type IngredientUnits = typeof ingredientUnits[number];
 
 export type RecipeCategory =
   | "Appetizer"
@@ -49,7 +62,6 @@ export interface RecipeAuthor {
 export interface RecipeFormData {
   title: string;
   description: string;
-
   coverImage: string;
 
   category: RecipeCategory;
@@ -57,9 +69,9 @@ export interface RecipeFormData {
 
   tags: string[];
 
-  prepTime: string;
-  cookTime: string;
-  servings: string;
+  prepTime: number;
+  cookTime: number;
+  servings: number;
   difficulty:  RecipeDifficulty;
 
   ingredients: RecipeIngredient[];

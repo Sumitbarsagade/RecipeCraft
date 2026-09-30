@@ -5,8 +5,12 @@ import type {
   IRecipeIngredient,
   IRecipeInstruction,
   IRecipeNutrition,
+  
+
 } from "../types/recipe.types";
 
+import {RECIPE_CATEGORIES,
+  RECIPE_CUISINES, RECIPE_DIFFICULTIES} from "../types/recipe.types";
 
 /* =========================================================
    INGREDIENT SCHEMA
@@ -142,29 +146,13 @@ const recipeSchema = new Schema<IRecipe>(
       type: String,
       required: true,
 
-      enum: [
-        "appetizer",
-        "snack",
-        "breakfast",
-        "main course",
-        "dessert",
-        "beverage",
-        "other",
-      ],
+      enum: RECIPE_CATEGORIES
     },
 
     cuisine: {
       type: String,
 
-      enum: [
-        "Italian",
-        "Mexican",
-        "Chinese",
-        "American",
-        "French",
-        "Indian",
-        "other",
-      ],
+      enum: RECIPE_CUISINES
     },
 
     tags: {
@@ -190,11 +178,7 @@ const recipeSchema = new Schema<IRecipe>(
     difficulty: {
       type: String,
 
-      enum: [
-        "easy",
-        "medium",
-        "hard",
-      ],
+      enum: RECIPE_DIFFICULTIES,
     },
 
 

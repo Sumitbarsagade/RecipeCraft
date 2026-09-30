@@ -1,5 +1,7 @@
 import { Plus, Trash2, GripVertical } from "lucide-react";
-import type { RecipeIngredient } from "../../../types/recipe.types";
+import { ingredientUnits, type RecipeIngredient } from "../../../types/recipe.types";
+
+
 
 interface Props {
   ingredients: RecipeIngredient[];
@@ -19,7 +21,7 @@ export default function IngredientEditor({
         id: crypto.randomUUID(),
         name: "",
         quantity: "",
-        unit: "",
+        unit: "" as RecipeIngredient["unit"],
       },
     ]);
   };
@@ -73,8 +75,11 @@ export default function IngredientEditor({
               <GripVertical size={17} />
             </div>
 
+                
+              {/* Ingredient */}
             <input
               value={ingredient.name}
+              
               onChange={(e) =>
                 updateIngredient(
                   ingredient.id,
@@ -85,9 +90,11 @@ export default function IngredientEditor({
               placeholder={`Ingredient ${index + 1}`}
               className="min-w-0 rounded-xl border border-[#E4DDD4] px-3 py-2.5 text-sm outline-none focus:border-[#C8501A]"
             />
-
+            
+             {/* Quantity */}
             <input
               value={ingredient.quantity}
+              type="number"
               onChange={(e) =>
                 updateIngredient(
                   ingredient.id,
@@ -98,6 +105,34 @@ export default function IngredientEditor({
               placeholder="Qty"
               className="w-20 rounded-xl border border-[#E4DDD4] px-3 py-2.5 text-sm outline-none focus:border-[#C8501A]"
             />
+
+            {/* Unit */}
+  <select
+    value={ingredient.unit}
+    onChange={(e) =>
+      updateIngredient(
+        ingredient.id,
+        "unit",
+        e.target.value
+      )
+    }
+    className="w-28 rounded-xl border border-[#E4DDD4] bg-[#FFFEFC] px-3 py-3 text-sm text-[#47534D] outline-none transition focus:border-[#C8501A] focus:ring-2 focus:ring-[#C8501A]/10"
+  >
+    <option value="">
+      Unit
+    </option>
+
+    {ingredientUnits
+      .filter(Boolean)
+      .map((unit) => (
+        <option
+          key={unit}
+          value={unit}
+        >
+          {unit}
+        </option>
+      ))}
+  </select>
 
             <button
               type="button"

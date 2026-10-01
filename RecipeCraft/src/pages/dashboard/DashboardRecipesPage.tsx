@@ -1,5 +1,11 @@
-import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {
+  useEffect,
+  useState,
+} from "react";
+
+import {
+  useNavigate,
+} from "react-router-dom";
 
 import RecipeManagementHeader from "../../components/dashboard/recipes/RecipeManagementHeader";
 import RecipeManagementToolbar from "../../components/dashboard/recipes/RecipeManagementToolbar";
@@ -8,114 +14,225 @@ import DashboardRecipeListItem from "../../components/dashboard/recipes/Dashboar
 import DeleteRecipeModal from "../../components/dashboard/recipes/DeleteRecipeModel";
 import RecipeEmptyState from "../../components/dashboard/recipes/RecipeEmptyState";
 
+import type {
+  RecipeCardSummary,
+} from "../../types/recipe.types";
+
+import type {
+  RecipeFilter,
+} from "../../components/dashboard/recipes/RecipeStatusFilter";
+
+import type {
+  RecipeSort,
+} from "../../components/dashboard/recipes/RecipeSort";
 
 import {
-  dashboardRecipes,
-  type DashboardRecipe,
-} from "../../utils/dashboardRecipes";
-
-import type { RecipeFilter } from "../../components/dashboard/recipes/RecipeStatusFilter";
-import type { RecipeSort } from "../../components/dashboard/recipes/RecipeSort";
-
+  useGetMyRecipesQuery,
+} from "../../features/recipes/recipeApi";
 
 
 export default function DashboardRecipesPage() {
-  const navigate = useNavigate();
+  const navigate =
+    useNavigate();
 
-  const [recipes, setRecipes] =
-    useState<DashboardRecipe[]>(dashboardRecipes);
 
-  const [search, setSearch] = useState("");
+  /* =====================================================
+     DASHBOARD STATE
+  ===================================================== */
+
+  const [page, setPage] =
+    useState(1);
+
+  const [search, setSearch] =
+    useState("");
 
   const [filter, setFilter] =
-    useState<RecipeFilter>("all");
+    useState<RecipeFilter>(
+      "all"
+    );
 
   const [sort, setSort] =
-    useState<RecipeSort>("newest");
+    useState<RecipeSort>(
+      "newest"
+    );
 
   const [view, setView] =
-    useState<"grid" | "list">("grid");
+    useState<"grid" | "list">(
+      "grid"
+    );
 
-  const [deleteRecipe, setDeleteRecipe] =
-    useState<DashboardRecipe | null>(null);
+  const [
+    deleteRecipe,
+    setDeleteRecipe,
+  ] = useState<
+    RecipeCardSummary | null
+  >(null);
 
-  const filteredRecipes = useMemo(() => {
-    let result = [...recipes];
 
-    // Search
-    if (search.trim()) {
-      const query = search.toLowerCase();
+  /* =====================================================
+     API QUERY
+  ===================================================== */
 
-      result = result.filter(
-        (recipe) =>
-          recipe.title.toLowerCase().includes(query) ||
-          recipe.category.toLowerCase().includes(query) ||
-          recipe.description.toLowerCase().includes(query)
-      );
-    }
+  const {
+    data,
+    isLoading,
+    isFetching,
+    isError,
+    refetch,
+  } = useGetMyRecipesQuery({
+    page,
 
-    // Status
-    if (filter !== "all") {
-      result = result.filter(
-        (recipe) => recipe.status === filter
-      );
-    }
+    search:
+      search.trim() ||
+      undefined,
 
-    // Sort
-    switch (sort) {
-      case "newest":
-        result.sort(
-          (a, b) =>
-            new Date(b.createdAt).getTime() -
-            new Date(a.createdAt).getTime()
-        );
-        break;
+    status:
+      filter === "all"
+        ? undefined
+        : filter,
 
-      case "oldest":
-        result.sort(
-          (a, b) =>
-            new Date(a.createdAt).getTime() -
-            new Date(b.createdAt).getTime()
-        );
-        break;
+    sort,
+  });
 
-      case "views":
-        result.sort((a, b) => b.views - a.views);
-        break;
 
-      case "az":
-        result.sort((a, b) =>
-          a.title.localeCompare(b.title)
-        );
-        break;
-    }
+  /* =====================================================
+     API DATA
+  ===================================================== */
 
-    return result;
-  }, [recipes, search, filter, sort]);
+  const recipes =
+    data?.data.recipes ?? [];
 
-  const handleEdit = (recipe: DashboardRecipe) => {
-    navigate(`/dashboard/recipes/${recipe.id}/edit`);
+  const pagination =
+    data?.data.pagination;
+
+
+  /* =====================================================
+     RESET PAGE WHEN FILTERS CHANGE
+  ===================================================== */
+
+  useEffect(() => {
+    setPage(1);
+  }, [
+    search,
+    filter,
+    sort,
+  ]);
+
+
+  /* =====================================================
+     ACTIONS
+  ===================================================== */
+
+  const handleEdit = (
+    recipe: RecipeCardSummary
+  ) => {
+    navigate(
+      `/dashboard/recipes/${recipe._id}/edit`
+    );
   };
 
-  const handleDelete = (recipe: DashboardRecipe) => {
+
+  const handleDelete = (
+    recipe: RecipeCardSummary
+  ) => {
     setDeleteRecipe(recipe);
   };
 
-  const handlePreview = (recipe: DashboardRecipe) => {
-    navigate(`/recipes/${recipe.id}`);
+
+  const handlePreview = (
+    recipe: RecipeCardSummary
+  ) => {
+    navigate(
+      `/recipes/${recipe.slug}`
+    );
   };
 
-  const confirmDelete = () => {
-    if (!deleteRecipe) return;
 
-    setRecipes((current) =>
-      current.filter(
-        (recipe) => recipe.id !== deleteRecipe.id
-      )
+  /*
+   * We'll replace this with
+   * useDeleteRecipeMutation()
+   * once the delete endpoint is connected.
+   */
+  const confirmDelete = () => {
+    if (!deleteRecipe) {
+      return;
+    }
+
+    console.log(
+      "Delete recipe:",
+      deleteRecipe._id
     );
 
     setDeleteRecipe(null);
   };
+
+
+  /* =====================================================
+     CLEAR FILTERS
+  ===================================================== */
+
+  const handleClearFilters = () => {
+    setSearch("");
+    setFilter("all");
+    setPage(1);
+  };
+
+
+  /* =====================================================
+     LOADING
+  ===================================================== */
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#FAF8F4] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+        <div className="mx-auto max-w-[1500px]">
+          <RecipeManagementHeader />
+
+          <div className="mt-8 flex min-h-[300px] items-center justify-center">
+            <p className="text-sm font-medium text-[#707A74]">
+              Loading recipes...
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+
+  /* =====================================================
+     ERROR
+  ===================================================== */
+
+  if (isError) {
+    return (
+      <div className="min-h-screen bg-[#FAF8F4] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+        <div className="mx-auto max-w-[1500px]">
+          <RecipeManagementHeader />
+
+          <div className="mt-8 flex min-h-[300px] flex-col items-center justify-center gap-4">
+            <p className="text-sm font-medium text-[#707A74]">
+              Unable to load your recipes.
+            </p>
+
+            <button
+              type="button"
+              onClick={() =>
+                refetch()
+              }
+              className="rounded-xl bg-[#C8501A] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#A94314]"
+            >
+              Try Again
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+
+  /* =====================================================
+     UI
+  ===================================================== */
 
   return (
     <div className="min-h-screen bg-[#FAF8F4] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
@@ -123,6 +240,11 @@ export default function DashboardRecipesPage() {
       <div className="mx-auto max-w-[1500px]">
 
         <RecipeManagementHeader />
+
+
+        {/* ===========================
+            TOOLBAR
+        =========================== */}
 
         <RecipeManagementToolbar
           search={search}
@@ -135,71 +257,221 @@ export default function DashboardRecipesPage() {
           setView={setView}
         />
 
-        {/* Results count */}
+
+        {/* ===========================
+            RESULTS INFO
+        =========================== */}
+
         <div className="mb-4 flex items-center justify-between">
+
           <p className="text-sm text-[#707A74]">
             <span className="font-semibold text-[#1F2D27]">
-              {filteredRecipes.length}
+              {pagination?.totalRecipes ?? 0}
             </span>{" "}
-            {filteredRecipes.length === 1
+
+            {(pagination?.totalRecipes ?? 0) === 1
               ? "recipe"
               : "recipes"}
           </p>
 
-          {(search || filter !== "all") && (
+
+          {(search ||
+            filter !== "all") && (
             <button
-              onClick={() => {
-                setSearch("");
-                setFilter("all");
-              }}
+              type="button"
+              onClick={
+                handleClearFilters
+              }
               className="text-sm font-semibold text-[#C8501A] hover:underline"
             >
               Clear filters
             </button>
           )}
+
         </div>
 
-        {/* Empty state */}
-        {filteredRecipes.length === 0 ? (
+
+        {/* ===========================
+            BACKGROUND REFRESH
+        =========================== */}
+
+        {isFetching &&
+          !isLoading && (
+            <div className="mb-3 text-xs font-medium text-[#8A928D]">
+              Updating recipes...
+            </div>
+          )}
+
+
+        {/* ===========================
+            EMPTY STATE
+        =========================== */}
+
+        {recipes.length === 0 ? (
+
           <RecipeEmptyState
             search={search}
             filter={filter}
           />
+
         ) : view === "grid" ? (
-          /* GRID */
+
+          /* =========================
+             GRID
+          ========================= */
+
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-            {filteredRecipes.map((recipe) => (
-              <DashboardRecipeCard
-                key={recipe.id}
-                recipe={recipe}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-                onPreview={handlePreview}
-              />
-            ))}
+
+            {recipes.map(
+              (recipe) => (
+                <DashboardRecipeCard
+                  key={
+                    recipe._id
+                  }
+                  recipe={
+                    recipe
+                  }
+                  onEdit={
+                    handleEdit
+                  }
+                  onDelete={
+                    handleDelete
+                  }
+                  onPreview={
+                    handlePreview
+                  }
+                />
+              )
+            )}
+
           </div>
+
         ) : (
-          /* LIST */
+
+          /* =========================
+             LIST
+          ========================= */
+
           <div className="space-y-4">
-            {filteredRecipes.map((recipe) => (
-              <DashboardRecipeListItem
-                key={recipe.id}
-                recipe={recipe}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-                onPreview={handlePreview}
-              />
-            ))}
+
+            {recipes.map(
+              (recipe) => (
+                <DashboardRecipeListItem
+                  key={
+                    recipe._id
+                  }
+                  recipe={
+                    recipe
+                  }
+                  onEdit={
+                    handleEdit
+                  }
+                  onDelete={
+                    handleDelete
+                  }
+                  onPreview={
+                    handlePreview
+                  }
+                />
+              )
+            )}
+
           </div>
+
         )}
+
+
+        {/* ===========================
+            PAGINATION
+        =========================== */}
+
+        {pagination &&
+          pagination.totalPages > 1 && (
+            <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t border-[#E5DED5] pt-5 sm:flex-row">
+
+              {/* Page info */}
+
+              <p className="text-sm text-[#707A74]">
+                Page{" "}
+
+                <span className="font-semibold text-[#1F2D27]">
+                  {
+                    pagination.currentPage
+                  }
+                </span>
+
+                {" "}of{" "}
+
+                <span className="font-semibold text-[#1F2D27]">
+                  {
+                    pagination.totalPages
+                  }
+                </span>
+              </p>
+
+
+              {/* Controls */}
+
+              <div className="flex items-center gap-2">
+
+                <button
+                  type="button"
+                  disabled={
+                    !pagination.hasPreviousPage ||
+                    isFetching
+                  }
+                  onClick={() =>
+                    setPage(
+                      (current) =>
+                        Math.max(
+                          current - 1,
+                          1
+                        )
+                    )
+                  }
+                  className="rounded-xl border border-[#DDD5CB] bg-white px-4 py-2 text-sm font-semibold text-[#47534D] transition hover:border-[#C8501A] hover:text-[#C8501A] disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  Previous
+                </button>
+
+
+                <button
+                  type="button"
+                  disabled={
+                    !pagination.hasNextPage ||
+                    isFetching
+                  }
+                  onClick={() =>
+                    setPage(
+                      (current) =>
+                        current + 1
+                    )
+                  }
+                  className="rounded-xl border border-[#DDD5CB] bg-white px-4 py-2 text-sm font-semibold text-[#47534D] transition hover:border-[#C8501A] hover:text-[#C8501A] disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  Next
+                </button>
+
+              </div>
+
+            </div>
+          )}
 
       </div>
 
-      {/* Delete Modal */}
+
+      {/* =============================
+          DELETE MODAL
+      ============================= */}
+
       <DeleteRecipeModal
         recipe={deleteRecipe}
-        onClose={() => setDeleteRecipe(null)}
-        onConfirm={confirmDelete}
+        onClose={() =>
+          setDeleteRecipe(null)
+        }
+        onConfirm={
+          confirmDelete
+        }
       />
 
     </div>

@@ -1,10 +1,14 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { AlertTriangle, X } from "lucide-react";
 
-import type { DashboardRecipe } from "../../../utils/dashboardRecipes";
+
+import type {
+  RecipeCardSummary,
+} from "../../../types/recipe.types";
 
 interface Props {
-  recipe: DashboardRecipe | null;
+  recipe:  RecipeCardSummary
+ | null;
   onClose: () => void;
   onConfirm: () => void;
 }

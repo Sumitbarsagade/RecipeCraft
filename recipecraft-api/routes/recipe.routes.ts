@@ -21,11 +21,18 @@ const router = Router();
 router.get('/', getAllRecipes);
 router.get('/search', searchRecipes);
 router.get('/trending', getTrendingRecipes);
-router.get('/user/:userId', getRecipesByUserId);  // must be before /:slug
+  // must be before /:slug
 router.get('/:slug', getRecipeBySlug);
 
 // Private routes (auth middleware to be added)
-router.use(protect)
+router.get('/user', (req, res) => {
+    console.log("MY RECIPES ROUTE HIT");
+    
+    res.status(200).json({
+      success: true,
+      message: "My recipes route works",
+    });
+  });
 router.get('/feed',protect, getRecipeFeed);
 router.post('/', protect, createRecipe);
 router.put('/:id', protect, updateRecipeById);

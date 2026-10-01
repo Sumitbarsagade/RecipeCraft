@@ -7,13 +7,15 @@ import {
   Trash2,
 } from "lucide-react";
 
-import type { DashboardRecipe } from "../../../utils/dashboardRecipes";
+import type {
+  RecipeCardSummary
+} from "../../../types/recipe.types";
 
 interface Props {
-  recipe: DashboardRecipe;
-  onEdit: (recipe: DashboardRecipe) => void;
-  onDelete: (recipe: DashboardRecipe) => void;
-  onPreview: (recipe: DashboardRecipe) => void;
+  recipe:  RecipeCardSummary;
+  onEdit: (recipe:  RecipeCardSummary) => void;
+  onDelete: (recipe:  RecipeCardSummary) => void;
+  onPreview: (recipe:  RecipeCardSummary) => void;
 }
 
 export default function DashboardRecipeListItem({
@@ -30,7 +32,7 @@ export default function DashboardRecipeListItem({
       className="flex flex-col gap-4 rounded-2xl border border-[#E8E1D8] bg-white p-4 shadow-sm sm:flex-row"
     >
       <img
-        src={recipe.image}
+        src={recipe.coverImage}
         alt={recipe.title}
         className="h-32 w-full rounded-xl object-cover sm:h-28 sm:w-44"
       />

@@ -4,7 +4,7 @@ import {
 
 import axiosBaseQuery from "../../api/axiosBaseQuery";
 
-import type { CreateRecipeRequest, RecipeResponse } from "./recipeTypes";
+import type { CreateRecipeRequest, UserRecipesResponse, RecipeResponse, MyRecipesQueryParams } from "./recipeTypes";
 
 
 
@@ -39,10 +39,66 @@ export const recipeApi =
           ],
         }),
 
+      /* =========================
+         GET USER RECIPE
+      ========================= */
+      
+      getMyRecipes:
+  builder.query<UserRecipesResponse,MyRecipesQueryParams >({
+    query: ({
+      page,
+      search,
+      status,
+      sort,
+    }) => ({
+      url: "/recipes/my",
+      method: "GET",
+
+      params: {
+        page,
+
+        ...(search && {
+          search,
+        }),
+
+        ...(status && {
+          status,
+        }),
+
+        ...(sort && {
+          sort,
+        }),
+      },
+    }),
+
+    providesTags: (result) =>
+      result
+        ? [
+            {
+              type: "Recipe",
+              id: "MY_LIST",
+            },
+
+            ...result.data.recipes.map(
+              (recipe) => ({
+                type: "Recipe" as const,
+                id: recipe._id,
+              })
+            ),
+          ]
+        : [
+            {
+              type: "Recipe",
+              id: "MY_LIST",
+            },
+          ],
+  }),
+
     }),
   });
 
 
 export const {
   useCreateRecipeMutation,
+  useGetMyRecipesQuery,
 } = recipeApi;

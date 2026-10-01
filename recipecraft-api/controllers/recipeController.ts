@@ -824,22 +824,220 @@ export const saveRecipeById = async (_req: AuthenticatedRequest, res: Response):
 // GET RECIPES BY USER ID
 // ---------------------------------------------------------------------------
 
-export const getRecipesByUserId = async (req: Request, res: Response): Promise<void> => {
+export const getRecipesByUserId = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
-    const { userId } = req.params;
-    
+    /* =====================================================
+       AUTHENTICATED USER
+    ===================================================== */
+
+     const userId =
+      (req.user as { _id?: mongoose.Types.ObjectId | string; id?: string } | undefined)?._id ??
+      (req.user as { _id?: mongoose.Types.ObjectId | string; id?: string } | undefined)?.id;
+
     if (!userId) {
-      res.status(401).json({ success: false, message: 'Unathorized access' });
+      res.status(401).json({
+        success: false,
+        message: "Not authenticated.",
+      });
+
       return;
     }
+   
+     /* =====================================================
+       QUERY PARAMETERS
+    ===================================================== */
 
-    const recipes = await Recipe.find({ author: userId }).sort({ createdAt: -1 });
+    const page = Math.max(
+      Number(req.query.page) || 1,
+      1
+    );
 
-    res.status(200).json({ success: true, recipes });
+    const limit = 20;
+
+    const skip =
+      (page - 1) * limit;
+
+    const search =
+      typeof req.query.search === "string"
+        ? req.query.search.trim()
+        : "";
+
+    const status =
+      typeof req.query.status === "string"
+        ? req.query.status
+        : "";
+
+    const sort =
+      typeof req.query.sort === "string"
+        ? req.query.sort
+        : "newest";
+
+
+     /* =====================================================
+       FILTER
+    ===================================================== */
+
+    const filter: Record<string, unknown> = {
+      author: userId,
+    };
+
+
+    // Draft / Published
+    if (
+      status === "draft" ||
+      status === "published"
+    ) {
+      filter.status = status;
+    }
+
+
+    // Search
+    if (search) {
+      filter.$or = [
+        {
+          title: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+        {
+          description: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+        {
+          category: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+      ];
+    }
+
+
+    /* =====================================================
+       SORT
+    ===================================================== */
+
+    let sortOption:
+      Record<string, 1 | -1>;
+
+    switch (sort) {
+      case "oldest":
+        sortOption = {
+          createdAt: 1,
+        };
+        break;
+
+      case "views":
+        sortOption = {
+          views: -1,
+        };
+        break;
+
+      case "az":
+        sortOption = {
+          title: 1,
+        };
+        break;
+
+      case "newest":
+      default:
+        sortOption = {
+          createdAt: -1,
+        };
+        break;
+    }
+
+
+    /* =====================================================
+       DATABASE QUERY
+    ===================================================== */
+
+    const [
+      recipes,
+      totalRecipes,
+    ] = await Promise.all([
+      Recipe.find(filter)
+        .select(
+          [
+            "title",
+            "slug",
+            "description",
+            "coverImage",
+            "category",
+            "prepTime",
+            "cookTime",
+            "difficulty",
+            "status",
+            "views",
+            "createdAt",
+            "updatedAt",
+          ].join(" ")
+        )
+        .sort(sortOption)
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+
+      Recipe.countDocuments(filter),
+    ]);
+
+
+    /* =====================================================
+       PAGINATION
+    ===================================================== */
+
+    const totalPages =
+      Math.ceil(
+        totalRecipes / limit
+      );
+
+
+    /* =====================================================
+       RESPONSE
+    ===================================================== */
+
+    res.status(200).json({
+      success: true,
+
+      message:
+        "Recipes fetched successfully.",
+
+      data: {
+        recipes,
+
+        pagination: {
+          currentPage: page,
+          pageSize: limit,
+
+          totalRecipes,
+          totalPages,
+
+          hasNextPage:
+            page < totalPages,
+
+          hasPreviousPage:
+            page > 1,
+        },
+      },
+    });
+
   } catch (error) {
+    console.error(
+      "getMyRecipes error:",
+      error
+    );
+   
+    console.log(error);
     res.status(500).json({
       success: false,
-      message: error instanceof Error ? error.message : 'Server error',
+
+      message:
+        error instanceof Error
+          ? error.message
+          : "Server error.",
     });
   }
 };

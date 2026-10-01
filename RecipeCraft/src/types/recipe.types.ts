@@ -90,6 +90,42 @@ export interface RecipeFormData {
 
 }
 
+export interface RecipeCardSummary {
+  _id: string;
+
+  title: string;
+  slug: string;
+
+  description?: string;
+
+  coverImage?: string;
+
+  category: RecipeCategory;
+
+  prepTime?: number;
+  cookTime?: number;
+
+  difficulty?: RecipeDifficulty;
+
+  status: RecipeStatus;
+
+  views: number;
+
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Pagination {
+  currentPage: number;
+  pageSize: number;
+
+  totalRecipes: number;
+  totalPages: number;
+
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+}
+
 
 
 

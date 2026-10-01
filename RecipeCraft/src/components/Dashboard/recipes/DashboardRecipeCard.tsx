@@ -7,14 +7,15 @@ import {
   Trash2,
   ExternalLink,
 } from "lucide-react";
-
-import type { DashboardRecipe } from "../../../utils/dashboardRecipes";
+import type {
+  RecipeCardSummary,
+} from "../../../types/recipe.types";
 
 interface Props {
-  recipe: DashboardRecipe;
-  onEdit: (recipe: DashboardRecipe) => void;
-  onDelete: (recipe: DashboardRecipe) => void;
-  onPreview: (recipe: DashboardRecipe) => void;
+  recipe: RecipeCardSummary;
+  onEdit: (recipe: RecipeCardSummary) => void;
+  onDelete: (recipe: RecipeCardSummary) => void;
+  onPreview: (recipe: RecipeCardSummary) => void;
 }
 
 export default function DashboardRecipeCard({
@@ -35,7 +36,7 @@ export default function DashboardRecipeCard({
       {/* Image */}
       <div className="relative aspect-[16/10] overflow-hidden">
         <img
-          src={recipe.image}
+          src={recipe.coverImage}
           alt={recipe.title}
           className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
         />

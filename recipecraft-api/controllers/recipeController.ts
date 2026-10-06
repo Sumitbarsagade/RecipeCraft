@@ -118,11 +118,25 @@ export const getRecipeFeed = async (req: Request, res: Response): Promise<void> 
 // GET RECIPE BY SLUG
 // ---------------------------------------------------------------------------
 
-export const getRecipeBySlug = async (req: {params: {slug: any}}, res: Response): Promise<void> => {
+export const getRecipeBySlug = async (req: AuthenticatedRequest<CreateRecipeRequestBody>, res: Response): Promise<void> => {
   try {
+
+
     const { slug } = req.params;
 
-    const recipe = await Recipe.findOne({ slug }).populate('author', 'username email');
+     const userId =
+      (req.user as { _id?: mongoose.Types.ObjectId | string; id?: string } | undefined)?._id ??
+      (req.user as { _id?: mongoose.Types.ObjectId | string; id?: string } | undefined)?.id;
+
+    if (!userId) {
+      res.status(401).json({
+        success: false,
+        message: "Not authenticated.",
+      });
+      return;
+    }
+
+    const recipe = await Recipe.findOne({ slug });
 
     if (!recipe) {
       res.status(404).json({ success: false, message: 'Recipe not found' });
@@ -833,7 +847,7 @@ export const getRecipesByUserId = async (req: AuthenticatedRequest, res: Respons
      const userId =
       (req.user as { _id?: mongoose.Types.ObjectId | string; id?: string } | undefined)?._id ??
       (req.user as { _id?: mongoose.Types.ObjectId | string; id?: string } | undefined)?.id;
-
+   console.log("get Recipe User",userId)
     if (!userId) {
       res.status(401).json({
         success: false,
@@ -955,10 +969,7 @@ export const getRecipesByUserId = async (req: AuthenticatedRequest, res: Respons
        DATABASE QUERY
     ===================================================== */
 
-    const [
-      recipes,
-      totalRecipes,
-    ] = await Promise.all([
+    const [recipes, totalRecipes] = await Promise.all([
       Recipe.find(filter)
         .select(
           [
@@ -980,7 +991,6 @@ export const getRecipesByUserId = async (req: AuthenticatedRequest, res: Respons
         .skip(skip)
         .limit(limit)
         .lean(),
-
       Recipe.countDocuments(filter),
     ]);
 

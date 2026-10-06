@@ -33,11 +33,7 @@ router.delete(
   deleteProfile
 );
 
-router.get(
-  "/me/saved-recipes",
-  protect,
-  getSavedRecipes
-);
+
 
 
 /* =========================================================

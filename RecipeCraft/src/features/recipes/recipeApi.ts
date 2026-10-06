@@ -40,7 +40,7 @@ export const recipeApi =
         }),
 
       /* =========================
-         GET USER RECIPE
+         GET USER RECIPES LIST
       ========================= */
       
       getMyRecipes:
@@ -93,7 +93,20 @@ export const recipeApi =
             },
           ],
   }),
-
+  
+   getRecipeData:
+    builder.query<UserRecipesResponse,MyRecipesQueryParams >({
+      query: (recipe) => ({
+            url: "/recipes/:slug",
+            method: "GET",
+            data: recipe,
+          }),
+       
+          providesTags: [
+            "Recipe",
+          ],
+    })
+   
     }),
   });
 
@@ -101,4 +114,6 @@ export const recipeApi =
 export const {
   useCreateRecipeMutation,
   useGetMyRecipesQuery,
+  useGetRecipeDataQuery
+  
 } = recipeApi;

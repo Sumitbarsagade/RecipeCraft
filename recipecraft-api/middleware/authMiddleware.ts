@@ -50,7 +50,7 @@ const protect = async (
     }
 
     (req as AuthenticatedRequest).user = user; // Cast req to AuthenticatedRequest
-    console.log( "request:", req)
+    console.log( "request:", req);
     next();
   } catch (error) {
 

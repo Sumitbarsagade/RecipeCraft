@@ -40,7 +40,7 @@ app.use(
     console.log(
       `→ ${req.method} ${req.originalUrl}`
     );
-
+  
     console.log(
       "Authorization:",
       req.headers.authorization

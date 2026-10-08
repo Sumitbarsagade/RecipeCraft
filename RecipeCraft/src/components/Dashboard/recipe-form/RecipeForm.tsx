@@ -30,9 +30,20 @@ import RecipeAdditionalInfo from "./RecipeAdditionalInfo";
 import RecipeFormActions from "./RecipeFormActions";
 
 
-interface Props {
-  initialData?: Partial<RecipeFormData>;
-  isEditing?: boolean;
+interface RecipeFormProps {
+  initialData?: RecipeFormData;
+
+  mode?: "create" | "edit";
+
+  isSubmitting?: boolean;
+
+  onSaveDraft: (
+    data: RecipeFormData
+  ) => Promise<void> | void;
+
+  onPublish: (
+    data: RecipeFormData
+  ) => Promise<void> | void;
 }
 
 
@@ -108,8 +119,12 @@ const getApiErrorMessage = (
 
 export default function RecipeForm({
   initialData,
-  isEditing = false,
-}: Props) {
+  mode = "create",
+  isSubmitting = false,
+  onSaveDraft,
+  onPublish, 
+
+}: RecipeFormProps) {
   const navigate =
     useNavigate();
 
@@ -553,9 +568,7 @@ export default function RecipeForm({
           submittingStatus
         }
         onSaveDraft={() =>
-          handleSubmitRecipe(
-            "draft"
-          )
+          onSaveDraft()
         }
         onPublish={() =>
           handleSubmitRecipe(

@@ -2,9 +2,134 @@ import { ArrowLeft, ChefHat } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import RecipeForm from "../../components/dashboard/recipe-form/RecipeForm";
+import type {
+  RecipeCategory,
+  RecipeCuisine,
+  RecipeDifficulty,
+  RecipeFormData,
+  RecipeIngredient,
+  RecipeInstruction,
+  RecipeStatus,
+} from "../../types/recipe.types";
 
 export default function CreateRecipePage() {
   const navigate = useNavigate();
+  
+const [
+    createRecipe,
+    { isLoading },
+  ] = useCreateRecipeMutation();  
+
+    /* =======================================================
+       SAVE / PUBLISH
+    ======================================================= */
+  
+    const handleSubmitRecipe =
+      async (
+        status: RecipeStatus
+      ) => {
+        const currentForm =
+          getFormData();
+  
+  
+        /* =========================
+           PUBLISH VALIDATION
+        ========================= */
+  
+        if (
+          status === "published"
+        ) {
+          const validationError =
+            validateForPublish(
+              currentForm
+            );
+  
+          if (validationError) {
+            toast.error(
+              validationError
+            );
+  
+            return;
+          }
+        }
+  
+  
+        /* =========================
+           PREPARE API PAYLOAD
+        ========================= */
+  
+        const payload =
+          prepareRecipePayload(
+            currentForm,
+            status
+          );
+  
+  
+        try {
+          setSubmittingStatus(
+            status
+          );
+  
+  
+          /* =======================
+             POST /recipes
+          ======================= */
+  
+          const response =
+            await createRecipe(
+              payload
+            ).unwrap();
+  
+  
+          /* =======================
+             SUCCESS
+          ======================= */
+  
+          toast.success(
+            response.message
+          );
+  
+  
+          /* =======================
+             NAVIGATION
+          ======================= */
+  
+          if (
+            status === "published"
+          ) {
+            navigate(
+              "/dashboard/recipes"
+            );
+          } 
+  
+        } catch (error) {
+          console.error(
+            "Recipe creation error:",
+            error
+          );
+  
+          toast.error(
+            getApiErrorMessage(
+              error
+            )
+          );
+  
+        } finally {
+          setSubmittingStatus(
+            null
+          );
+        }
+      };
+
+    const  onSaveDraft = () =>
+          handleSubmitRecipe(
+            "draft"
+          )
+    const onPublish=() =>
+          handleSubmitRecipe(
+            "published"
+          )
+     const onPreview="s";    
 
   return (
     <div className="min-h-screen bg-[#FAF8F4] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
@@ -46,7 +171,13 @@ export default function CreateRecipePage() {
 
         </div>
 
-        <RecipeForm />
+        <RecipeForm   mode="create"
+      isSubmitting={isLoading}
+
+      onSaveDraft ={onSaveDraft()}
+      onPublish={onPublish}
+      
+      />
 
       </div>
 
